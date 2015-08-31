@@ -1,0 +1,47 @@
+package cc_DXE_R;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'Cornelius Concepts Delphi Library'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl,
+  dbrtl,
+  vcldb,
+  edbrun,
+  RaizeComponentsVcl;
+
+contains
+  ufrmEDBTableLookup in 'edbtablelookup\ufrmEDBTableLookup.pas' {frmEDBTableLookup},
+  ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
+  AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
+  CloseApplication in 'idleclose\CloseApplication.pas',
+  LayoutSaver in 'layoutsaver\LayoutSaver.pas',
+  TextFileLogger in 'textfilelogger\TextFileLogger.pas',
+  ufrmTextViewer in 'textfileviewer\ufrmTextViewer.pas' {frmTextViewer},
+  Mergetxt in 'mergetext\Mergetxt.pas';
+
+end.

@@ -44,6 +44,12 @@
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
+{ Delphi XE }
+{$IFDEF VER220}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
 
 {$IFNDEF SupportedCompiler}
   {$MESSAGE FATAL 'Non-supported compiler.'}

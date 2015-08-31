@@ -41,8 +41,8 @@ end;
 procedure TTextViewerEditor.ExecuteVerb(Index: Integer);
 begin
   case Index of
-    0: MessageBox(0, 'TccTextViewer vr. 1.1'#13#10 +
-                     'Copyright (c) 2002 by Cornelius concepts.',
+    0: MessageBox(0, 'TccTextViewer vr. 1.2'#13#10 +
+                     'Copyright (c) 2015 by Cornelius concepts.',
                      PChar('About this component ...'),
                      MB_OK + MB_ICONINFORMATION);
     1: MessageBox(0, 'TccTextViewer is, as the name implies, a simple text file viewer. With ' +

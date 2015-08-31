@@ -1,0 +1,48 @@
+package cc_DXE_D;
+
+{$R *.res}
+{$R 'elapsedtimer\ElapsedTimerReg.dcr'}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'Cornelius Concepts Components'}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  cc_DXE_R,
+  designide,
+  vcldb,
+  dbrtl,
+  vcl;
+
+contains
+  EDBTableLookupReg in 'edbtablelookup\EDBTableLookupReg.pas',
+  CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
+  ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
+  cc_splash in 'cc_splash.pas',
+  TextViewerReg in 'textfileviewer\TextViewerReg.pas',
+  TextFileLoggerReg in 'textfilelogger\TextFileLoggerReg.pas',
+  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
+  MergeTxtReg in 'mergetext\MergeTxtReg.pas';
+
+end.

@@ -48,7 +48,7 @@ const
 begin
   case Index of
     0: MessageBox(0, 'TccTextFileLogger vr. 1.1' + CR + LF +
-                     'Copyright (c) 2001-2002 by Cornelius Concepts.',
+                     'Copyright (c) 2001-2015 by Cornelius Concepts.',
                      PChar('About this component ...'),
                      MB_OK + MB_ICONINFORMATION);
     1: MessageBox(0, 'TccTextfileLogger provides quick and easy logging to a text file. ' +

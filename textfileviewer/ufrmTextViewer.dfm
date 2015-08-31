@@ -1,9 +1,9 @@
 object frmTextViewer: TfrmTextViewer
   Left = 258
   Top = 281
-  Width = 438
-  Height = 430
   Caption = 'Text Viewer'
+  ClientHeight = 391
+  ClientWidth = 422
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,9 +17,10 @@ object frmTextViewer: TfrmTextViewer
   object mmoText: TRzMemo
     Left = 0
     Top = 0
-    Width = 430
-    Height = 367
+    Width = 422
+    Height = 355
     Align = alClient
+    Color = clInfoBk
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -34,12 +35,10 @@ object frmTextViewer: TfrmTextViewer
   end
   object RzDialogButtons: TRzDialogButtons
     Left = 0
-    Top = 367
-    Width = 430
+    Top = 355
+    Width = 422
     ActionOk = actDone
     CaptionOk = '&Done'
-    CaptionCancel = 'Cancel'
-    CaptionHelp = '&Help'
     ShowCancelButton = False
     TabOrder = 1
   end
