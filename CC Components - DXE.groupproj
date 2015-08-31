@@ -1,0 +1,48 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{57A0C018-BF3D-4732-978A-EEC95C6D8C0B}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="cc_DXE_R.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="cc_DXE_D.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="cc_DXE_R">
+			<MSBuild Projects="cc_DXE_R.dproj"/>
+		</Target>
+		<Target Name="cc_DXE_R:Clean">
+			<MSBuild Projects="cc_DXE_R.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="cc_DXE_R:Make">
+			<MSBuild Projects="cc_DXE_R.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="cc_DXE_D">
+			<MSBuild Projects="cc_DXE_D.dproj"/>
+		</Target>
+		<Target Name="cc_DXE_D:Clean">
+			<MSBuild Projects="cc_DXE_D.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="cc_DXE_D:Make">
+			<MSBuild Projects="cc_DXE_D.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="cc_DXE_R;cc_DXE_D"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="cc_DXE_R:Clean;cc_DXE_D:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="cc_DXE_R:Make;cc_DXE_D:Make"/>
+		</Target>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
+	</Project>
