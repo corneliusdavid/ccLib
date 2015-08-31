@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Windows, StdCtrls, Classes, Controls, ExtCtrls, Forms,
-  RzDlgBtn, RzEdit, ActnList, Menus, StdActns, Buttons, LayoutSaver;
+  RzDlgBtn, RzEdit, ActnList, Menus, StdActns, Buttons, LayoutSaver, RzPanel;
 
 type
   TfrmTextViewer = class(TForm)
@@ -27,22 +27,27 @@ type
     procedure actTextSizeLargerExecute(Sender: TObject);
     procedure actTextSizeSmallerExecute(Sender: TObject);
     procedure actDoneExecute(Sender: TObject);
+  private
+    FTextSizeIndex: Integer;
+  protected
+    property TextSizeIndex: Integer read FTextSizeIndex write FTextSizeIndex;
   end;
 
   TccTextViewer = class(TComponent)
   private
     FFileName: string;
+    FTextSizeIndex: Integer;
     procedure ShowTextViewer;
   public
+    constructor Create(AOwner: TComponent); override;
     procedure Execute; overload;
     procedure Execute(const fn: string); overload;
   published
+    property TextSizeIndex: Integer read FTextSizeIndex write FTextSizeIndex default 3;
     property FileName: string read FFileName write FFileName;
   end;
 
 
-const
-  CurrTextSizeIndex: Integer = 3; // --->>>> this should be saved as a user setting
 var
   frmTextViewer: TfrmTextViewer; // default variable for global use
 
@@ -60,11 +65,11 @@ const
 
 procedure TfrmTextViewer.actTextSizeLargerExecute(Sender: TObject);
 begin
-  if CurrTextSizeIndex < MaxTextSizes then
+  if FTextSizeIndex < MaxTextSizes then
   begin
-    Inc(CurrTextSizeIndex);
-    mmoText.Font.Size := TextSizes[CurrTextSizeIndex];
-    if CurrTextSizeIndex = MaxTextSizes then
+    Inc(FTextSizeIndex);
+    mmoText.Font.Size := TextSizes[FTextSizeIndex];
+    if FTextSizeIndex = MaxTextSizes then
       actTextSizeLarger.Enabled := False;
     actTextSizeSmaller.Enabled := True;
   end;
@@ -72,11 +77,11 @@ end;
 
 procedure TfrmTextViewer.actTextSizeSmallerExecute(Sender: TObject);
 begin
-  if CurrTextSizeIndex > 1 then
+  if FTextSizeIndex > 1 then
   begin
-    Dec(CurrTextSizeIndex);
-    mmoText.Font.Size := TextSizes[CurrTextSizeIndex];
-    if CurrTextSizeIndex = 1 then
+    Dec(FTextSizeIndex);
+    mmoText.Font.Size := TextSizes[FTextSizeIndex];
+    if FTextSizeIndex = 1 then
       actTextSizeSmaller.Enabled := False;
     actTextSizeLarger.Enabled := True;
   end;
@@ -96,8 +101,9 @@ var
 begin
   LocalTextViewer := TfrmTextViewer.Create(nil);
   try
+    LocalTextViewer.TextSizeIndex := FTextSizeIndex;
+    LocalTextviewer.mmoText.Font.Size := TextSizes[FTextSizeIndex];
     LocalTextViewer.mmoText.Lines.LoadFromFile(FFileName);
-    LocalTextviewer.mmoText.Font.Size := TextSizes[CurrTextSizeIndex];
     LocalTextviewer.Caption := FFileName;
     LocalTextViewer.ShowModal;
   finally
@@ -119,6 +125,14 @@ begin
     Application.MessageBox(PChar(s), PChar(sTextFileViewer), MB_OK + MB_DEFBUTTON1 + MB_ICONERROR);
   end else
     ShowTextViewer;
+end;
+
+constructor TccTextViewer.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+
+  // establish default
+  FTextSizeIndex := 3;
 end;
 
 procedure TccTextViewer.Execute(const fn: string);
