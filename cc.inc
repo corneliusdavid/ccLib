@@ -51,6 +51,55 @@
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
+{ Delphi XE2 }
+{$IFDEF VER230}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
+{ Delphi XE3 }
+{$IFDEF VER240}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
+{ Delphi XE4 }
+{$IFDEF VER250}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
+{ Delphi XE5 }
+{$IFDEF VER260}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
+{ Delphi XE6 }
+{$IFDEF VER270}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
+{ Delphi XE7 }
+{$IFDEF VER280}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
+{ Delphi XE8 }
+{$IFDEF VER290}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
 {$IFNDEF SupportedCompiler}
   {$MESSAGE FATAL 'Non-supported compiler.'}
 {$ENDIF}

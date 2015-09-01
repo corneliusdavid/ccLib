@@ -9,19 +9,16 @@ implementation
 uses
   SysUtils, Windows, Graphics, ToolsAPI, DesignIntf,
   {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
-  EDBTableLookupReg, CloseApplicationReg, ElapsedTimerReg,
-  LayoutSaverReg, MergeTxtReg, TextFileLoggerReg;
+  CloseApplicationReg, ElapsedTimerReg,
+  LayoutSaverReg;
 
 {$R cc.res}
 
 procedure Register;
 begin
-  RegisterEDBTableLookup;
   RegisterCloseApp;
   RegisterElapsedTimer;
   RegisterLayoutSaver;
-  RegisterMergeText;
-  RegisterTextFileLogger;
 end;
 
 end.
