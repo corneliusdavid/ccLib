@@ -37,7 +37,7 @@ uses
 
 resourcestring
   ComponentPkgName = 'Elapsed Timer';
-  ComponentPkgLic  = 'Freeware';
+  ComponentPkgLic  = 'Freeware by Cornelius Concepts';
   ComponentPkgDesc = 'A convenient stopwatch component';
 
 var
@@ -88,7 +88,7 @@ begin
   RegisterSplashScreen;
   RegisterAboutBox;
   RegisterComponentEditor(TccElapsedTimer, TElapsedTimerEditor);
-  RegisterComponents('cc', [TccElapsedTimer]);
+  RegisterComponents('Cornelius Concepts', [TccElapsedTimer]);
 end;
 
 { TElapsedTimerEditor }
@@ -101,7 +101,7 @@ const
 begin
   case Index of
     0: MessageBox(0, 'TElapsedTimer vr. 1.0' + CR + LF +
-                     'Copyright (c) 2001-2002 by Cornelius Concepts.',
+                     'Freeware by Cornelius Concepts.',
                      PChar('About this component ...'),
                      MB_OK + MB_ICONINFORMATION);
     1: MessageBox(0, 'TElapsedTimer makes it easy to time things and get the elapsed time in whatever precision you want. ' +
@@ -122,7 +122,7 @@ end;
 function TElapsedTimerEditor.GetVerb(Index: Integer): string;
 begin
   case Index of
-    0: Result := '&Version and Copyright info...';
+    0: Result := '&Version Info...';
     1: Result := 'Component Help...';
   end;
 end;
