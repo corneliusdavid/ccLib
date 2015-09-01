@@ -32,12 +32,11 @@ implementation
 
 uses
   SysUtils, Classes, Windows, Graphics, ToolsAPI,
-  {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
   CloseApplication;
 
 resourcestring
   ComponentPkgName = 'Auto Close Application';
-  ComponentPkgLic  = 'Freeware';
+  ComponentPkgLic  = 'Freeware by Cornelius Concepts';
   ComponentPkgDesc = 'A component to automatically close an application after a specified time of no activity';
 
 var
@@ -48,8 +47,6 @@ procedure RegisterSplashScreen;
 var
   Bmp: TBitmap;
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod('RegisterSplashScreen');{$ENDIF}
-
   Bmp := TBitmap.Create;
   try
     Bmp.LoadFromResourceName( HInstance, 'CCLIB');
@@ -63,14 +60,10 @@ begin
   finally
     Bmp.Free;
   end;
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod('RegisterSplashScreen');{$ENDIF}
 end;
 
 procedure RegisterAboutBox;
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod('RegisterAboutBox');{$ENDIF}
-
   {$IFDEF VERSION2005orHigher}
   Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices);
   AboutBoxIndex := AboutBoxServices.AddPluginInfo(ComponentPkgName,
@@ -79,8 +72,6 @@ begin
                                                   False,
                                                   ComponentPkgLic);
   {$ENDIF}
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod('RegisterAboutBox');{$ENDIF}
 end;
 
 procedure RegisterCloseApp;
@@ -88,7 +79,7 @@ begin
   RegisterSplashScreen;
   RegisterAboutBox;
   RegisterComponentEditor(TCloseApplication, TCloseAppComponent);
-  RegisterComponents('cc', [TCloseApplication]);
+  RegisterComponents('Cornelius Concepts', [TCloseApplication]);
 end;
 
 { TCloseAppComponent }
@@ -100,7 +91,7 @@ const
   LF = #10;
 begin
   case Index of
-    0: MessageBox(0, 'Written by someone name Neil on the DBISAM newsgroups several years ago, ' +
+    0: MessageBox(0, 'Written by someone named Neil on the DBISAM newsgroups several years ago, ' +
                      'this nifty component automatically closes an application after a specified ' +
                      'amount of time without any keyboard or mouse activitiy.  Cornelius Concepts ' +
                      'turned this into a component.',
@@ -123,8 +114,6 @@ end;
 
 procedure UnregisterAboutBox;
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod('UnregisterAboutBox');{$ENDIF}
-
   {$IFDEF VERSION2005orHigher}
   if (AboutBoxIndex <> 0) and Assigned(AboutBoxServices) then begin
     AboutBoxServices.RemovePluginInfo(AboutBoxIndex);
@@ -132,8 +121,6 @@ begin
     AboutBoxServices := nil;
   end;
   {$ENDIF}
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod('UnregisterAboutBox');{$ENDIF}
 end;
 
 initialization
