@@ -9,6 +9,12 @@
         <Projects Include="cc_DXE8_D.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="layoutsaver\demo\IniLayoutSaverDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="layoutsaver\demo\RegLayoutSaverDemo.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +41,32 @@
     <Target Name="cc_DXE8_D:Make">
         <MSBuild Projects="cc_DXE8_D.dproj" Targets="Make"/>
     </Target>
+    <Target Name="IniLayoutSaverDemo">
+        <MSBuild Projects="layoutsaver\demo\IniLayoutSaverDemo.dproj"/>
+    </Target>
+    <Target Name="IniLayoutSaverDemo:Clean">
+        <MSBuild Projects="layoutsaver\demo\IniLayoutSaverDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="IniLayoutSaverDemo:Make">
+        <MSBuild Projects="layoutsaver\demo\IniLayoutSaverDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="RegLayoutSaverDemo">
+        <MSBuild Projects="layoutsaver\demo\RegLayoutSaverDemo.dproj"/>
+    </Target>
+    <Target Name="RegLayoutSaverDemo:Clean">
+        <MSBuild Projects="layoutsaver\demo\RegLayoutSaverDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RegLayoutSaverDemo:Make">
+        <MSBuild Projects="layoutsaver\demo\RegLayoutSaverDemo.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="cc_DXE8_R;cc_DXE8_D"/>
+        <CallTarget Targets="cc_DXE8_R;cc_DXE8_D;IniLayoutSaverDemo;RegLayoutSaverDemo"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="cc_DXE8_R:Clean;cc_DXE8_D:Clean"/>
+        <CallTarget Targets="cc_DXE8_R:Clean;cc_DXE8_D:Clean;IniLayoutSaverDemo:Clean;RegLayoutSaverDemo:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="cc_DXE8_R:Make;cc_DXE8_D:Make"/>
+        <CallTarget Targets="cc_DXE8_R:Make;cc_DXE8_D:Make;IniLayoutSaverDemo:Make;RegLayoutSaverDemo:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
