@@ -1,15 +1,16 @@
-package cc_D2010D;
+package cc_DXE2_D;
 
 {$R *.res}
 {$R 'elapsedtimer\ElapsedTimerReg.dcr'}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO ON}
+{$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION ON}
@@ -23,25 +24,24 @@ package cc_D2010D;
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
+{$DEFINE RELEASE}
+{$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Cornelius Concepts Components'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
-  cc_D2010R,
+  cc_DXE2_R,
   designide,
   vcldb,
   dbrtl,
   vcl;
 
 contains
-  EDBTableLookupReg in 'edbtablelookup\EDBTableLookupReg.pas',
   CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
   ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
   cc_splash in 'cc_splash.pas',
-  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
-  MergeTxtReg in 'mergetext\MergeTxtReg.pas',
-  TextFileLoggerReg in 'textfilelogger\TextFileLoggerReg.pas';
+  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas';
 
 end.

@@ -8,11 +8,18 @@ unit LayoutSaver;
 
 interface
 
+{$I cc.inc}
 
 uses
+  {$IFDEF XE2orHIGHER}
+  System.SysUtils, System.Classes,
+  System.Win.Registry,
+  System.IniFiles;
+  {$ELSE}
   SysUtils, Classes,
   Registry,
   IniFiles;
+  {$ENDIF}
 
 type
   {
@@ -107,8 +114,13 @@ implementation
 
 uses
   {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
+  {$IFDEF XEorHIGHER}
+  Winapi.Windows, Winapi.SHFolder,
+  VCL.Forms;
+  {$ELSE}
   Windows, SHFolder,
   Forms;
+  {$ENDIF}
 
 const
   sFormTop = 'FormTop';
@@ -121,7 +133,6 @@ const
 
 constructor TccCustomLayoutSaver.Create(AOwner: TComponent);
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'Create'); {$ENDIF}
   inherited;
 
   FLocation := EmptyStr;
@@ -139,16 +150,11 @@ begin
     (AOwner as TForm).OnCreate := CheckRestoreOnCreate;
     (AOwner as TForm).OnDestroy := CheckSaveOnDestroy;
   end;
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'Create'); {$ENDIF}
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'Create'); {$ENDIF}
 end;
 
 
 function TccCustomLayoutSaver.Open: Boolean;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Open'); {$ENDIF}
-
   if (Length(FLocation) = 0) or FUseDefaultNames then
     AssignDefaultLocation;
   if (Length(FSection) = 0) or FUseDefaultNames then
@@ -156,36 +162,26 @@ begin
 
   // default--override in descendant class
   Result := False;
-
-  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Open'); {$ENDIF}
 end;
 
 procedure TccCustomLayoutSaver.Restore;
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'Restore'); {$ENDIF}
-
   (Owner as TForm).Top := RestoreIntValue(sFormTop);
   (Owner as TForm).Left := RestoreIntValue(sFormLeft);
   (Owner as TForm).Width := RestoreIntValue(sFormWidth);
   (Owner as TForm).Height := RestoreIntValue(sFormHeight);
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'Restore'); {$ENDIF}
 end;
 
 procedure TccCustomLayoutSaver.Save;
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'Save'); {$ENDIF}
   SaveIntValue(sFormTop,(Owner as TForm).Top);
   SaveIntValue(sFormLeft,(Owner as TForm).Left);
   SaveIntValue(sFormWidth,(Owner as TForm).Width);
   SaveIntValue(sFormHeight,(Owner as TForm).Height);
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'Save'); {$ENDIF}
 end;
 
 procedure TccCustomLayoutSaver.SetUseDefaultNames(Value: Boolean);
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'SetUseDefaultNames'); {$ENDIF}
   if FUseDefaultNames <> Value then begin
     FUseDefaultNames := Value;
     if FUseDefaultNames then begin
@@ -193,41 +189,29 @@ begin
       AssignDefaultLocation;
     end;
   end;
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'SetUseDefaultNames'); {$ENDIF}
 end;
 
 
 procedure TccCustomLayoutSaver.AssignDefaultSection;
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'AssignDefaultSection'); {$ENDIF}
   FSection := (Owner as TForm).Name;
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'AssignDefaultSection'); {$ENDIF}
-
 end;
 
 procedure TccCustomLayoutSaver.CheckRestoreOnCreate(Sender: TObject);
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'CheckRestoreOnCreate'); {$ENDIF}
   if Assigned(FSaveOnCreate)then
     FSaveOnCreate(Sender);
   if FAutoRestore and(not(csDesigning in ComponentState))then
     Restore;
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'CheckRestoreOnCreate'); {$ENDIF}
 end;
 
 
 procedure TccCustomLayoutSaver.CheckSaveOnDestroy(Sender: TObject);
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'CheckSaveOnDestroy'); {$ENDIF}
   if FAutoSave and(not(csDesigning in ComponentState))then
     Save;
   if Assigned(FSaveOnDestroy)then
     FSaveOnDestroy(Sender);
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'CheckSaveOnDestroy'); {$ENDIF}
 end;
 
 { TccIniLayoutSaver }
@@ -235,10 +219,8 @@ end;
 
 constructor TccIniLayoutSaver.Create(AOwner: TComponent);
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Create'); {$ENDIF}
   inherited;
   FUseAppDataFolder := True;
-  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Create'); {$ENDIF}
 end;
 
 
@@ -246,14 +228,10 @@ function TccIniLayoutSaver.GetAppDataPath:string;
 var
   LStr: array[0 .. MAX_PATH] of Char;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'GetAppDataPath'); {$ENDIF}
   SetLastError(ERROR_SUCCESS);
 
   if SHGetFolderPath(0, CSIDL_LOCAL_APPDATA, 0, 0,@LStr)= S_OK then
     Result := LStr;
-
-  {$IFDEF UseCodeSite} CodeSite.Send('Result', Result); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'GetAppDataPath'); {$ENDIF}
 end;
 
 
@@ -261,8 +239,6 @@ procedure TccIniLayoutSaver.AssignDefaultLocation;
 var
   AppDataFolder: string;
 begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'AssignDefaultLocation'); {$ENDIF}
-
   inherited;
 
   if FUseAppDataFolder then begin

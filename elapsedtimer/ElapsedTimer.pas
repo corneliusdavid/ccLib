@@ -7,8 +7,14 @@ unit ElapsedTimer;
 
 interface
 
+{$I cc.inc}
+
 uses
+  {$IFDEF XE2orHIGHER}
+  System.SysUtils, System.Classes;
+  {$ELSE}
   SysUtils, Classes;
+  {$ENDIF}
 
 type
   TccElapsedTimer = class(TComponent)

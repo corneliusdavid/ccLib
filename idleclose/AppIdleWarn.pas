@@ -2,9 +2,16 @@ unit AppIdleWarn;
 
 interface
 
+{$I cc.inc}
+
 uses
+  {$IFDEF XEorHIGHER}
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.StdCtrls, VCL.ExtCtrls;
+  {$ELSE}
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, Buttons, ExtCtrls;
+  {$ENDIF}
 
 type
   TfmAppIdleWarn = class(TForm)

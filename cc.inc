@@ -55,6 +55,7 @@
 {$IFDEF VER230}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
@@ -62,6 +63,7 @@
 {$IFDEF VER240}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
@@ -69,6 +71,7 @@
 {$IFDEF VER250}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
@@ -76,6 +79,7 @@
 {$IFDEF VER260}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
@@ -83,6 +87,7 @@
 {$IFDEF VER270}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
@@ -90,6 +95,7 @@
 {$IFDEF VER280}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
@@ -97,6 +103,7 @@
 {$IFDEF VER290}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 

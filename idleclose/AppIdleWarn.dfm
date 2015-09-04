@@ -39,7 +39,6 @@ object fmAppIdleWarn: TfmAppIdleWarn
     Height = 49
     Caption = 'Do NOT Close'
     Default = True
-    DoubleBuffered = True
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -145,7 +144,6 @@ object fmAppIdleWarn: TfmAppIdleWarn
       CFE1D0C8DFCDC4DBC6BCD7C0B5D5BDB1D1B8AACFB4A5CEB2A2CBAF9ECBAD9BCA
       AC99CAAC97CAAC95CCAA95CEA793C49781D0B4A7FFFFFFFFFFFF}
     ModalResult = 1
-    ParentDoubleBuffered = False
     ParentFont = False
     TabOrder = 0
     OnClick = BBCancelClick

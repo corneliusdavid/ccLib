@@ -3,10 +3,10 @@
 			<ProjectGuid>{57A0C018-BF3D-4732-978A-EEC95C6D8C0B}</ProjectGuid>
 		</PropertyGroup>
 		<ItemGroup>
-			<Projects Include="V:\lib\delphi\cc_D2010R.dproj">
+			<Projects Include="cc_D2010_R.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="V:\lib\delphi\cc_D2010D.dproj">
+			<Projects Include="cc_D2010_D.dproj">
 				<Dependencies/>
 			</Projects>
 		</ItemGroup>
@@ -17,32 +17,32 @@
 				<Default.Personality/>
 			</BorlandProject>
 		</ProjectExtensions>
-		<Target Name="cc_D2010R">
-			<MSBuild Projects="V:\lib\delphi\cc_D2010R.dproj"/>
+		<Target Name="cc_D2010_R">
+			<MSBuild Projects="cc_D2010_R.dproj"/>
 		</Target>
-		<Target Name="cc_D2010R:Clean">
-			<MSBuild Targets="Clean" Projects="V:\lib\delphi\cc_D2010R.dproj"/>
+		<Target Name="cc_D2010_R:Clean">
+			<MSBuild Targets="Clean" Projects="cc_D2010_R.dproj"/>
 		</Target>
-		<Target Name="cc_D2010R:Make">
-			<MSBuild Targets="Make" Projects="V:\lib\delphi\cc_D2010R.dproj"/>
+		<Target Name="cc_D2010_R:Make">
+			<MSBuild Targets="Make" Projects="cc_D2010_R.dproj"/>
 		</Target>
-		<Target Name="cc_D2010D">
-			<MSBuild Projects="V:\lib\delphi\cc_D2010D.dproj"/>
+		<Target Name="cc_D2010_D">
+			<MSBuild Projects="cc_D2010_D.dproj"/>
 		</Target>
-		<Target Name="cc_D2010D:Clean">
-			<MSBuild Targets="Clean" Projects="V:\lib\delphi\cc_D2010D.dproj"/>
+		<Target Name="cc_D2010_D:Clean">
+			<MSBuild Targets="Clean" Projects="cc_D2010_D.dproj"/>
 		</Target>
-		<Target Name="cc_D2010D:Make">
-			<MSBuild Targets="Make" Projects="V:\lib\delphi\cc_D2010D.dproj"/>
+		<Target Name="cc_D2010_D:Make">
+			<MSBuild Targets="Make" Projects="cc_D2010_D.dproj"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="cc_D2010R;cc_D2010D"/>
+			<CallTarget Targets="cc_D2010_R;cc_D2010_D"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="cc_D2010R:Clean;cc_D2010D:Clean"/>
+			<CallTarget Targets="cc_D2010_R:Clean;cc_D2010_D:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="cc_D2010R:Make;cc_D2010D:Make"/>
+			<CallTarget Targets="cc_D2010_R:Make;cc_D2010_D:Make"/>
 		</Target>
 		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 	</Project>

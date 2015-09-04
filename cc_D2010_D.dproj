@@ -1,7 +1,7 @@
 ﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 		<PropertyGroup>
-			<ProjectGuid>{8178B323-479A-4104-949D-2359FC3FBE8E}</ProjectGuid>
-			<MainSource>cc_D2010R.dpk</MainSource>
+			<ProjectGuid>{B9231CE4-668B-40C5-8322-59235F9B931D}</ProjectGuid>
+			<MainSource>cc_D2010_D.dpk</MainSource>
 			<Config Condition="'$(Config)'==''">Release</Config>
 			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
 			<ProjectVersion>12.0</ProjectVersion>
@@ -20,18 +20,17 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_BplOutput>$(BDSCOMMONDIR)\Bpl</DCC_BplOutput>
 			<DCC_DcuOutput>$(BDSCOMMONDIR)\Dcp</DCC_DcuOutput>
-			<DCC_IMPLICIT_IMPORT>false</DCC_IMPLICIT_IMPORT>
-			<DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
+			<DCC_DcpOutput>$(BDSCOMMONDIR)\Dcp</DCC_DcpOutput>
 			<DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
-			<DesignOnlyPackage>false</DesignOnlyPackage>
-			<DCC_DependencyCheckOutputName>C:\Users\Public\Documents\RAD Studio\7.0\Bpl\cc_D2010R.bpl</DCC_DependencyCheckOutputName>
 			<DCC_ImageBase>00400000</DCC_ImageBase>
+			<DesignOnlyPackage>true</DesignOnlyPackage>
 			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
-			<RuntimeOnlyPackage>true</RuntimeOnlyPackage>
+			<DCC_DependencyCheckOutputName>..\..\..\..\..\Public\Documents\RAD Studio\7.0\Bpl\cc_D2010_D.bpl</DCC_DependencyCheckOutputName>
 			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;$(DCC_UnitAlias)</DCC_UnitAlias>
 			<DCC_Platform>x86</DCC_Platform>
-			<DCC_Description>Cornelius Concepts Delphi Library</DCC_Description>
+			<DCC_Description>Cornelius Concepts Components</DCC_Description>
 			<DCC_N>false</DCC_N>
 			<DCC_S>false</DCC_S>
 			<GenDll>true</GenDll>
@@ -41,35 +40,32 @@
 			<DCC_F>false</DCC_F>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1)'!=''">
-			<DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
 			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
 			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
 			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
 			<DCC_DebugInformation>false</DCC_DebugInformation>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
-			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+			<DCC_Define>DEBUG;UseCodeSite;$(DCC_Define)</DCC_Define>
 		</PropertyGroup>
 		<ItemGroup>
-			<DelphiCompile Include="cc_D2010R.dpk">
+			<DelphiCompile Include="cc_D2010_D.dpk">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
+			<DCCReference Include="elapsedtimer\ElapsedTimerReg.dcr"/>
+			<DCCReference Include="cc_D2010_R.dcp"/>
 			<DCCReference Include="rtl.dcp"/>
-			<DCCReference Include="vcl.dcp"/>
-			<DCCReference Include="dbrtl.dcp"/>
+			<DCCReference Include="designide.dcp"/>
 			<DCCReference Include="vcldb.dcp"/>
-			<DCCReference Include="edbrun.dcp"/>
-			<DCCReference Include="edbtablelookup\ufrmEDBTableLookup.pas">
-				<Form>frmEDBTableLookup</Form>
-			</DCCReference>
-			<DCCReference Include="elapsedtimer\ElapsedTimer.pas"/>
-			<DCCReference Include="idleclose\AppIdleWarn.pas">
-				<Form>fmAppIdleWarn</Form>
-			</DCCReference>
-			<DCCReference Include="idleclose\CloseApplication.pas"/>
-			<DCCReference Include="layoutsaver\LayoutSaver.pas"/>
-			<DCCReference Include="mergetext\Mergetxt.pas"/>
-			<DCCReference Include="textfilelogger\TextFileLogger.pas"/>
+			<DCCReference Include="dbrtl.dcp"/>
+			<DCCReference Include="vcl.dcp"/>
+			<DCCReference Include="edbtablelookup\EDBTableLookupReg.pas"/>
+			<DCCReference Include="idleclose\CloseApplicationReg.pas"/>
+			<DCCReference Include="elapsedtimer\ElapsedTimerReg.pas"/>
+			<DCCReference Include="cc_splash.pas"/>
+			<DCCReference Include="layoutsaver\LayoutSaverReg.pas"/>
+			<DCCReference Include="mergetext\MergeTxtReg.pas"/>
+			<DCCReference Include="textfilelogger\TextFileLoggerReg.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
@@ -83,16 +79,13 @@
 			</BuildConfiguration>
 		</ItemGroup>
 		<Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
-		<PropertyGroup>
-			<PostBuildEvent><![CDATA[copy $(PROJECTDIR)\edbtablelookup\*.dfm "$(BDSCOMMONDIR)\bpl"]]></PostBuildEvent>
-		</PropertyGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
 			<Borland.ProjectType>Package</Borland.ProjectType>
 			<BorlandProject>
 				<Delphi.Personality>
 					<Source>
-						<Source Name="MainSource">cc_D2010R.dpk</Source>
+						<Source Name="MainSource">cc_D2010_D.dpk</Source>
 					</Source>
 					<Parameters>
 						<Parameters Name="UseLauncher">False</Parameters>
@@ -129,6 +122,15 @@
 					<Excluded_Packages>
 						<Excluded_Packages Name="$(BDS)\bin\dcloffice2k140.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDS)\bin\dclofficexp140.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_DataSnap_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_DataSnap_D14.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Synapse_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Synapse_D14.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Indy_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Indy_D14.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_D14.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_IDE_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_IDE_D14.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_DataSnap_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_DataSnap_D14.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_Synapse_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_Synapse_D14.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_Indy_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_Server_Indy_D14.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_WebBroker_D14.bpl">File C:\Program Files (x86)\RemObjects Software\RemObjects SDK for Delphi\Dcu\D14\RemObjects_WebBroker_D14.bpl not found</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
 			</BorlandProject>

@@ -1,14 +1,15 @@
-package cc_D2010R;
+package cc_DXE2_R;
 
 {$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
-{$ASSERTIONS OFF}
+{$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO ON}
+{$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION ON}
@@ -22,24 +23,20 @@ package cc_D2010R;
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DESCRIPTION 'Cornelius Concepts Delphi Library'}
+{$DEFINE RELEASE}
+{$ENDIF IMPLICITBUILDING}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
   vcl,
-  dbrtl,
-  vcldb,
-  edbrun;
+  dbrtl;
 
 contains
-  ufrmEDBTableLookup in 'edbtablelookup\ufrmEDBTableLookup.pas' {frmEDBTableLookup},
   ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
   AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
   CloseApplication in 'idleclose\CloseApplication.pas',
-  LayoutSaver in 'layoutsaver\LayoutSaver.pas',
-  Mergetxt in 'mergetext\Mergetxt.pas',
-  TextFileLogger in 'textfilelogger\TextFileLogger.pas';
+  LayoutSaver in 'layoutsaver\LayoutSaver.pas';
 
 end.

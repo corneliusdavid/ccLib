@@ -2,9 +2,18 @@ unit CloseApplication;
 
 interface
 
+{$I cc.inc}
+
 uses
+  {$IFDEF XE2orHIGHER}
+  System.SysUtils, System.Classes, VCL.Graphics, VCL.Controls, VCL.Forms, VCL.Dialogs,
+  Winapi.Windows, Winapi.Messages, Data.DB,
+  VCL.ExtCtrls, VCL.StdCtrls, AppIdleWarn;
+  {$ELSE}
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls, DB, StdCtrls, AppIdleWarn;
+  {$ENDIF}
+
 
 type
   TOnApplicationMsg = procedure(var Msg: TMsg; var Handled: Boolean) of object;
@@ -56,8 +65,13 @@ destructor TCloseApplication.Destroy;
 begin
   if (not (csDesigning in ComponentState)) then begin
       // Release Windows Hooks
+    {$IFDEF XE2orHIGHER}
+    UnhookWindowsHookEx(MouseHook);
+    UnHookWindowsHookEx(KeyboardHook);
+    {$ELSE}
     Windows.UnhookWindowsHookEx(MouseHook);
     Windows.UnHookWindowsHookEx(KeyboardHook);
+    {$ENDIF}
       // Free Timer
     IdleTimer.Free;
   end;
