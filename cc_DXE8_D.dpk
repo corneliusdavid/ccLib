@@ -2,6 +2,8 @@ package cc_DXE8_D;
 
 {$R *.res}
 {$R 'elapsedtimer\ElapsedTimerReg.dcr'}
+{$R 'idleclose\CloseApplicationReg.dcr'}
+{$R 'layoutsaver\LayoutSaverReg.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}

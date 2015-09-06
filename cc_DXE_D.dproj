@@ -55,6 +55,8 @@
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
 			<DCCReference Include="elapsedtimer\ElapsedTimerReg.dcr"/>
+			<DCCReference Include="idleclose\CloseApplicationReg.dcr"/>
+			<DCCReference Include="layoutsaver\LayoutSaverReg.dcr"/>
 			<DCCReference Include="rtl.dcp"/>
 			<DCCReference Include="cc_DXE_R.dcp"/>
 			<DCCReference Include="designide.dcp"/>

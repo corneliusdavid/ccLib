@@ -53,16 +53,18 @@
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
 			<DCCReference Include="elapsedtimer\ElapsedTimerReg.dcr"/>
+			<DCCReference Include="idleclose\CloseApplicationReg.dcr"/>
+			<DCCReference Include="layoutsaver\LayoutSaverReg.dcr"/>
 			<DCCReference Include="cc_D2010_R.dcp"/>
 			<DCCReference Include="rtl.dcp"/>
 			<DCCReference Include="designide.dcp"/>
 			<DCCReference Include="vcldb.dcp"/>
 			<DCCReference Include="dbrtl.dcp"/>
 			<DCCReference Include="vcl.dcp"/>
+			<DCCReference Include="cc_splash.pas"/>
 			<DCCReference Include="edbtablelookup\EDBTableLookupReg.pas"/>
 			<DCCReference Include="idleclose\CloseApplicationReg.pas"/>
 			<DCCReference Include="elapsedtimer\ElapsedTimerReg.pas"/>
-			<DCCReference Include="cc_splash.pas"/>
 			<DCCReference Include="layoutsaver\LayoutSaverReg.pas"/>
 			<DCCReference Include="mergetext\MergeTxtReg.pas"/>
 			<DCCReference Include="textfilelogger\TextFileLoggerReg.pas"/>

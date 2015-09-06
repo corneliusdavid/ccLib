@@ -2,6 +2,8 @@ package cc_DXE_D;
 
 {$R *.res}
 {$R 'elapsedtimer\ElapsedTimerReg.dcr'}
+{$R 'idleclose\CloseApplicationReg.dcr'}
+{$R 'layoutsaver\LayoutSaverReg.dcr'}
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}

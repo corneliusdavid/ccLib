@@ -100,6 +100,8 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="elapsedtimer\ElapsedTimerReg.dcr"/>
+        <DCCReference Include="idleclose\CloseApplicationReg.dcr"/>
+        <DCCReference Include="layoutsaver\LayoutSaverReg.dcr"/>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="cc_DXE8_R.dcp"/>
         <DCCReference Include="designide.dcp"/>
@@ -170,7 +172,7 @@
                 <Platform value="Win64">False</Platform>
             </Platforms>
             <Deployment Version="2">
-                <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\16.0\Bpl\cc_DXE8_D.bpl" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\16.0\Bpl\Win32\cc_DXE8_D.bpl" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>cc_DXE8_D.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -498,9 +500,9 @@
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
             </Deployment>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

@@ -2,6 +2,8 @@ package cc_D2010_D;
 
 {$R *.res}
 {$R 'elapsedtimer\ElapsedTimerReg.dcr'}
+{$R 'idleclose\CloseApplicationReg.dcr'}
+{$R 'layoutsaver\LayoutSaverReg.dcr'}
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
@@ -36,10 +38,10 @@ requires
   vcl;
 
 contains
+  cc_splash in 'cc_splash.pas',
   EDBTableLookupReg in 'edbtablelookup\EDBTableLookupReg.pas',
   CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
   ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
-  cc_splash in 'cc_splash.pas',
   LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
   MergeTxtReg in 'mergetext\MergeTxtReg.pas',
   TextFileLoggerReg in 'textfilelogger\TextFileLoggerReg.pas';
