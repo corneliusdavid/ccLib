@@ -107,6 +107,15 @@
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
+{ Delphi 10 Seattle }
+{$IFDEF VER300}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
+
 {$IFNDEF SupportedCompiler}
   {$MESSAGE FATAL 'Non-supported compiler.'}
 {$ENDIF}

@@ -9,7 +9,7 @@ package cc_D10Seattle_R;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION ON}
@@ -23,8 +23,7 @@ package cc_D10Seattle_R;
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE DEBUG}
-{$DEFINE UseCodeSite}
+{$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Cornelius Concepts Delphi Library'}
 {$RUNONLY}
@@ -33,8 +32,7 @@ package cc_D10Seattle_R;
 requires
   rtl,
   vcl,
-  dbrtl,
-  vcldb;
+  dbrtl;
 
 contains
   ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
