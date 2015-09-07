@@ -27,63 +27,12 @@ implementation
 
 uses
   SysUtils, Classes, Windows, Graphics, ToolsAPI,
-  {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
   ufrmEDBTableLookup;
-
-resourcestring
-  ComponentPkgName = 'EDB Table Lookup';
-  ComponentPkgLic  = 'Freeware';
-  ComponentPkgDesc = 'A flexible lookup dialog for ElevateDB Tables';
-
-var
-  AboutBoxServices : IOTAAboutBoxServices = nil;
-  AboutBoxIndex : Integer = 0;
-
-procedure RegisterSplashScreen;
-var
-  Bmp: TBitmap;
-begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod('RegisterSplashScreen');{$ENDIF}
-
-  Bmp := TBitmap.Create;
-  try
-    Bmp.LoadFromResourceName( HInstance, 'CCLIB');
-    {$IFDEF VERSION2005or Higher}
-    ForceDemandLoadState(dlDisable);
-    SplashScreenServices.AddPluginBitmap(ComponentPkgName, Bmp.Handle, False,
-                                         ComponentPkgLic,
-                                         ComponentPkgDesc);
-    SplashScreenServices.StatusMessage('Loaded ' + ComponentPkgName + ' from Cornelius Concepts');
-    {$ENDIF}
-  finally
-    Bmp.Free;
-  end;
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod('RegisterSplashScreen');{$ENDIF}
-end;
-
-procedure RegisterAboutBox;
-begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod('RegisterAboutBox');{$ENDIF}
-
-  {$IFDEF VERSION2005orHigher}
-  Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices);
-  AboutBoxIndex := AboutBoxServices.AddPluginInfo(ComponentPkgName,
-                                                  ComponentPkgDesc,
-                                                  LoadBitmap(HInstance, 'CCLIB'),
-                                                  False,
-                                                  ComponentPkgLic);
-  {$ENDIF}
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod('RegisterAboutBox');{$ENDIF}
-end;
 
 procedure RegisterEDBTableLookup;
 begin
-  RegisterSplashScreen;
-  RegisterAboutBox;
   RegisterComponentEditor(TccEDBLookup, TEDBTableLookupEditor);
-  RegisterComponents('cc', [TccEDBLookup]);
+  RegisterComponents('Cornelius Concepts', [TccEDBLookup]);
 end;
 
 { TTextViewerEditor }
@@ -120,22 +69,4 @@ begin
   Result := 2;
 end;
 
-procedure UnregisterAboutBox;
-begin
-  {$IFDEF UseCodeSite}CodeSite.EnterMethod('UnregisterAboutBox');{$ENDIF}
-
-  {$IFDEF VERSION2005orHigher}
-  if (AboutBoxIndex <> 0) and Assigned(AboutBoxServices) then begin
-    AboutBoxServices.RemovePluginInfo(AboutBoxIndex);
-    AboutBoxIndex := 0;
-    AboutBoxServices := nil;
-  end;
-  {$ENDIF}
-
-  {$IFDEF UseCodeSite}CodeSite.ExitMethod('UnregisterAboutBox');{$ENDIF}
-end;
-
-initialization
-finalization
-  UnregisterAboutBox;
 end.

@@ -29,19 +29,12 @@ package cc_DXE_R;
 requires
   rtl,
   vcl,
-  dbrtl,
-  vcldb,
-  edbrun,
-  RaizeComponentsVcl;
+  dbrtl;
 
 contains
-  ufrmEDBTableLookup in 'edbtablelookup\ufrmEDBTableLookup.pas' {frmEDBTableLookup},
   ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
   AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
   CloseApplication in 'idleclose\CloseApplication.pas',
-  LayoutSaver in 'layoutsaver\LayoutSaver.pas',
-  TextFileLogger in 'textfilelogger\TextFileLogger.pas',
-  ufrmTextViewer in 'textfileviewer\ufrmTextViewer.pas' {frmTextViewer},
-  Mergetxt in 'mergetext\Mergetxt.pas';
+  LayoutSaver in 'layoutsaver\LayoutSaver.pas';
 
 end.

@@ -98,8 +98,8 @@
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="idleclose\CloseApplicationReg.pas"/>
         <DCCReference Include="elapsedtimer\ElapsedTimerReg.pas"/>
-        <DCCReference Include="cc_splash.pas"/>
         <DCCReference Include="layoutsaver\LayoutSaverReg.pas"/>
+        <DCCReference Include="cc_reg.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

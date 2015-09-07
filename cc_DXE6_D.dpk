@@ -40,6 +40,6 @@ contains
   ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
   CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
   LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
-  cc_splash in 'cc_splash.pas';
+  cc_reg in 'cc_reg.pas';
 
 end.

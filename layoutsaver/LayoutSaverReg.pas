@@ -40,49 +40,8 @@ uses
   SysUtils, Classes, Windows, Graphics, ToolsAPI,
   LayoutSaver;
 
-resourcestring
-  ComponentPkgName = 'Cornelius Concepts - Layout Saver';
-  ComponentPkgLic  = 'Freeware by Cornelius Concepts';
-  ComponentPkgDesc = 'Components to automatically save and restore a form''s size and position.';
-
-var
-  AboutBoxServices : IOTAAboutBoxServices = nil;
-  AboutBoxIndex : Integer = 0;
-
-procedure RegisterSplashScreen;
-var
-  Bmp: TBitmap;
-begin
-  Bmp := TBitmap.Create;
-  try
-    Bmp.LoadFromResourceName( HInstance, 'CCLIB');
-    {$IFDEF VERSION2005orHigher}
-    SplashScreenServices.AddPluginBitmap(ComponentPkgName, Bmp.Handle, False,
-                                         ComponentPkgLic,
-                                         ComponentPkgDesc);
-    SplashScreenServices.StatusMessage('Loaded ' + ComponentPkgName);
-    {$ENDIF}
-  finally
-    Bmp.Free;
-  end;
-end;
-
-procedure RegisterAboutBox;
-begin
-  {$IFDEF VERSION2005orHigher}
-  if Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices) then
-    AboutBoxIndex := AboutBoxServices.AddPluginInfo(ComponentPkgName,
-                                                    ComponentPkgDesc,
-                                                    LoadBitmap(HInstance, 'CCLIB'),
-                                                    False,
-                                                    ComponentPkgLic);
-  {$ENDIF}
-end;
-
 procedure RegisterLayoutSaver;
 begin
-  RegisterSplashScreen;
-  RegisterAboutBox;
   RegisterComponentEditor(TccIniLayoutSaver, TccIniLayoutSaverEditor);
   RegisterComponentEditor(TccRegistryLayoutSaver, TccRegistryLayoutSaverEditor);
   RegisterComponents('Cornelius Concepts', [TccIniLayoutSaver, TccRegistryLayoutSaver]);
@@ -184,18 +143,4 @@ begin
   Result := 2;
 end;
 
-procedure UnregisterAboutBox;
-begin
-  {$IFDEF VERSION2005orHigher}
-  if (AboutBoxIndex <> 0) and Assigned(AboutBoxServices) then begin
-    AboutBoxServices.RemovePluginInfo(AboutBoxIndex);
-    AboutBoxIndex := 0;
-    AboutBoxServices := nil;
-  end;
-  {$ENDIF}
-end;
-
-initialization
-finalization
-  UnregisterAboutBox;
 end.

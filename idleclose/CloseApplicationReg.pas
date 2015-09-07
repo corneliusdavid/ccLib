@@ -34,49 +34,8 @@ uses
   SysUtils, Classes, Windows, Graphics, ToolsAPI,
   CloseApplication;
 
-resourcestring
-  ComponentPkgName = 'Cornelius Concepts - Auto Close Application';
-  ComponentPkgLic  = 'Freeware by Cornelius Concepts';
-  ComponentPkgDesc = 'A component to automatically close an application after a specified time of no activity';
-
-var
-  AboutBoxServices : IOTAAboutBoxServices = nil;
-  AboutBoxIndex : Integer = 0;
-
-procedure RegisterSplashScreen;
-var
-  Bmp: TBitmap;
-begin
-  Bmp := TBitmap.Create;
-  try
-    Bmp.LoadFromResourceName( HInstance, 'CCLIB');
-    {$IFDEF VERSION2005orHigher}
-    SplashScreenServices.AddPluginBitmap(ComponentPkgName, Bmp.Handle, False,
-                                         ComponentPkgLic,
-                                         ComponentPkgDesc);
-    SplashScreenServices.StatusMessage('Loaded ' + ComponentPkgName);
-    {$ENDIF}
-  finally
-    Bmp.Free;
-  end;
-end;
-
-procedure RegisterAboutBox;
-begin
-  {$IFDEF VERSION2005orHigher}
-  if Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices) then
-    AboutBoxIndex := AboutBoxServices.AddPluginInfo(ComponentPkgName,
-                                                    ComponentPkgDesc,
-                                                    LoadBitmap(HInstance, 'CCLIB'),
-                                                    False,
-                                                    ComponentPkgLic);
-  {$ENDIF}
-end;
-
 procedure RegisterCloseApp;
 begin
-  RegisterSplashScreen;
-  RegisterAboutBox;
   RegisterComponentEditor(TCloseApplication, TCloseAppComponent);
   RegisterComponents('Cornelius Concepts', [TCloseApplication]);
 end;
@@ -111,18 +70,4 @@ begin
   Result := 1;
 end;
 
-procedure UnregisterAboutBox;
-begin
-  {$IFDEF VERSION2005orHigher}
-  if (AboutBoxIndex <> 0) and Assigned(AboutBoxServices) then begin
-    AboutBoxServices.RemovePluginInfo(AboutBoxIndex);
-    AboutBoxIndex := 0;
-    AboutBoxServices := nil;
-  end;
-  {$ENDIF}
-end;
-
-initialization
-finalization
-  UnregisterAboutBox;
 end.
