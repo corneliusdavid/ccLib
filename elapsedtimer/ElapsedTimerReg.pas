@@ -36,7 +36,7 @@ uses
   ElapsedTimer;
 
 resourcestring
-  ComponentPkgName = 'Elapsed Timer';
+  ComponentPkgName = 'Cornelius Concepts - Elapsed Timer';
   ComponentPkgLic  = 'Freeware by Cornelius Concepts';
   ComponentPkgDesc = 'A convenient stopwatch component';
 
@@ -53,12 +53,11 @@ begin
   Bmp := TBitmap.Create;
   try
     Bmp.LoadFromResourceName( HInstance, 'CCLIB');
-    {$IFDEF VERSION2005or Higher}
-    ForceDemandLoadState(dlDisable);
+    {$IFDEF VERSION2005orHigher}
     SplashScreenServices.AddPluginBitmap(ComponentPkgName, Bmp.Handle, False,
                                          ComponentPkgLic,
                                          ComponentPkgDesc);
-    SplashScreenServices.StatusMessage('Loaded ' + ComponentPkgName + ' from Cornelius Concepts');
+    SplashScreenServices.StatusMessage('Loaded ' + ComponentPkgName);
     {$ENDIF}
   finally
     Bmp.Free;
@@ -72,12 +71,12 @@ begin
   {$IFDEF UseCodeSite}CodeSite.EnterMethod('RegisterAboutBox');{$ENDIF}
 
   {$IFDEF VERSION2005orHigher}
-  Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices);
-  AboutBoxIndex := AboutBoxServices.AddPluginInfo(ComponentPkgName,
-                                                  ComponentPkgDesc,
-                                                  LoadBitmap(HInstance, 'CCLIB'),
-                                                  False,
-                                                  ComponentPkgLic);
+  if Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices) then
+    AboutBoxIndex := AboutBoxServices.AddPluginInfo(ComponentPkgName,
+                                                    ComponentPkgDesc,
+                                                    LoadBitmap(HInstance, 'CCLIB'),
+                                                    False,
+                                                    ComponentPkgLic);
   {$ENDIF}
 
   {$IFDEF UseCodeSite}CodeSite.ExitMethod('RegisterAboutBox');{$ENDIF}

@@ -41,9 +41,9 @@ uses
   LayoutSaver;
 
 resourcestring
-  ComponentPkgName = 'Layout Saver';
+  ComponentPkgName = 'Cornelius Concepts - Layout Saver';
   ComponentPkgLic  = 'Freeware by Cornelius Concepts';
-  ComponentPkgDesc = 'A component to automatically save and restore a form''s size and position';
+  ComponentPkgDesc = 'Components to automatically save and restore a form''s size and position.';
 
 var
   AboutBoxServices : IOTAAboutBoxServices = nil;
@@ -56,12 +56,11 @@ begin
   Bmp := TBitmap.Create;
   try
     Bmp.LoadFromResourceName( HInstance, 'CCLIB');
-    {$IFDEF VERSION2005or Higher}
-    ForceDemandLoadState(dlDisable);
+    {$IFDEF VERSION2005orHigher}
     SplashScreenServices.AddPluginBitmap(ComponentPkgName, Bmp.Handle, False,
                                          ComponentPkgLic,
                                          ComponentPkgDesc);
-    SplashScreenServices.StatusMessage('Loaded ' + ComponentPkgName + ' from Cornelius Concepts');
+    SplashScreenServices.StatusMessage('Loaded ' + ComponentPkgName);
     {$ENDIF}
   finally
     Bmp.Free;
@@ -71,12 +70,12 @@ end;
 procedure RegisterAboutBox;
 begin
   {$IFDEF VERSION2005orHigher}
-  Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices);
-  AboutBoxIndex := AboutBoxServices.AddPluginInfo(ComponentPkgName,
-                                                  ComponentPkgDesc,
-                                                  LoadBitmap(HInstance, 'CCLIB'),
-                                                  False,
-                                                  ComponentPkgLic);
+  if Supports(BorlandIDEServices,IOTAAboutBoxServices, AboutBoxServices) then
+    AboutBoxIndex := AboutBoxServices.AddPluginInfo(ComponentPkgName,
+                                                    ComponentPkgDesc,
+                                                    LoadBitmap(HInstance, 'CCLIB'),
+                                                    False,
+                                                    ComponentPkgLic);
   {$ENDIF}
 end;
 
