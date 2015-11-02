@@ -1,0 +1,50 @@
+package cc_D2010_D;
+
+{$R *.res}
+{$R 'elapsedtimer\ElapsedTimerReg.dcr'}
+{$R 'idleclose\CloseApplicationReg.dcr'}
+{$R 'layoutsaver\LayoutSaverReg.dcr'}
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'Cornelius Concepts Components'}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+{$DEFINE RELEASE}
+
+requires
+  cc_D2007_R,
+  rtl,
+  designide,
+  vcldb,
+  dbrtl,
+  vcl,
+  xmlrtl,
+  vclactnband,
+  vclx;
+
+contains
+  CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
+  ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
+  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
+  cc_reg in 'cc_reg.pas';
+
+end.
