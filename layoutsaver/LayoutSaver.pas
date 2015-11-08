@@ -51,7 +51,7 @@ type
     procedure SaveIntValue(const Name:string;const Value: Integer); virtual; abstract;
     function RestoreIntValue(const Name:string; const Default: Integer = 0): Integer; virtual; abstract;
     procedure SaveStrValue(const Name:string;const Value:string); virtual; abstract;
-    function ResstoreStrValue(const Name:string; const Default: string = ''):string; virtual; abstract;
+    function RestoreStrValue(const Name:string; const Default: string = ''):string; virtual; abstract;
     procedure SaveBoolValue(const Name:string;const Value: Boolean); virtual; abstract;
     function RestoreBoolValue(const Name:string; const Default: Boolean = False): Boolean; virtual; abstract;
   published
@@ -81,7 +81,7 @@ type
     procedure SaveIntValue(const Name:string;const Value: Integer); override;
     function RestoreIntValue(const Name: string; const Default: Integer = 0): Integer; override;
     procedure SaveStrValue(const Name:string;const Value:string); override;
-    function ResstoreStrValue(const Name:string; const Default: string = ''): string; override;
+    function RestoreStrValue(const Name:string; const Default: string = ''): string; override;
     procedure SaveBoolValue(const Name:string; const Value: Boolean); override;
     function RestoreBoolValue(const Name:string; const Default: Boolean = False): Boolean; override;
   published
@@ -104,7 +104,7 @@ type
     procedure SaveIntValue(const Name:string;const Value: Integer); override;
     function RestoreIntValue(const Name: string; const Default: Integer = 0): Integer; override;
     procedure SaveStrValue(const Name:string;const Value:string); override;
-    function ResstoreStrValue(const Name: string; const Default: string = ''): string; override;
+    function RestoreStrValue(const Name: string; const Default: string = ''): string; override;
     procedure SaveBoolValue(const Name:string;const Value: Boolean); override;
     function RestoreBoolValue(const Name: string; const Default: Boolean = False): Boolean; override;
   end;
@@ -332,9 +332,9 @@ begin
 end;
 
 
-function TccIniLayoutSaver.ResstoreStrValue(const Name:string; const Default: string = ''):string;
+function TccIniLayoutSaver.RestoreStrValue(const Name:string; const Default: string = ''):string;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'ResstoreStrValue'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreStrValue'); {$ENDIF}
 
   inherited;
 
@@ -345,7 +345,7 @@ begin
   else
     Result := Default;
 
-  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'ResstoreStrValue'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'RestoreStrValue'); {$ENDIF}
 end;
 
 
@@ -494,9 +494,9 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'SaveStrValue'); {$ENDIF}
 end;
 
-function TccRegistryLayoutSaver.ResstoreStrValue(const Name: string; const Default: string = ''): string;
+function TccRegistryLayoutSaver.RestoreStrValue(const Name: string; const Default: string = ''): string;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'ResstoreStrValue'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreStrValue'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Name', Name); {$ENDIF}
 
   Result := Default;
@@ -508,7 +508,7 @@ begin
   end;
 
   {$IFDEF UseCodeSite} CodeSite.Send('Result', Result); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'ResstoreStrValue'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'RestoreStrValue'); {$ENDIF}
 end;
 
 end.
