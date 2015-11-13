@@ -31,7 +31,7 @@ const
 
 procedure TfrmIniLayoutSaver.FormCreate(Sender: TObject);
 begin
-  edtStrValue.Text := ccIniLayoutSaver1.ResstoreStrValue(sStringValName);
+  edtStrValue.Text := ccIniLayoutSaver1.RestoreStrValue(sStringValName);
   edtBoolValue.Checked := ccIniLayoutSaver1.RestoreBoolValue(sBoolValName);
   edtIntValue.Value := ccIniLayoutSaver1.RestoreIntValue(sIntValName);
 end;
