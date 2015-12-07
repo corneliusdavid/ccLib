@@ -323,6 +323,27 @@ begin
 end;
 
 class procedure TIniPersist.Load(FileName: String; obj: TObject; IgnoreBaseProperties: Boolean = True);
+
+  function GetIniSection(objType: TRttiType; obj: TObject): string;
+  var
+    IniClass: ConfigClassAttribute;
+  begin
+    {$IFDEF UseCodeSite} CodeSite.EnterMethod('GetIniSection'); {$ENDIF}
+
+    // is this class using the "class-level" keys?
+    IniClass := GetClassAttribute(ObjType);
+    if Assigned(IniClass) then begin
+      // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Value Names
+      Result := IniClass.SectionName;
+      {$IFDEF UseCodeSite}  CodeSite.Send('using class level [section] for ' + Obj.ClassName, Result); {$ENDIF}
+    end else begin
+      Result := (Obj as TCustomIniSettings).Section;
+      {$IFDEF UseCodeSite}  CodeSite.Send('using assigned [section] for ' + Obj.ClassName, Result); {$ENDIF}
+    end;
+
+    {$IFDEF UseCodeSite} CodeSite.ExitMethod('GetIniSection'); {$ENDIF}
+  end;
+
 var
   ctx: TRttiContext;
   objType: TRttiType;
@@ -330,90 +351,75 @@ var
   PropClass: TClass;
   Value: TValue;
   PropValueAttr: ConfigValueAttribute;
-  IniClass: ConfigClassAttribute;
   PropIgnoreAttr: IniIgnoreAttribute;
   Ini: TIniFile;
   Data: String;
-
-  IniClassSection: string;
   PropDefaultAttr: string;
+  IniClassSection: string;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Load');  {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('filename', FileName); {$ENDIF}
 
   ctx := TRttiContext.Create;
+  Ini := TIniFile.Create(FileName);
   try
-    Ini := TIniFile.Create(FileName);
-    try
-      objType := ctx.GetType(Obj.ClassInfo);
+    objType := ctx.GetType(Obj.ClassInfo);
 
-      {$REGION 'get the "section" from either the class or the Section property in the object'}
-      // is this class using the "class-level" keys?
-      IniClass := GetClassAttribute(ObjType);
-      if Assigned(IniClass) then begin
-        // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Value Names
-        IniClassSection := IniClass.SectionName;
-        {$IFDEF UseCodeSite} CodeSite.Send('using class level [section] for ' + Obj.ClassName, IniClassSection); {$ENDIF}
-      end else
-        IniClassSection := (Obj as TCustomIniSettings).Section;
-      {$ENDREGION}
+    IniClassSection := GetIniSection(objType, obj);
 
-      // look at all the properties of the object
-      for Prop in objType.GetProperties do begin
-        // get the class to which the current property belongs
-        PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
+    // look at all the properties of the object
+    for Prop in objType.GetProperties do begin
+      // get the class to which the current property belongs
+      PropClass :=  TRttiInstanceType(Prop.Parent).MetaclassType;
 
-        // always ignore TInterfacedObject properties
-        if PropClass <> TInterfacedObject then begin
-          // optionally ignore TCustomSettings properties
-          if IgnoreBaseProperties and (PropClass = TCustomIniSettings) then begin
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'ignoring base property', Prop.Name); {$ENDIF}
-          end else begin
-            // look at each of the properties
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
-            Data := EmptyStr;
+      // always ignore TInterfacedObject properties
+      if PropClass <> TInterfacedObject then begin
+        // optionally ignore TCustomSettings properties
+        if IgnoreBaseProperties and (PropClass = TCustomIniSettings) then begin
+          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'ignoring base property', Prop.Name); {$ENDIF}
+        end else begin
+          // look at each of the properties
+          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
+          Data := EmptyStr;
 
-            {$REGION 'read the value for the property from the registry'}
-            // if class-level keys are in use then these will override the class-level settings
-            PropValueAttr := GetValueAttribute(Prop);
-            if Assigned(PropValueAttr) then begin
-              Data := Ini.ReadString((Obj as TCustomIniSettings).Section, PropValueAttr.Name, PropValueAttr.DefaultValue);
-              {$IFDEF UseCodeSite} CodeSite.Send('property-specific data', Data); {$ENDIF}
-            end else if Length(IniClassSection) > 0 then begin
-              // if using class-level keys, check to see if this property is ignored in the INI file
-              PropIgnoreAttr := GetPropIgnoreAttribute(Prop);
-              if not Assigned(PropIgnoreAttr) then begin
-                // not ignored, check to see if there's a default value
-                PropDefaultAttr := GetDefaultAttributeValue(Prop);
+          {$REGION 'read the value for the property from the ini file'}
+          // if class-level keys are in use then these will override the class-level settings
+          PropValueAttr := GetValueAttribute(Prop);
+          if Assigned(PropValueAttr) then begin
+            Data := Ini.ReadString((Obj as TCustomIniSettings).Section, PropValueAttr.Name, PropValueAttr.DefaultValue);
+            {$IFDEF UseCodeSite} CodeSite.Send('property-specific data', Data); {$ENDIF}
+          end else if Length(IniClassSection) > 0 then begin
+            // if using class-level keys, check to see if this property is ignored in the INI file
+            PropIgnoreAttr := GetPropIgnoreAttribute(Prop);
+            if not Assigned(PropIgnoreAttr) then begin
+              // not ignored, check to see if there's a default value
+              PropDefaultAttr := GetDefaultAttributeValue(Prop);
 
-                // finally, read the data using the property name as the value name
-                Data := Ini.ReadString(IniClassSection, Prop.Name, PropDefaultAttr);
-                {$IFDEF UseCodeSite} CodeSite.Send('class-level data', Data); {$ENDIF}
-              end;
+              // finally, read the data using the property name as the value name
+              Data := Ini.ReadString(IniClassSection, Prop.Name, PropDefaultAttr);
+              {$IFDEF UseCodeSite} CodeSite.Send('class-level data', Data); {$ENDIF}
             end;
-            {$ENDREGION}
-
-            {$REGION 'assign the value to the property in the object'}
-            // whichever way we read in the data, if it's available, we can now assign it
-            if Length(Data) > 0 then begin
-              {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data read from .INI file', Data); {$ENDIF}
-              // just before assigning, get the value from the object into a Value var
-              Value := Prop.GetValue(Obj);
-              // set the new value into the Value var
-              SetValue(Data, Value);
-              // and finally, write the Value into the object
-              if prop.IsWritable then
-                prop.SetValue(Obj, Value);
-            end;
-            {$ENDREGION}
           end;
+          {$ENDREGION}
+
+          {$REGION 'assign the value to the property in the object'}
+          // whichever way we read in the data, if it's available, we can now assign it
+          if Length(Data) > 0 then begin
+            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data read from .INI file', Data); {$ENDIF}
+            // just before assigning, get the value from the object into a Value var
+            Value := Prop.GetValue(Obj);
+            // set the new value into the Value var
+            SetValue(Data, Value);
+            // and finally, write the Value into the object
+            if prop.IsWritable then
+              prop.SetValue(Obj, Value);
+          end;
+          {$ENDREGION}
         end;
       end;
-    finally
-      Ini.Free;
     end;
   finally
-    ctx.Free;
+    Ini.Free;
   end;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod('TIniPersist.Load'); {$ENDIF}
@@ -467,67 +473,63 @@ begin
   {$IFDEF UseCodeSite} CodeSite.Send('filename', Filename); {$ENDIF}
 
   ctx := TRttiContext.Create;
+  Ini := TMemIniFile.Create(FileName);
   try
-    Ini := TMemIniFile.Create(FileName);
-    try
-      objType := ctx.GetType(Obj.ClassInfo);
+    objType := ctx.GetType(Obj.ClassInfo);
 
-      {$REGION 'get the "section" from either the class or the Section property in the object'}
-      // is this class using the new "class-level" keys?
-      IniClass := GetClassAttribute(ObjType);
-      if Assigned(IniClass) then begin
-        // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Key Names
-        IniClassSection := IniClass.SectionName;
-        {$IFDEF UseCodeSite} CodeSite.Send('using class level [section] for ' + Obj.ClassName, IniClassSection); {$ENDIF}
-      end else
-        IniClassSection := (Obj as TCustomIniSettings).Section;
-      {$ENDREGION}
+    {$REGION 'get the "section" from either the class or the Section property in the object'}
+    // is this class using the new "class-level" keys?
+    IniClass := GetClassAttribute(ObjType);
+    if Assigned(IniClass) then begin
+      // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Key Names
+      IniClassSection := IniClass.SectionName;
+      {$IFDEF UseCodeSite} CodeSite.Send('using class level [section] for ' + Obj.ClassName, IniClassSection); {$ENDIF}
+    end else
+      IniClassSection := (Obj as TCustomIniSettings).Section;
+    {$ENDREGION}
 
-      // look at all the properties of the object
-      for Prop in objType.GetProperties do begin
-        // get the class to which the current property belongs
-        PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
+    // look at all the properties of the object
+    for Prop in objType.GetProperties do begin
+      // get the class to which the current property belongs
+      PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
 
-        // always ignore TInterfacedObject properties
-        if (PropClass <> TInterfacedObject) { and (PropClass <> TCustomSettings) } then begin
-          // optionally ignore TCustomSettings properties
-          if IgnoreBaseProperties and (PropClass = TCustomIniSettings) then begin
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'ignoring base property', Prop.Name); {$ENDIF}
+      // always ignore TInterfacedObject properties
+      if (PropClass <> TInterfacedObject) { and (PropClass <> TCustomSettings) } then begin
+        // optionally ignore TCustomSettings properties
+        if IgnoreBaseProperties and (PropClass = TCustomIniSettings) then begin
+          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'ignoring base property', Prop.Name); {$ENDIF}
+        end else begin
+          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
+          // get the value to be saved
+          Value := Prop.GetValue(Obj);
+          Data := GetValue(Value);
+
+          {$REGION 'write the value for the property to the registry'}
+          // if class-level keys are in use then these will override the class-level settings
+          PropValueAttr := GetValueAttribute(Prop);
+          if Assigned(PropValueAttr) then begin
+            {$IFDEF UseCodeSite} CodeSite.Send('data to write', data); {$ENDIF}
+            {$IFDEF UseCodeSite} CodeSite.Send('IniValue.Name', PropValueAttr.Name); {$ENDIF}
+            Ini.WriteString(IniClassSection, PropValueAttr.Name, Data);
+            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
           end else begin
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
-            // get the value to be saved
-            Value := Prop.GetValue(Obj);
-            Data := GetValue(Value);
-
-            {$REGION 'write the value for the property to the registry'}
-            // if class-level keys are in use then these will override the class-level settings
-            PropValueAttr := GetValueAttribute(Prop);
-            if Assigned(PropValueAttr) then begin
-              {$IFDEF UseCodeSite} CodeSite.Send('data to write', data); {$ENDIF}
-              {$IFDEF UseCodeSite} CodeSite.Send('IniValue.Name', PropValueAttr.Name); {$ENDIF}
-              Ini.WriteString(IniClassSection, PropValueAttr.Name, Data);
-              {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
+            // if not using IniValue for the properties, check to see if this property is ignored
+            PropIgnoreAttr := GetPropIgnoreAttribute(Prop);
+            if Assigned(PropIgnoreAttr) then begin
+              {$IFDEF UseCodeSite} CodeSite.Send('ignoring...'); {$ENDIF}
             end else begin
-              // if not using IniValue for the properties, check to see if this property is ignored
-              PropIgnoreAttr := GetPropIgnoreAttribute(Prop);
-              if Assigned(PropIgnoreAttr) then begin
-                {$IFDEF UseCodeSite} CodeSite.Send('ignoring...'); {$ENDIF}
-              end else begin
-                // not ignored and the IniClassSection is set, write out the data using property name as value name
-                Ini.WriteString(IniClassSection, Prop.Name, Data);
-                {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
-              end;
+              // not ignored and the IniClassSection is set, write out the data using property name as value name
+              Ini.WriteString(IniClassSection, Prop.Name, Data);
+              {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
             end;
-            {$ENDREGION}
           end;
+          {$ENDREGION}
         end;
       end;
-    finally
-      Ini.UpdateFile;
-      Ini.Free;
     end;
   finally
-    ctx.Free;
+    Ini.UpdateFile;
+    Ini.Free;
   end;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod('TIniPersist.Save');  {$ENDIF}
