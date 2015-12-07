@@ -63,6 +63,10 @@ begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Create'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('ASection', ASection); {$ENDIF}
 
+  {$IFDEF DEBUG}
+  ReportMemoryLeaksOnShutdown := True;
+  {$ENDIF}
+
   if Length(ASection) = 0 then
     raise EProgrammerNotFound.Create('Did not set the Section of the configuration object: ' + self.ClassName);
 
