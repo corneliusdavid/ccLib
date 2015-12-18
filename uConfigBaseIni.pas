@@ -22,7 +22,7 @@ type
     property Configfilename: string read GetConfigFilename write SetConfigFilename;
   end;
 
-  TCustomIniSettings = class(TInterfacedObject, IIniConfigurableSection)
+  TCustomIniSettings = class(TObject, IIniConfigurableSection)
   strict private
     {$REGION 'private fields'}
     FSection: string;
@@ -38,8 +38,15 @@ type
     procedure SetAppDataPath(const Value: string);
     procedure SetConfigFilename(const Value: string);
     {$ENDREGION}
+  protected
+    procedure CustomSave; virtual; abstract;
+    procedure CustomLoad; virtual; abstract;
+    // IInterface
+    function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
+    function _AddRef: Integer; stdcall;
+    function _Release: Integer; stdcall;
   public
-    constructor Create(ASection: string); overload;
+    constructor Create(ASection: string = ''); overload; virtual;
     procedure Save; virtual;
     procedure Load; virtual;
   published
@@ -54,11 +61,11 @@ implementation
 
 uses
   {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
-  SysUtils, uConfigIniPersist;
+  SysUtils;
 
 {$REGION 'TCustomSettings'}
 
-constructor TCustomIniSettings.Create(ASection: string);
+constructor TCustomIniSettings.Create(ASection: string = '');
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Create'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('ASection', ASection); {$ENDIF}
@@ -66,9 +73,6 @@ begin
   {$IFDEF DEBUG}
   ReportMemoryLeaksOnShutdown := True;
   {$ENDIF}
-
-  if Length(ASection) = 0 then
-    raise EProgrammerNotFound.Create('Did not set the Section of the configuration object: ' + self.ClassName);
 
   FSection := ASection;
 
@@ -97,7 +101,7 @@ begin
   if Length(FConfigFilename) = 0 then
     raise EProgrammerNotFound.Create('[Load] Did not set configuration filename: ' + self.ClassName);
 
-  TIniPersist.Load(FConfigFilename, Self);
+  CustomLoad;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Load'); {$ENDIF}
 end;
@@ -109,7 +113,7 @@ begin
   if Length(FConfigFilename) = 0 then
     raise EProgrammerNotFound.Create('[Save] Did not set configuration filename: ' + self.ClassName);
 
-  TIniPersist.Save(FConfigFilename, Self);
+  CustomSave;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Save'); {$ENDIF}
 end;
@@ -138,6 +142,27 @@ procedure TCustomIniSettings.SetSection(const AValue: string);
 begin
   FSection := AValue;
 end;
+
+function TCustomIniSettings.QueryInterface(const IID: TGUID; out Obj): HResult;
+begin
+  if GetInterface(IID, Obj) then
+    Result := 0
+  else
+    Result := E_NOINTERFACE;
+end;
+
+function TCustomIniSettings._AddRef: Integer;
+begin
+  // don't reference count
+  Result := -1;
+end;
+
+function TCustomIniSettings._Release: Integer;
+begin
+  // don't reference count
+  Result := -1;
+end;
+
 {$ENDREGION}
 
 end.
