@@ -5,24 +5,21 @@ interface
 {$TYPEINFO ON}
 
 type
-  IIniConfigurableSection = interface
+  IConfigurableSettings = interface
   ['{41935A6A-6FFE-45D8-A3D6-FF74BD3E0655}']
     {$REGION 'Private Getters and Setters'}
     function GetSection: string;
-    function GetAppDataPath: string;
     function GetConfigFilename: string;
     procedure SetSection(const Value: string);
-    procedure SetAppDataPath(const Value: string);
     procedure SetConfigFilename(const Value: string);
     {$ENDREGION}
     procedure Save;
     procedure Load;
     property Section: string read GetSection write SetSection;
-    property AppDataPath: string read GetAppDataPath write SetAppDataPath;
     property Configfilename: string read GetConfigFilename write SetConfigFilename;
   end;
 
-  TCustomIniSettings = class(TObject, IIniConfigurableSection)
+  TCustomConfigSettings = class(TObject, IConfigurableSettings)
   strict private
     {$REGION 'private fields'}
     FSection: string;
@@ -32,16 +29,14 @@ type
   private
     {$REGION 'IConfigurable getters and setters'}
     function GetSection: string;
-    function GetAppDataPath: string;
     function GetConfigFilename: string;
     procedure SetSection(const AValue: string);
-    procedure SetAppDataPath(const Value: string);
     procedure SetConfigFilename(const Value: string);
     {$ENDREGION}
   protected
     procedure CustomSave; virtual; abstract;
     procedure CustomLoad; virtual; abstract;
-    // IInterface
+    // IInterface -- not descended from TInterfacedObject because don't want reference counting
     function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
     function _AddRef: Integer; stdcall;
     function _Release: Integer; stdcall;
@@ -50,8 +45,8 @@ type
     procedure Save; virtual;
     procedure Load; virtual;
   published
+    property AppDataPath: string read FAppDataPath write FAppDataPath;
     property Section: string read GetSection write SetSection;
-    property AppDataPath: string read GetAppDataPath write SetAppDataPath;
     property Configfilename: string read GetConfigFilename write SetConfigFilename;
   end;
 
@@ -63,9 +58,9 @@ uses
   {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
   SysUtils;
 
-{$REGION 'TCustomSettings'}
+{$REGION 'TCustomConfigSettings'}
 
-constructor TCustomIniSettings.Create(ASection: string = '');
+constructor TCustomConfigSettings.Create(ASection: string = '');
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Create'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('ASection', ASection); {$ENDIF}
@@ -79,22 +74,18 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Create'); {$ENDIF}
 end;
 
-function TCustomIniSettings.GetAppDataPath: string;
-begin
-  Result := FAppDataPath;
-end;
 
-function TCustomIniSettings.GetConfigFilename: string;
+function TCustomConfigSettings.GetConfigFilename: string;
 begin
   Result := FConfigFilename;
 end;
 
-function TCustomIniSettings.GetSection: string;
+function TCustomConfigSettings.GetSection: string;
 begin
   Result := FSection;
 end;
 
-procedure TCustomIniSettings.Load;
+procedure TCustomConfigSettings.Load;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Load'); {$ENDIF}
 
@@ -106,7 +97,7 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Load'); {$ENDIF}
 end;
 
-procedure TCustomIniSettings.Save;
+procedure TCustomConfigSettings.Save;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Save'); {$ENDIF}
 
@@ -118,17 +109,7 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Save'); {$ENDIF}
 end;
 
-procedure TCustomIniSettings.SetAppDataPath(const Value: string);
-begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SetAppDataPath'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('value', value); {$ENDIF}
-
-  FAppDataPath := Value;
-
-  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'SetAppDataPath'); {$ENDIF}
-end;
-
-procedure TCustomIniSettings.SetConfigFilename(const Value: string);
+procedure TCustomConfigSettings.SetConfigFilename(const Value: string);
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SetConfigFilename'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('value', value); {$ENDIF}
@@ -138,12 +119,12 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'SetConfigFilename'); {$ENDIF}
 end;
 
-procedure TCustomIniSettings.SetSection(const AValue: string);
+procedure TCustomConfigSettings.SetSection(const AValue: string);
 begin
   FSection := AValue;
 end;
 
-function TCustomIniSettings.QueryInterface(const IID: TGUID; out Obj): HResult;
+function TCustomConfigSettings.QueryInterface(const IID: TGUID; out Obj): HResult;
 begin
   if GetInterface(IID, Obj) then
     Result := 0
@@ -151,13 +132,13 @@ begin
     Result := E_NOINTERFACE;
 end;
 
-function TCustomIniSettings._AddRef: Integer;
+function TCustomConfigSettings._AddRef: Integer;
 begin
   // don't reference count
   Result := -1;
 end;
 
-function TCustomIniSettings._Release: Integer;
+function TCustomConfigSettings._Release: Integer;
 begin
   // don't reference count
   Result := -1;
