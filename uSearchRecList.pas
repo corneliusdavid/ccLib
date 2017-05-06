@@ -49,7 +49,6 @@ type
   {$ENDREGION}
   TFileFoundProc = reference to procedure (FileInfo: TSearchRec);
 
-{$REGION 'XMLDoc'}
 /// <summary>
 ///   Walk through a directory tree looking for specific files and return them
 ///   in a callback procedure
@@ -71,7 +70,12 @@ type
 ///   A procedure of type TFileFoundProc called for each found file, giving the
 ///   TSearchRec to the calling method.
 /// </param>
-{$ENDREGION}
+/// <example>
+///   GetSearchRecs(LogFolder, '*.log', False, nil, <br />procedure (FileInfo:
+///   TSearchRec) <br />begin <br />// log files older than 90 days to the
+///   recycle bin <br />if FileInfo.TimeStamp &lt; Now - 90 then <br />
+///   FileDelete(TPath.Combine(LogFolder, FileInfo.Name), True); <br />end); <br />
+/// </example>
 procedure GetSearchRecs(const Path, Pattern: string; const Recursive: Boolean; PathStatusProc: TPathStatusProc; FileFoundProc: TFileFoundProc);
 
 
