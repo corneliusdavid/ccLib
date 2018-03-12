@@ -33,8 +33,7 @@ requires
   rtl,
   vcl,
   dbrtl,
-  vcldb,
-  CodeSiteExpressPkg;
+  vcldb;
 
 contains
   ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
