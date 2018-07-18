@@ -17,7 +17,24 @@ These classes expand the WebBroker usefulness by building in a link between HTML
 
 Please read the comments in the code for further information.
 
+## Miscellaneous
 
+The "misc" folder contains only one unit (more may be added later): **uSearchRecList**. This unit contains a couple of procedure type declarations and one procedure: GetSearchRecs.
+
+    TPathStatusProc = reference to procedure (const Path: string; var Stop: Boolean);
+	TFileFoundProc = reference to procedure (FileInfo: TSearchRec);
+	procedure GetSearchRecs(const Path, Pattern: string; const Recursive: Boolean; PathStatusProc: TPathStatusProc; FileFoundProc: TFileFoundProc);
+
+GetSearchRecs traverses a directory tree looking for files matching a pattern and calls PathStatusProc for every path found and FileFoundProc for every file found that matches the pattern.
+
+Here's an example call that would delete old log files:
+
+    GetSearchRecs(LogFolder, '*.log', False, nil, 
+		procedure (FileInfo: TSearchRec)
+		begin
+		  if FileInfo.TimeStamp < Now - 90 then
+			FileDelete(TPath.Combine(LogFolder, FileInfo.Name), True);
+		end);
 
 ## Component: LayoutSaver
 
