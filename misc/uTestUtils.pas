@@ -4,8 +4,6 @@ interface
 
 type
   TTestUtils = class
-  private
-    class function RandStr(const MaxLen: Integer): string; static;
   public
     class function RandYear: Word;
     class function RandMonth: Word;
@@ -160,15 +158,6 @@ end;
 class function TTestUtils.RandIntStr(const MaxLen: Integer): string;
 begin
   Result := IntToStr(RandInt(MaxLen));
-end;
-
-class function TTestUtils.RandStr(const MaxLen: Integer): string;
-var
-  i: Integer;
-begin
-  Result := EmptyStr;
-  for i := 1 to MaxLen do
-    Result := Result + Chr(Random(26) + 65);
 end;
 
 end.
