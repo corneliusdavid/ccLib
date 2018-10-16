@@ -19,7 +19,9 @@ Please read the comments in the code for further information.
 
 ## Miscellaneous
 
-The "misc" folder contains a couple of units (more may be added later): **uSearchRecList** and **uTestUtils**. The first one contains a couple of procedure type declarations and one procedure: GetSearchRecs.
+The "misc" folder contains three units (more may be added later): **uSearchRecList**, **uXmlDates**, and **uTestUtils**. 
+
+The first one, **uSearchRecList**, contains a couple of procedure type declarations and one procedure: GetSearchRecs.
 
     TPathStatusProc = reference to procedure (const Path: string; var Stop: Boolean);
 	TFileFoundProc = reference to procedure (FileInfo: TSearchRec);
@@ -36,7 +38,9 @@ Here's an example call that would delete old log files:
 			FileDelete(TPath.Combine(LogFolder, FileInfo.Name), True);
 		end);
 
-The second unit, uTestUtils, provides some functions used in a few projects where I need to generate test data such as dates, times, numbers, payment types, etc.  They're just handy to have around.
+The second unit, **uXmlDates**, makes it easy to work with dates found in XML files. The common format is: yyyy-mm-dd"T"hh:mm:ss, but the method, ConvertToDelphiDateFromXml, can take a string without the time part.
+
+The third unit, **uTestUtils**, provides some functions used in a few projects where I need to generate test data such as dates, times, numbers, payment types, etc.  They're just handy to have around.
 
 ## Component: LayoutSaver
 
