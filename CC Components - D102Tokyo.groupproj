@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{7CBAECCE-706D-4D11-9D38-A2299775FBB9}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="cc_D102Tokyo_R.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cc_D102Tokyo_D.dproj">
+            <Dependencies>cc_D102Tokyo_R.dproj</Dependencies>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="cc_D102Tokyo_R">
+        <MSBuild Projects="cc_D102Tokyo_R.dproj"/>
+    </Target>
+    <Target Name="cc_D102Tokyo_R:Clean">
+        <MSBuild Projects="cc_D102Tokyo_R.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="cc_D102Tokyo_R:Make">
+        <MSBuild Projects="cc_D102Tokyo_R.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="cc_D102Tokyo_D" DependsOnTargets="cc_D102Tokyo_R">
+        <MSBuild Projects="cc_D102Tokyo_D.dproj"/>
+    </Target>
+    <Target Name="cc_D102Tokyo_D:Clean" DependsOnTargets="cc_D102Tokyo_R:Clean">
+        <MSBuild Projects="cc_D102Tokyo_D.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="cc_D102Tokyo_D:Make" DependsOnTargets="cc_D102Tokyo_R:Make">
+        <MSBuild Projects="cc_D102Tokyo_D.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="cc_D102Tokyo_R;cc_D102Tokyo_D"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="cc_D102Tokyo_R:Clean;cc_D102Tokyo_D:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="cc_D102Tokyo_R:Make;cc_D102Tokyo_D:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
