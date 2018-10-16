@@ -3,7 +3,7 @@
         <ProjectGuid>{D219E6CE-1D2C-4E89-AF9A-F5A5B261B34F}</ProjectGuid>
         <MainSource>cc_D101Berlin_R.dpk</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Package</AppType>
         <FrameworkType>VCL</FrameworkType>

@@ -7,7 +7,7 @@
             <Dependencies/>
         </Projects>
         <Projects Include="cc_D101Berlin_D.dproj">
-            <Dependencies/>
+            <Dependencies>cc_D101Berlin_R.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -26,13 +26,13 @@
     <Target Name="cc_D101Berlin_R:Make">
         <MSBuild Projects="cc_D101Berlin_R.dproj" Targets="Make"/>
     </Target>
-    <Target Name="cc_D101Berlin_D">
+    <Target Name="cc_D101Berlin_D" DependsOnTargets="cc_D101Berlin_R">
         <MSBuild Projects="cc_D101Berlin_D.dproj"/>
     </Target>
-    <Target Name="cc_D101Berlin_D:Clean">
+    <Target Name="cc_D101Berlin_D:Clean" DependsOnTargets="cc_D101Berlin_R:Clean">
         <MSBuild Projects="cc_D101Berlin_D.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="cc_D101Berlin_D:Make">
+    <Target Name="cc_D101Berlin_D:Make" DependsOnTargets="cc_D101Berlin_R:Make">
         <MSBuild Projects="cc_D101Berlin_D.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
