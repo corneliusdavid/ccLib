@@ -62,11 +62,14 @@ var
   LYear, LMonth, LDay: Word;
   LHour, LMinute, LSecond: Word;
 begin
-
   LXmlDateTime := Trim(ADateTime);
 
   if LXmlDateTime = EmptyStr then
     raise Exception.Create('ADateTime Parameter Can Not Be An Empty String');
+
+  if Length(LXmlDateTime) = 10 then
+    // just date, no time; add default time values
+    LXmlDateTime := LXmlDateTime + ' 00:00:00';
 
   {$IFDEF UseCodeSite}
   CodeSite.Send(Format('Year: %s, Month: %s, Day: %s, Hour: %s, Minute: %s, Second: %s', [
