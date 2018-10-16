@@ -74,13 +74,14 @@ end;
 
 procedure Register;
 begin
-  ForceDemandLoadState(dlDisable);
   RegisterSplashScreen;
   RegisterAboutBox;
 
   RegisterCloseApp;
   RegisterElapsedTimer;
   RegisterLayoutSaver;
+
+  ForceDemandLoadState(dlDisable);
 end;
 
 initialization
