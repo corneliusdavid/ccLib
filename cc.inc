@@ -115,6 +115,22 @@
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
+{ Delphi 10.1 Berlin }
+{$IFDEF VER310}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
+{ Delphi 10.2 Tokyo }
+{$IFDEF VER320}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
 
 {$IFNDEF SupportedCompiler}
   {$MESSAGE FATAL 'Non-supported compiler.'}

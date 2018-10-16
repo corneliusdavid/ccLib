@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{FDBB1F16-BC1C-432F-825C-A06AA6BA142D}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="cc_D101Berlin_R.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cc_D101Berlin_D.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="cc_D101Berlin_R">
+        <MSBuild Projects="cc_D101Berlin_R.dproj"/>
+    </Target>
+    <Target Name="cc_D101Berlin_R:Clean">
+        <MSBuild Projects="cc_D101Berlin_R.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="cc_D101Berlin_R:Make">
+        <MSBuild Projects="cc_D101Berlin_R.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="cc_D101Berlin_D">
+        <MSBuild Projects="cc_D101Berlin_D.dproj"/>
+    </Target>
+    <Target Name="cc_D101Berlin_D:Clean">
+        <MSBuild Projects="cc_D101Berlin_D.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="cc_D101Berlin_D:Make">
+        <MSBuild Projects="cc_D101Berlin_D.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="cc_D101Berlin_R;cc_D101Berlin_D"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="cc_D101Berlin_R:Clean;cc_D101Berlin_D:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="cc_D101Berlin_R:Make;cc_D101Berlin_D:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
