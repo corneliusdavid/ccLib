@@ -6,7 +6,6 @@ uses
   System.SysUtils, System.IOUtils;
 
 type
-  {$REGION 'XMLDoc'}
   /// <summary>
   ///   a call procedure type used in GetSearchRecs for when a path is
   ///   traversed
@@ -27,9 +26,7 @@ type
   ///     private var set by a button <br />end
   ///   </para>
   /// </example>
-  {$ENDREGION}
   TPathStatusProc = reference to procedure (const Path: string; var Stop: Boolean);
-  {$REGION 'XMLDoc'}
   /// <summary>
   ///   when a match file is found, the TSearchRec is passed to this procedure
   /// </summary>
@@ -46,7 +43,6 @@ type
   ///     MySearchList.Add(FileInfo); <br />end
   ///   </para>
   /// </example>
-  {$ENDREGION}
   TFileFoundProc = reference to procedure (FileInfo: TSearchRec);
 
 /// <summary>
