@@ -64,7 +64,9 @@ With the additional methods for saving/restoring integer, string, and Boolean va
 
 This component includes routines written by someone named Neil on the DBISAM newsgroups several years ago. Turned into a component, this attaches to some keyboard and mouse Windows hooks to watch for inactivity on the computer and pops up a message with a count-down timer to close the application.  One use case is a 2-tier database applications that leave files and records open.
 
-## Component: ElapsedTimer
+## Component: ElapsedTimer (DEPRECATED)
+
+*This component was removed from the Delphi 10.3 Rio version in favor of using Delphi's TStopWatch class.*
 
 This is a very simple component that hides the details of timing an operation.  Simply call Start, do your stuff, then call Stop and you have the following properties available:
 
@@ -82,20 +84,20 @@ This component does NOT check for change in time zones (if used on a mobile devi
 
 The following components were only supported up through Delphi XE and removed from newer packages.
 
-### Component: ccDBISAMTableLookup
+### Component: ccDBISAMTableLookup (DEPRECATED)
 
 A long time ago, I used the InfoPower suite of components which had a really nice incremental search component that would list matching records as you type.  I patterned this component off that idea but also added user-defined buttons and many other features. I also used Raize Controls for some extra nice display features--and tied it all very closely to the DBISAM database components. It was for a specific project at the time, but I used it and variations of it (like switching out DBISAM for ElevateDB components) in other projects since then.
 
 This might be an interesting component to look at because it's a good example of how to build a compound component.
 
-### Component: ccTextMerge
+### Component: ccTextMerge (DEPRECATED)
 
 Written to support an old project many years ago, this allows simple merging of NAME=VALUE pairs with delimiters. Deprecated in favor of using TStringList.
 
-### Component: ccTextFileLogger
+### Component: ccTextFileLogger (DEPRECATED)
 
 Provides quick and easy logging to a text file. Deprecated because newer libraries and methods of logging are preferred.
 
-### Component: ccTextViewer
+### Component: ccTextViewer (DEPRECATED)
 
 A simple text file viewer in a pop-up modal window.
