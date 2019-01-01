@@ -40,7 +40,6 @@ var
 begin
   instance := TfmAppIdleWarn.Create(nil);
   try
-    Result := 0;
     Instance.SecondsWarning := CloseTime;
     instance.Showmodal;
     Result := instance.CloseCode;
