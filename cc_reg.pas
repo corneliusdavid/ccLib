@@ -17,14 +17,16 @@ uses
     DesignEditors, DesignIntf,
     {$ENDIF}
   {$ENDIF}
-  CloseApplicationReg, ElapsedTimerReg, LayoutSaverReg;
+  CloseApplicationReg, {$IFNDEF 103RioOrHigher} ElapsedTimerReg, {$ENDIF} LayoutSaverReg;
 
 {$R cc.res}
 
 resourcestring
   ComponentPkgName = 'Cornelius Concepts Components';
   ComponentPkgLic  = 'OpenSource by Cornelius Concepts';
-  ComponentPkgDesc = 'TccElapsedTimer - simple stopwatch;' + #13#10 +
+  ComponentPkgDesc = {$IFNDEF 103RioOrHigher}
+                     'TccElapsedTimer - simple stopwatch;' + #13#10 +
+                     {$ENDIF}
                      'TCloseApplication - auto close an application with no activity;' + #13#10 +
                      'TccIniLayoutSaver/TccRegistryLayoutSaver - save/restore form size/position.';
 
@@ -78,7 +80,9 @@ begin
   RegisterAboutBox;
 
   RegisterCloseApp;
+  {$IFNDEF 103RioOrHigher}
   RegisterElapsedTimer;
+  {$ENDIF}
   RegisterLayoutSaver;
 
   ForceDemandLoadState(dlDisable);
