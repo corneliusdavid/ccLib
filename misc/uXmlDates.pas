@@ -5,6 +5,7 @@ interface
 type
   TXMLDateZeroOptions = (dzoBlank, dzoZero, dzoNow);
 
+function GetTimeZoneOffset: string;
 function GetTimestampWithTimeZone(const ADateTime: TDateTime): string;
 function GetXmlDate(const ADateTime: TDateTime; const DateZeroOption: TXMLDateZeroOptions = dzoBlank): string;
 function ConvertToDelphiDateFromXml(const ADateTime: string): TDateTime;
@@ -15,24 +16,29 @@ uses
   {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
   Windows, SysUtils, StrUtils, DateUtils;
 
-function GetTimestampWithTimeZone(const ADateTime: TDateTime): string;
+function GetTimeZoneOffset: string;
 var
   LZoneInfo: TTimeZoneInformation;
+begin
+  GetTimeZoneInformation(LZoneInfo);
+
+  Result := FormatFloat('00', LZoneInfo.Bias div -60) + ':00';
+  if LeftStr(Result, 1) <> '-' then
+    Result := '+' + Result;
+end;
+
+function GetTimestampWithTimeZone(const ADateTime: TDateTime): string;
+var
   LFormatSettings: TFormatSettings;
-  LZoneOffset: string;
-  LXMLImportDate: string;
 begin
   LFormatSettings := TFormatSettings.Create;
 
-  GetTimeZoneInformation(LZoneInfo);
-  LZoneOffset := FormatFloat('00', LZoneInfo.Bias div -60) + ':00';
-
   if ADateTime <> 0 then
-    LXMLImportDate := FormatDateTime('yyyy-mm-dd"T"hh:mm:ss', ADateTime, LFormatSettings)
+    Result := FormatDateTime('yyyy-mm-dd"T"hh:mm:ss', ADateTime, LFormatSettings)
   else
-    LXMLImportDate := FormatDateTime('yyyy-mm-dd"T"hh:mm:ss', Now, LFormatSettings);
+    Result := FormatDateTime('yyyy-mm-dd"T"hh:mm:ss', Now, LFormatSettings);
 
-  Result := LXMLImportDate + LZoneOffset;
+  Result := Result + GetTimeZoneOffset;
 
   {$IFDEF UseCodeSite} CodeSite.Send('Result', Result); {$ENDIF}
 end;
