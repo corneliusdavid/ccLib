@@ -60,7 +60,7 @@ With the additional methods for saving/restoring integer, string, and Boolean va
     - function RestoreIntValue(const Name:string; const Default: Integer = 0): Integer; 
     - function RestoreBoolValue(const Name:string; const Default: Boolean = False): Boolean;
 
-## Component: IdleClose
+## Component: CloseApplication
 
 This component includes routines written by someone named Neil on the DBISAM newsgroups several years ago. Turned into a component, this attaches to some keyboard and mouse Windows hooks to watch for inactivity on the computer and pops up a message with a count-down timer to close the application.  One use case is a 2-tier database applications that leave files and records open.
 
