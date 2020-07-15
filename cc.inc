@@ -149,7 +149,7 @@
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
-{ Delphi 10.4 Denali }
+{ Delphi 10.4 Sydney }
 {$IFDEF VER340}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}

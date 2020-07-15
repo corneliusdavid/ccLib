@@ -1,8 +1,6 @@
-package cc_D104Denali_D;
+package cc_D104Sydney_R;
 
 {$R *.res}
-{$R 'idleclose\CloseApplicationReg.dcr'}
-{$R 'layoutsaver\LayoutSaverReg.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -11,37 +9,34 @@ package cc_D104Denali_D;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION OFF}
+{$OPTIMIZATION ON}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
-{$REFERENCEINFO ON}
+{$REFERENCEINFO OFF}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES ON}
+{$STACKFRAMES OFF}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE DEBUG}
+{$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Cornelius Concepts Components'}
-{$DESIGNONLY}
+{$DESCRIPTION 'Cornelius Concepts Delphi Library'}
+{$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
-  cc_D104Denali_R,
-  designide,
-  vcldb,
-  dbrtl,
-  vcl;
+  vcl,
+  dbrtl;
 
 contains
-  CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
-  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
-  cc_reg in 'cc_reg.pas';
+  LayoutSaver in 'layoutsaver\LayoutSaver.pas',
+  AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
+  CloseApplication in 'idleclose\CloseApplication.pas';
 
 end.
