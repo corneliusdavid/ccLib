@@ -10,6 +10,7 @@ interface
 {$I cc.inc}
 
 uses
+  Classes,
   {$IFDEF	Delphi5}
   Dsgnintf;
   {$ELSE}
@@ -19,12 +20,18 @@ uses
   {$ENDIF}
 
 type
+  {$IFDEF 103RioOrHigher}
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
+  {$ENDIF}
   TccIniLayoutSaverEditor = class(TComponentEditor)
     function GetVerbCount: Integer; override;
     function GetVerb(Index: Integer): string; override;
     procedure ExecuteVerb(Index: Integer); override;
   end;
 
+  {$IFDEF 103RioOrHigher}
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
+  {$ENDIF}
   TccRegistryLayoutSaverEditor = class(TComponentEditor)
     function GetVerbCount: Integer; override;
     function GetVerb(Index: Integer): string; override;
@@ -37,7 +44,7 @@ procedure RegisterLayoutSaver;
 implementation
 
 uses
-  SysUtils, Classes, Windows, Graphics, ToolsAPI,
+  SysUtils, Windows, Graphics, ToolsAPI,
   LayoutSaver;
 
 procedure RegisterLayoutSaver;
