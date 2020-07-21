@@ -66,12 +66,12 @@ type
 ///   A procedure of type TFileFoundProc called for each found file, giving the
 ///   TSearchRec to the calling method.
 /// </param>
-/// <example>
+/// <examples>
 ///   GetSearchRecs(LogFolder, '*.log', False, nil, <br />procedure (FileInfo:
 ///   TSearchRec) <br />begin <br />// log files older than 90 days to the
 ///   recycle bin <br />if FileInfo.TimeStamp &lt; Now - 90 then <br />
 ///   FileDelete(TPath.Combine(LogFolder, FileInfo.Name), True); <br />end); <br />
-/// </example>
+/// </examples>
 procedure GetSearchRecs(const Path, Pattern: string; const Recursive: Boolean; PathStatusProc: TPathStatusProc; FileFoundProc: TFileFoundProc);
 
 
