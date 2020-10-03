@@ -3,8 +3,8 @@ unit ufrmRegLayoutSaverDemo;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Samples.Spin, LayoutSaver;
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Spin, StdCtrls,
+  Forms, Controls, ExtCtrls, LayoutSaver;
 
 type
   TfrmRegLayoutSaver = class(TForm)
@@ -15,6 +15,8 @@ type
     ccRegistryLayoutSaver1: TccRegistryLayoutSaver;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure ccRegistryLayoutSaver1BeforeRestore(Sender: TObject);
+    procedure ccRegistryLayoutSaver1BeforeSave(Sender: TObject);
   end;
 
 var
@@ -24,10 +26,23 @@ implementation
 
 {$R *.dfm}
 
+uses
+  Dialogs;
+
 const
   sIntValName = 'an integer value';
   sBoolValName = 'a boolean value';
   sStringValName = 'a string value';
+
+procedure TfrmRegLayoutSaver.ccRegistryLayoutSaver1BeforeRestore(Sender: TObject);
+begin
+  ShowMessage('restoring from ' + ccRegistryLayoutSaver1.Location + ' / ' + ccRegistryLayoutSaver1.Section);
+end;
+
+procedure TfrmRegLayoutSaver.ccRegistryLayoutSaver1BeforeSave(Sender: TObject);
+begin
+  ShowMessage('saving to ' + ccRegistryLayoutSaver1.Location + ' / ' + ccRegistryLayoutSaver1.Section);
+end;
 
 procedure TfrmRegLayoutSaver.FormCreate(Sender: TObject);
 begin
