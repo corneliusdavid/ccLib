@@ -14,7 +14,7 @@ implementation
 
 uses
   {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
-  Windows, SysUtils, StrUtils, DateUtils;
+  WinAPI.Windows, System.SysUtils, System.StrUtils, System.DateUtils;
 
 function GetTimeZoneOffset: string;
 var
