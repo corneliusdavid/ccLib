@@ -77,6 +77,9 @@ begin
                      'automatically saved and restored upon creation and destruction of the form.  ' +
                      'Therefore, by simply dropping this component on a form, its size and position will ' +
                      'automatically be saved and restored in an .INI file--with no code!' + CR + LF +
+                     'You can use the OnBeforeRestore and OnBeforeSave events to modify behavior just before ' +
+                     'those actions take place.' + sLineBreak +
+                     sLineBreak +
                      LF +
                      'Note: If the Position property of the form is set to poScreenCenter, the form will still ' +
                      'retain its size (width and height), but always start centered.' + CR + LF +
@@ -111,23 +114,26 @@ const
   LF = #10;
 begin
   case Index of
-    0: MessageBox(0, 'TccRegistryLayoutSaver vr. 1.0' + CR + LF +
+    0: MessageBox(0, 'TccRegistryLayoutSaver vr. 1.0' + sLineBreak +
                      'Freeware by Cornelius Concepts',
                      PChar('About this component ...'),
                      MB_OK + MB_ICONINFORMATION);
     1: MessageBox(0, 'TccRegistryLayoutSaver saves the form''s Top, Left, Width, and Height settings in the ' +
                      'CURRENT_USER root key. By setting UseDefaultNames to True, the Location property is ' +
-                     'automatically assigned the Application.ExeName and appended with the Section property, ' +
-                     'which is set to the form''s name upon which the component resides.' + CR + LF +
-                     LF +
+                     'automatically assigned the Application.ExeName and and the Section property is ' +
+                     'set to the form''s name upon which the component resides.' + sLineBreak +
+                     sLineBreak +
                      'The AutoSave and AutoRestore properties allow a form to be ' +
                      'automatically saved and restored upon creation and destruction of the form.  ' +
                      'Therefore, by simply dropping this component on a form, its size and position will ' +
-                     'automatically be saved and restored in the registry--with no code!' + CR + LF +
-                     LF +
+                     'automatically be saved and restored in the registry--with no code!' + sLineBreak +
+                     sLineBreak +
+                     'You can use the OnBeforeRestore and OnBeforeSave events to modify behavior just before ' +
+                     'those actions take place.' + sLineBreak +
+                     sLineBreak +
                      'Note: If the Position property of the form is set to poScreenCenter, the form will still ' +
-                     'retain its size (width and height), but always start centered.' + CR + LF +
-                     LF +
+                     'retain its size (width and height), but always start centered.' + sLineBreak +
+                     sLineBreak +
                      'Also provided are three sets of public methods, SaveIntValue/RestoreIntValue, ' +
                      'SaveStrValue/RestoreStrValue and SaveBoolValue/RestoreBoolValue that ' +
                      'will save/resotre any integer, string, or boolean values (respectively) in the same ' +

@@ -56,6 +56,8 @@ object frmRegLayoutSaver: TfrmRegLayoutSaver
   object ccRegistryLayoutSaver1: TccRegistryLayoutSaver
     Location = 'Software\bds'
     Section = 'frmRegLayoutSaver'
+    OnBeforeRestore = ccRegistryLayoutSaver1BeforeRestore
+    OnBeforeSave = ccRegistryLayoutSaver1BeforeSave
     Left = 160
     Top = 136
   end
