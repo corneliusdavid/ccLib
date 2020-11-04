@@ -61,19 +61,13 @@ type
 implementation
 
 uses
-  {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
-  SysUtils, uConfigIniPersist;
+  System.SysUtils, uConfigIniPersist;
 
 {$REGION 'TBaseCustomConfigSettings'}
 
 constructor TBaseCustomConfigSettings.Create(ASection: string = '');
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Create'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('ASection', ASection); {$ENDIF}
-
   FSection := ASection;
-
-  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Create'); {$ENDIF}
 end;
 
 
@@ -89,12 +83,7 @@ end;
 
 procedure TBaseCustomConfigSettings.SetConfigFilename(const Value: string);
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SetConfigFilename'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('value', value); {$ENDIF}
-
   FConfigFilename := Value;
-
-  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'SetConfigFilename'); {$ENDIF}
 end;
 
 procedure TBaseCustomConfigSettings.SetSection(const AValue: string);
@@ -116,35 +105,26 @@ end;
 
 procedure TCustomConfigSettings.Load;
 begin
-  {$IFDEF UseCodeSite} CodeSite.TraceMethod( Self, 'Load', tmoTiming ); {$ENDIF}
-
   CheckConfigReadY('Load');
   CustomLoad;
 end;
 
 procedure TCustomConfigSettings.Save;
 begin
-  {$IFDEF UseCodeSite} CodeSite.TraceMethod( Self, 'Save', tmoTiming ); {$ENDIF}
-
   CheckConfigReady('Save');
   CustomSave;
 end;
-
 
 { TIniPersistConfigSettings }
 
 procedure TIniPersistConfigSettings.Load;
 begin
-  {$IFDEF UseCodeSite} CodeSite.TraceMethod( Self, 'Load', tmoTiming ); {$ENDIF}
-
   CheckConfigReadY('Load');
   TIniPersist.Load(Configfilename, Self);
 end;
 
 procedure TIniPersistConfigSettings.Save;
 begin
-  {$IFDEF UseCodeSite} CodeSite.TraceMethod( Self, 'Save', tmoTiming ); {$ENDIF}
-
   CheckConfigReady('Save');
   TIniPersist.Save(Configfilename, Self);
 end;
