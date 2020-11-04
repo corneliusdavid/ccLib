@@ -19,7 +19,7 @@ uses
   SysUtils, Classes,
   Registry,
   IniFiles;
-  {$ENDIF}
+{$ENDIF}
 
 type
   {
@@ -29,9 +29,11 @@ type
   }
   TccCustomLayoutSaver = class(TComponent)
   private
-    FLocation:string;
-    FSection:string;
+    FLocation: string;
+    FSection: string;
     FUseDefaultNames: Boolean;
+    FOnBeforeRestore: TNotifyEvent;
+    FOnBeforeSave: TNotifyEvent;
     procedure SetUseDefaultNames(Value: Boolean);
     procedure CheckSaveOnDestroy(Sender: TObject);
     procedure CheckRestoreOnCreate(Sender: TObject);
@@ -40,6 +42,8 @@ type
     FAutoRestore: Boolean;
     FSaveOnCreate: TNotifyEvent;
     FSaveOnDestroy: TNotifyEvent;
+    procedure DoBeforeRestore;
+    procedure DoBeforeSave;
     procedure AssignDefaultLocation; virtual; abstract;
     procedure AssignDefaultSection; virtual;
     function Open: Boolean; virtual;
@@ -48,18 +52,20 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure Restore; virtual;
     procedure Save; virtual;
-    procedure SaveIntValue(const Name:string;const Value: Integer); virtual; abstract;
-    function RestoreIntValue(const Name:string; const Default: Integer = 0): Integer; virtual; abstract;
-    procedure SaveStrValue(const Name:string;const Value:string); virtual; abstract;
-    function RestoreStrValue(const Name:string; const Default: string = ''):string; virtual; abstract;
-    procedure SaveBoolValue(const Name:string;const Value: Boolean); virtual; abstract;
-    function RestoreBoolValue(const Name:string; const Default: Boolean = False): Boolean; virtual; abstract;
+    procedure SaveIntValue(const name: string; const Value: Integer); virtual; abstract;
+    function RestoreIntValue(const name: string; const default: Integer = 0): Integer; virtual; abstract;
+    procedure SaveStrValue(const name: string; const Value: string); virtual; abstract;
+    function RestoreStrValue(const name: string; const default: string = ''): string; virtual; abstract;
+    procedure SaveBoolValue(const name: string; const Value: Boolean); virtual; abstract;
+    function RestoreBoolValue(const name: string; const default: Boolean = False): Boolean; virtual; abstract;
   published
-    property Location:string read FLocation write FLocation;
-    property Section:string read FSection write FSection;
+    property Location: string read FLocation write FLocation;
+    property Section: string read FSection write FSection;
     property UseDefaultNames: Boolean read FUseDefaultNames write SetUseDefaultNames default True;
     property AutoSave: Boolean read FAutoSave write FAutoSave default True;
     property AutoRestore: Boolean read FAutoRestore write FAutoRestore default True;
+    property OnBeforeRestore: TNotifyEvent read FOnBeforeRestore write FOnBeforeRestore;
+    property OnBeforeSave: TNotifyEvent read FOnBeforeSave write FOnBeforeSave;
   end;
 
 
@@ -71,19 +77,19 @@ type
   private
     FIniFile: TIniFile;
     FUseAppDataFolder: Boolean;
-    function GetAppDataPath:string;
+    function GetAppDataPath: string;
   protected
     procedure AssignDefaultLocation; override;
     procedure Close; override;
     function Open: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
-    procedure SaveIntValue(const Name:string;const Value: Integer); override;
-    function RestoreIntValue(const Name: string; const Default: Integer = 0): Integer; override;
-    procedure SaveStrValue(const Name:string;const Value:string); override;
-    function RestoreStrValue(const Name:string; const Default: string = ''): string; override;
-    procedure SaveBoolValue(const Name:string; const Value: Boolean); override;
-    function RestoreBoolValue(const Name:string; const Default: Boolean = False): Boolean; override;
+    procedure SaveIntValue(const name: string; const Value: Integer); override;
+    function RestoreIntValue(const name: string; const default: Integer = 0): Integer; override;
+    procedure SaveStrValue(const name: string; const Value: string); override;
+    function RestoreStrValue(const name: string; const default: string = ''): string; override;
+    procedure SaveBoolValue(const name: string; const Value: Boolean); override;
+    function RestoreBoolValue(const name: string; const default: Boolean = False): Boolean; override;
   published
     property UseAppDataFolder: Boolean read FUseAppDataFolder write FUseAppDataFolder default True;
   end;
@@ -101,12 +107,12 @@ type
     procedure Close; override;
     function Open: Boolean; override;
   public
-    procedure SaveIntValue(const Name:string;const Value: Integer); override;
-    function RestoreIntValue(const Name: string; const Default: Integer = 0): Integer; override;
-    procedure SaveStrValue(const Name:string;const Value:string); override;
-    function RestoreStrValue(const Name: string; const Default: string = ''): string; override;
-    procedure SaveBoolValue(const Name:string;const Value: Boolean); override;
-    function RestoreBoolValue(const Name: string; const Default: Boolean = False): Boolean; override;
+    procedure SaveIntValue(const name: string; const Value: Integer); override;
+    function RestoreIntValue(const name: string; const default: Integer = 0): Integer; override;
+    procedure SaveStrValue(const name: string; const Value: string); override;
+    function RestoreStrValue(const name: string; const default: string = ''): string; override;
+    procedure SaveBoolValue(const name: string; const Value: Boolean); override;
+    function RestoreBoolValue(const name: string; const default: Boolean = False): Boolean; override;
   end;
 
 implementation
@@ -118,14 +124,14 @@ uses
   Winapi.Windows, Winapi.SHFolder,
   VCL.Forms;
   {$ELSE}
-  Windows, SHFolder,
+Windows, SHFolder,
   Forms;
-  {$ENDIF}
+{$ENDIF}
 
 const
-  sFormTop = 'FormTop';
-  sFormLeft = 'FormLeft';
-  sFormWidth = 'FormWidth';
+  sFormTop    = 'FormTop';
+  sFormLeft   = 'FormLeft';
+  sFormWidth  = 'FormWidth';
   sFormHeight = 'FormHeight';
 
   { TccCustomLayoutSaver }
@@ -135,23 +141,35 @@ constructor TccCustomLayoutSaver.Create(AOwner: TComponent);
 begin
   inherited;
 
-  FLocation := EmptyStr;
-  FSection := EmptyStr;
+  FLocation        := EmptyStr;
+  FSection         := EmptyStr;
   FUseDefaultNames := True;
 
   FAutoRestore := True;
-  FAutoSave := True;
-  if not(csDesigning in ComponentState)then begin
-    if Assigned((AOwner as TForm).OnCreate)then
-      FSaveOnCreate :=(AOwner as TForm).OnCreate;
-    if Assigned((AOwner as TForm).OnDestroy)then
-      FSaveOnDestroy :=(AOwner as TForm).OnDestroy;
+  FAutoSave    := True;
+  if not(csDesigning in ComponentState) then begin
+    if Assigned((AOwner as TForm).OnCreate) then
+      FSaveOnCreate := (AOwner as TForm).OnCreate;
+    if Assigned((AOwner as TForm).OnDestroy) then
+      FSaveOnDestroy := (AOwner as TForm).OnDestroy;
 
-    (AOwner as TForm).OnCreate := CheckRestoreOnCreate;
+    (AOwner as TForm).OnCreate  := CheckRestoreOnCreate;
     (AOwner as TForm).OnDestroy := CheckSaveOnDestroy;
   end;
 end;
 
+
+procedure TccCustomLayoutSaver.DoBeforeRestore;
+begin
+  if Assigned(FOnBeforeRestore) then
+    FOnBeforeRestore(self);
+end;
+
+procedure TccCustomLayoutSaver.DoBeforeSave;
+begin
+  if Assigned(FOnBeforeSave) then
+    FOnBeforeSave(self);
+end;
 
 function TccCustomLayoutSaver.Open: Boolean;
 begin
@@ -166,18 +184,20 @@ end;
 
 procedure TccCustomLayoutSaver.Restore;
 begin
-  (Owner as TForm).Top := RestoreIntValue(sFormTop, (Owner as TForm).Top);
-  (Owner as TForm).Left := RestoreIntValue(sFormLeft, (Owner as TForm).Left);
-  (Owner as TForm).Width := RestoreIntValue(sFormWidth, (Owner as TForm).Width);
+  DoBeforeRestore;
+  (Owner as TForm).Top    := RestoreIntValue(sFormTop, (Owner as TForm).Top);
+  (Owner as TForm).Left   := RestoreIntValue(sFormLeft, (Owner as TForm).Left);
+  (Owner as TForm).Width  := RestoreIntValue(sFormWidth, (Owner as TForm).Width);
   (Owner as TForm).Height := RestoreIntValue(sFormHeight, (Owner as TForm).Height);
 end;
 
 procedure TccCustomLayoutSaver.Save;
 begin
-  SaveIntValue(sFormTop,(Owner as TForm).Top);
-  SaveIntValue(sFormLeft,(Owner as TForm).Left);
-  SaveIntValue(sFormWidth,(Owner as TForm).Width);
-  SaveIntValue(sFormHeight,(Owner as TForm).Height);
+  DoBeforeSave;
+  SaveIntValue(sFormTop, (Owner as TForm).Top);
+  SaveIntValue(sFormLeft, (Owner as TForm).Left);
+  SaveIntValue(sFormWidth, (Owner as TForm).Width);
+  SaveIntValue(sFormHeight, (Owner as TForm).Height);
 end;
 
 procedure TccCustomLayoutSaver.SetUseDefaultNames(Value: Boolean);
@@ -199,18 +219,18 @@ end;
 
 procedure TccCustomLayoutSaver.CheckRestoreOnCreate(Sender: TObject);
 begin
-  if Assigned(FSaveOnCreate)then
+  if Assigned(FSaveOnCreate) then
     FSaveOnCreate(Sender);
-  if FAutoRestore and(not(csDesigning in ComponentState))then
+  if FAutoRestore and (not(csDesigning in ComponentState)) then
     Restore;
 end;
 
 
 procedure TccCustomLayoutSaver.CheckSaveOnDestroy(Sender: TObject);
 begin
-  if FAutoSave and(not(csDesigning in ComponentState))then
+  if FAutoSave and (not(csDesigning in ComponentState)) then
     Save;
-  if Assigned(FSaveOnDestroy)then
+  if Assigned(FSaveOnDestroy) then
     FSaveOnDestroy(Sender);
 end;
 
@@ -224,13 +244,13 @@ begin
 end;
 
 
-function TccIniLayoutSaver.GetAppDataPath:string;
+function TccIniLayoutSaver.GetAppDataPath: string;
 var
-  LStr: array[0 .. MAX_PATH] of Char;
+  LStr: array [0 .. MAX_PATH] of Char;
 begin
   SetLastError(ERROR_SUCCESS);
 
-  if SHGetFolderPath(0, CSIDL_LOCAL_APPDATA, 0, 0,@LStr)= S_OK then
+  if SHGetFolderPath(0, CSIDL_LOCAL_APPDATA, 0, 0, @LStr) = S_OK then
     Result := LStr;
 end;
 
@@ -243,12 +263,13 @@ begin
 
   if FUseAppDataFolder then begin
     AppDataFolder := IncludeTrailingPathDelimiter(GetAppDataPath) +
-                     ChangeFileExt(ExtractFileName(Application.ExeName), '');
+      ChangeFileExt(ExtractFileName(Application.ExeName), '');
     {$IFDEF UseCodeSite} CodeSite.Send('using AppDataFolder', AppDataFolder); {$ENDIF}
     ForceDirectories(AppDataFolder);
     FLocation := IncludeTrailingPathDelimiter(AppDataFolder) +
-                 ChangeFileExt(ExtractFileName(Application.ExeName), '.INI');
-  end else
+      ChangeFileExt(ExtractFileName(Application.ExeName), '.INI');
+  end
+  else
     FLocation := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
       ChangeFileExt(ExtractFileName(Application.ExeName), '.INI');
 
@@ -260,13 +281,13 @@ end;
 function TccIniLayoutSaver.Open: Boolean;
 begin
   {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'Open'); {$ENDIF}
-
   inherited Open;
 
-  if Length(FLocation)> 0 then begin
+  if Length(FLocation) > 0 then begin
     FIniFile := TIniFile.Create(FLocation);
-    Result := True;
-  end else
+    Result   := True;
+  end
+  else
     Result := False;
 
   {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'Open'); {$ENDIF}
@@ -276,7 +297,6 @@ end;
 procedure TccIniLayoutSaver.Close;
 begin
   {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'Close'); {$ENDIF}
-
   inherited Open;
 
   FIniFile.Free;
@@ -285,10 +305,9 @@ begin
 end;
 
 
-procedure TccIniLayoutSaver.SaveIntValue(const Name: string; const Value: Integer);
+procedure TccIniLayoutSaver.SaveIntValue(const name: string; const Value: Integer);
 begin
   {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'SaveIntValue'); {$ENDIF}
-
   inherited;
 
   if Open then begin
@@ -300,27 +319,25 @@ begin
 end;
 
 
-function TccIniLayoutSaver.RestoreIntValue(const Name: string; const Default: Integer = 0): Integer;
+function TccIniLayoutSaver.RestoreIntValue(const name: string; const default: Integer = 0): Integer;
 begin
   {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'RestoreIntValue'); {$ENDIF}
-
   inherited;
 
-  if Open and FIniFile.ValueExists(FSection, name)then begin
-    Result := FIniFile.ReadInteger(FSection, name, Default);
+  if Open and FIniFile.ValueExists(FSection, name) then begin
+    Result := FIniFile.ReadInteger(FSection, name, default);
     Close;
   end
   else
-    Result := Default;
+    Result := default;
 
   {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'RestoreIntValue'); {$ENDIF}
 end;
 
 
-procedure TccIniLayoutSaver.SaveStrValue(const Name, Value:string);
+procedure TccIniLayoutSaver.SaveStrValue(const name, Value: string);
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveStrValue'); {$ENDIF}
-
   inherited;
 
   if Open then begin
@@ -332,27 +349,25 @@ begin
 end;
 
 
-function TccIniLayoutSaver.RestoreStrValue(const Name:string; const Default: string = ''):string;
+function TccIniLayoutSaver.RestoreStrValue(const name: string; const default: string = ''): string;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreStrValue'); {$ENDIF}
-
   inherited;
 
-  if Open and FIniFile.ValueExists(FSection, name)then begin
-    Result := FIniFile.ReadString(FSection, name, Default);
+  if Open and FIniFile.ValueExists(FSection, name) then begin
+    Result := FIniFile.ReadString(FSection, name, default);
     Close;
   end
   else
-    Result := Default;
+    Result := default;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'RestoreStrValue'); {$ENDIF}
 end;
 
 
-procedure TccIniLayoutSaver.SaveBoolValue(const Name:string; const Value: Boolean);
+procedure TccIniLayoutSaver.SaveBoolValue(const name: string; const Value: Boolean);
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveBoolValue'); {$ENDIF}
-
   inherited;
 
   if Open then begin
@@ -364,18 +379,17 @@ begin
 end;
 
 
-function TccIniLayoutSaver.RestoreBoolValue(const Name:string; const Default: Boolean = False): Boolean;
+function TccIniLayoutSaver.RestoreBoolValue(const name: string; const default: Boolean = False): Boolean;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreBoolValue'); {$ENDIF}
-
   inherited;
 
-  if Open and FIniFile.ValueExists(FSection, name)then begin
-    Result := FIniFile.ReadBool(FSection, name, Default);
+  if Open and FIniFile.ValueExists(FSection, name) then begin
+    Result := FIniFile.ReadBool(FSection, name, default);
     Close;
   end
   else
-    Result := Default;
+    Result := default;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'RestoreBoolValue'); {$ENDIF}
 end;
@@ -404,10 +418,10 @@ begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Open'); {$ENDIF}
   inherited Open;
 
-  if Length(FLocation)> 0 then begin
-    FRegistry := TRegistry.Create;
+  if Length(FLocation) > 0 then begin
+    FRegistry         := TRegistry.Create;
     FRegistry.RootKey := HKEY_CURRENT_USER;
-    Result := FRegistry.OpenKey(IncludeTrailingPathDelimiter(FLocation) + FSection, True);
+    Result            := FRegistry.OpenKey(IncludeTrailingPathDelimiter(FLocation) + FSection, True);
   end
   else
     Result := False;
@@ -416,30 +430,28 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'Open'); {$ENDIF}
 end;
 
-procedure TccRegistryLayoutSaver.SaveBoolValue(const Name: string; const Value: Boolean);
+procedure TccRegistryLayoutSaver.SaveBoolValue(const name: string; const Value: Boolean);
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveBoolValue'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('Name', Name); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Value', Value); {$ENDIF}
-
   if Open then begin
-    FRegistry.WriteBool(Name, Value);
+    FRegistry.WriteBool(name, Value);
     Close;
   end;
 
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveBoolValue'); {$ENDIF}
 end;
 
-function TccRegistryLayoutSaver.RestoreBoolValue(const Name: string; const Default: Boolean = False): Boolean;
+function TccRegistryLayoutSaver.RestoreBoolValue(const name: string; const default: Boolean = False): Boolean;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreBoolValue'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('Name', Name); {$ENDIF}
-
-  Result := Default;
+  {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
+  Result := default;
 
   if Open then begin
-    if FRegistry.ValueExists(Name) then
-      Result := FRegistry.ReadBool(Name);
+    if FRegistry.ValueExists(name) then
+      Result := FRegistry.ReadBool(name);
     Close;
   end;
 
@@ -447,32 +459,30 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'RestoreBoolValue'); {$ENDIF}
 end;
 
-procedure TccRegistryLayoutSaver.SaveIntValue(const Name: string; const Value: Integer);
+procedure TccRegistryLayoutSaver.SaveIntValue(const name: string; const Value: Integer);
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveIntValue'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('Name', Name); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Value', Value); {$ENDIF}
-
   inherited;
 
   if Open then begin
-    FRegistry.WriteInteger(Name, Value);
+    FRegistry.WriteInteger(name, Value);
     Close;
   end;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'SaveIntValue'); {$ENDIF}
 end;
 
-function TccRegistryLayoutSaver.RestoreIntValue(const Name: string; const Default: Integer = 0): Integer;
+function TccRegistryLayoutSaver.RestoreIntValue(const name: string; const default: Integer = 0): Integer;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreIntValue'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('Name', Name); {$ENDIF}
-
-  Result := Default;
+  {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
+  Result := default;
 
   if Open then begin
-    if FRegistry.ValueExists(Name) then
-      Result := FRegistry.ReadInteger(Name);
+    if FRegistry.ValueExists(name) then
+      Result := FRegistry.ReadInteger(name);
     Close;
   end;
 
@@ -480,30 +490,28 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'RestoreIntValue'); {$ENDIF}
 end;
 
-procedure TccRegistryLayoutSaver.SaveStrValue(const Name, Value: string);
+procedure TccRegistryLayoutSaver.SaveStrValue(const name, Value: string);
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveStrValue'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('Name', Name); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Value', Value); {$ENDIF}
-
   if Open then begin
-    FRegistry.WriteString(Name, Value);
+    FRegistry.WriteString(name, Value);
     Close;
   end;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'SaveStrValue'); {$ENDIF}
 end;
 
-function TccRegistryLayoutSaver.RestoreStrValue(const Name: string; const Default: string = ''): string;
+function TccRegistryLayoutSaver.RestoreStrValue(const name: string; const default: string = ''): string;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreStrValue'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('Name', Name); {$ENDIF}
-
-  Result := Default;
+  {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
+  Result := default;
 
   if Open then begin
-    if FRegistry.ValueExists(Name) then
-      Result := FRegistry.ReadString(Name);
+    if FRegistry.ValueExists(name) then
+      Result := FRegistry.ReadString(name);
     Close;
   end;
 
