@@ -19,7 +19,7 @@ uses
   SysUtils, Classes,
   Registry,
   IniFiles;
-{$ENDIF}
+  {$ENDIF}
 
 type
   {
@@ -124,15 +124,16 @@ uses
   Winapi.Windows, Winapi.SHFolder,
   VCL.Forms;
   {$ELSE}
-Windows, SHFolder,
+  Windows, SHFolder,
   Forms;
 {$ENDIF}
 
 const
-  sFormTop    = 'FormTop';
-  sFormLeft   = 'FormLeft';
-  sFormWidth  = 'FormWidth';
-  sFormHeight = 'FormHeight';
+  FORM_TOP    = 'FormTop';
+  FORM_LEFT   = 'FormLeft';
+  FORM_WIDTH  = 'FormWidth';
+  FORM_HEIGHT = 'FormHeight';
+  FORM_MAX    = 'FormMaximized';
 
   { TccCustomLayoutSaver }
 
@@ -185,19 +186,25 @@ end;
 procedure TccCustomLayoutSaver.Restore;
 begin
   DoBeforeRestore;
-  (Owner as TForm).Top    := RestoreIntValue(sFormTop, (Owner as TForm).Top);
-  (Owner as TForm).Left   := RestoreIntValue(sFormLeft, (Owner as TForm).Left);
-  (Owner as TForm).Width  := RestoreIntValue(sFormWidth, (Owner as TForm).Width);
-  (Owner as TForm).Height := RestoreIntValue(sFormHeight, (Owner as TForm).Height);
+  (Owner as TForm).Top    := RestoreIntValue(FORM_TOP, (Owner as TForm).Top);
+  (Owner as TForm).Left   := RestoreIntValue(FORM_LEFT, (Owner as TForm).Left);
+  (Owner as TForm).Width  := RestoreIntValue(FORM_WIDTH, (Owner as TForm).Width);
+  (Owner as TForm).Height := RestoreIntValue(FORM_HEIGHT, (Owner as TForm).Height);
+  if RestoreBoolValue(FORM_MAX, False) then begin
+    {$IFDEF UseCodeSite} CodeSite.Send(csmBlue, 'Restoring window maximized'); {$ENDIF}
+    (Owner as TForm).WindowState := wsMaximized;
+  end;
 end;
 
 procedure TccCustomLayoutSaver.Save;
 begin
   DoBeforeSave;
-  SaveIntValue(sFormTop, (Owner as TForm).Top);
-  SaveIntValue(sFormLeft, (Owner as TForm).Left);
-  SaveIntValue(sFormWidth, (Owner as TForm).Width);
-  SaveIntValue(sFormHeight, (Owner as TForm).Height);
+  SaveIntValue(FORM_TOP, (Owner as TForm).Top);
+  SaveIntValue(FORM_LEFT, (Owner as TForm).Left);
+  SaveIntValue(FORM_WIDTH, (Owner as TForm).Width);
+  SaveIntValue(FORM_HEIGHT, (Owner as TForm).Height);
+  SaveBoolValue(FORM_MAX, (Owner as TForm).WindowState = wsMaximized);
+  {$IFDEF UseCodeSite} CodeSite.Send(csmBlue, 'Saving Window state maximized: ', (Owner as TForm).WindowState = wsMaximized); {$ENDIF}
 end;
 
 procedure TccCustomLayoutSaver.SetUseDefaultNames(Value: Boolean);
@@ -281,13 +288,12 @@ end;
 function TccIniLayoutSaver.Open: Boolean;
 begin
   {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'Open'); {$ENDIF}
-  inherited Open;
+  inherited;
 
   if Length(FLocation) > 0 then begin
     FIniFile := TIniFile.Create(FLocation);
     Result   := True;
-  end
-  else
+  end else
     Result := False;
 
   {$IFDEF UseCodeSite}CodeSite.ExitMethod(Self, 'Open'); {$ENDIF}
@@ -297,7 +303,7 @@ end;
 procedure TccIniLayoutSaver.Close;
 begin
   {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'Close'); {$ENDIF}
-  inherited Open;
+  inherited;
 
   FIniFile.Free;
 
@@ -357,13 +363,11 @@ begin
   if Open and FIniFile.ValueExists(FSection, name) then begin
     Result := FIniFile.ReadString(FSection, name, default);
     Close;
-  end
-  else
+  end else
     Result := default;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'RestoreStrValue'); {$ENDIF}
 end;
-
 
 procedure TccIniLayoutSaver.SaveBoolValue(const name: string; const Value: Boolean);
 begin
@@ -387,8 +391,7 @@ begin
   if Open and FIniFile.ValueExists(FSection, name) then begin
     Result := FIniFile.ReadBool(FSection, name, default);
     Close;
-  end
-  else
+  end else
     Result := default;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'RestoreBoolValue'); {$ENDIF}
@@ -407,6 +410,7 @@ end;
 procedure TccRegistryLayoutSaver.Close;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'Close'); {$ENDIF}
+
   FRegistry.CloseKey;
   FRegistry.Free;
 
@@ -422,8 +426,7 @@ begin
     FRegistry         := TRegistry.Create;
     FRegistry.RootKey := HKEY_CURRENT_USER;
     Result            := FRegistry.OpenKey(IncludeTrailingPathDelimiter(FLocation) + FSection, True);
-  end
-  else
+  end else
     Result := False;
 
   {$IFDEF UseCodeSite} CodeSite.Send('Result', Result); {$ENDIF}
@@ -435,18 +438,20 @@ begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveBoolValue'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Value', Value); {$ENDIF}
+
   if Open then begin
     FRegistry.WriteBool(name, Value);
     Close;
   end;
 
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveBoolValue'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.ExitMethod(Self, 'SaveBoolValue'); {$ENDIF}
 end;
 
 function TccRegistryLayoutSaver.RestoreBoolValue(const name: string; const default: Boolean = False): Boolean;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreBoolValue'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
+
   Result := default;
 
   if Open then begin
@@ -464,6 +469,7 @@ begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveIntValue'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Value', Value); {$ENDIF}
+
   inherited;
 
   if Open then begin
@@ -478,6 +484,7 @@ function TccRegistryLayoutSaver.RestoreIntValue(const name: string; const defaul
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreIntValue'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
+
   Result := default;
 
   if Open then begin
@@ -495,6 +502,7 @@ begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'SaveStrValue'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Value', Value); {$ENDIF}
+
   if Open then begin
     FRegistry.WriteString(name, Value);
     Close;
@@ -507,6 +515,7 @@ function TccRegistryLayoutSaver.RestoreStrValue(const name: string; const defaul
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod(Self, 'RestoreStrValue'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('Name', name); {$ENDIF}
+
   Result := default;
 
   if Open then begin
