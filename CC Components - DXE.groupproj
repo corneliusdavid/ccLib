@@ -9,6 +9,9 @@
 			<Projects Include="cc_DXE_D.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="layoutsaver\demo\RegLayoutSaverDemo.dproj">
+				<Dependencies/>
+			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
 		<Target Name="cc_DXE_D:Make">
 			<MSBuild Projects="cc_DXE_D.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="RegLayoutSaverDemo">
+			<MSBuild Projects="layoutsaver\demo\RegLayoutSaverDemo.dproj"/>
+		</Target>
+		<Target Name="RegLayoutSaverDemo:Clean">
+			<MSBuild Projects="layoutsaver\demo\RegLayoutSaverDemo.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="RegLayoutSaverDemo:Make">
+			<MSBuild Projects="layoutsaver\demo\RegLayoutSaverDemo.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="cc_DXE_R;cc_DXE_D"/>
+			<CallTarget Targets="cc_DXE_R;cc_DXE_D;RegLayoutSaverDemo"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="cc_DXE_R:Clean;cc_DXE_D:Clean"/>
+			<CallTarget Targets="cc_DXE_R:Clean;cc_DXE_D:Clean;RegLayoutSaverDemo:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="cc_DXE_R:Make;cc_DXE_D:Make"/>
+			<CallTarget Targets="cc_DXE_R:Make;cc_DXE_D:Make;RegLayoutSaverDemo:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>
