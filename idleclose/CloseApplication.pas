@@ -18,6 +18,7 @@ uses
 type
   TOnApplicationMsg = procedure(var Msg: TMsg; var Handled: Boolean) of object;
 
+  [ComponentPlatforms(pfidWindows)]
   TCloseApplication = class(TComponent)
     procedure IdleTimerTimer(Sender: TObject);
   private
