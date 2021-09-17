@@ -37,6 +37,11 @@ requires
 contains
   LayoutSaver in 'layoutsaver\LayoutSaver.pas',
   AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
-  CloseApplication in 'idleclose\CloseApplication.pas';
+  CloseApplication in 'idleclose\CloseApplication.pas',
+  uConfigBaseIni in 'misc\uConfigBaseIni.pas',
+  uConfigIniPersist in 'misc\uConfigIniPersist.pas',
+  uSearchRecList in 'misc\uSearchRecList.pas',
+  uTestUtils in 'misc\uTestUtils.pas',
+  uXmlDates in 'misc\uXmlDates.pas';
 
 end.
