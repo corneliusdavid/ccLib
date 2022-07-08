@@ -5,8 +5,8 @@ interface
 {$I cc.inc}
 
 uses
-  {$IFDEF XEorHIGHER}
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  {$IFDEF XE2orHIGHER}
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.IOUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.StdCtrls, VCL.ExtCtrls;
   {$ELSE}
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -22,25 +22,29 @@ type
     procedure TimerCloseTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
+    MyFormatSettings: TFormatSettings;
     SecondsTillClose: Integer;
+    AppName: string;
+    procedure UpdateCaption;
   public
     CloseCode: Integer;
     SecondsWarning: Integer;
-    class function OpenfmAppIdleWarn(CloseTime: Integer): Integer;
+    ShowAppName: Boolean;
+    class function OpenfmAppIdleWarn(CloseTime: Integer; const ShouldShowAppName: Boolean = False): Integer;
   end;
-
 
 implementation
 
 {$R *.DFM}
 
-class function TfmAppIdleWarn.OpenfmAppIdleWarn(CloseTime: Integer): Integer;
+class function TfmAppIdleWarn.OpenfmAppIdleWarn(CloseTime: Integer; const ShouldShowAppName: Boolean = False): Integer;
 var
   instance: TfmAppIdleWarn;
 begin
   instance := TfmAppIdleWarn.Create(nil);
   try
     Instance.SecondsWarning := CloseTime;
+    Instance.ShowAppName := ShouldShowAppName;
     instance.Showmodal;
     Result := instance.CloseCode;
   finally
@@ -48,15 +52,19 @@ begin
   end;
 end;
 
-const
-  AppCloseMsg1 = 'Application will close in ';
-  AppCloseMsg2 = ' seconds';
 
 procedure TfmAppIdleWarn.FormShow(Sender: TObject);
 begin
+  MyFormatSettings := TFormatSettings.Create;
+
+  if ShowAppName then
+    AppName := TPath.GetFileNameWithoutExtension(Application.ExeName)
+  else
+    AppName := 'This Application';
+
   CloseCode := 0;
   SecondsTillClose := SecondsWarning;
-  LabSeconds.Caption := AppCloseMsg1 + IntToStr(SecondsWarning) + AppCloseMsg2;
+  UpdateCaption;
   TimerClose.Enabled := True;
 end;
 
@@ -69,11 +77,17 @@ end;
 procedure TfmAppIdleWarn.TimerCloseTimer(Sender: TObject);
 begin
   SecondsTillClose := SecondsTillClose - 1;
-  LabSeconds.Caption := AppCloseMsg1 + InttoStr(SecondsTillClose) + AppCloseMsg2;
+  UpdateCaption;
   Application.ProcessMessages;
   if SecondsTillClose < 1 then
     Close;
 end;
 
+procedure TfmAppIdleWarn.UpdateCaption;
+begin
+  LabSeconds.Caption := Format('%s will close in %d seconds.', [AppName, SecondsTillClose], MyFormatSettings);
+end;
+
 end.
+
 

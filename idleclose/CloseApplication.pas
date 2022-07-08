@@ -30,6 +30,7 @@ type
 
     FPreventCancelEditInserts: Boolean; // Flag To Prevent Cancellation of Edits & Inserts On Shutdown
     IdleTimer: TTimer;
+    FShowAppName: Boolean;
 
     procedure CloseAppBecauseIdleTimeExceeded;
     procedure CancelEditsInsertsInDatamodules;
@@ -46,6 +47,7 @@ type
     property MinutesAppAllowedToBeIdle: Integer read FMinutesAppAllowedToBeIdle write SetMinutesAppAllowedToBeIdle default 60;
     property PreventCancelEditInserts: Boolean read FPreventCancelEditInserts write FPreventCancelEditInserts default False;
     property SecondsPromptedOnShutdown: Integer read FSecondsPromptedOnShutdown write SetSecondsPromptedOnShutdown default 90;
+    property ShowAppName: Boolean read FShowAppName write FShowAppName default False;
     property TimerInterval: Integer read FTimerInterval write FTimerInterval default 60000;
     property OnAppTermination: TNotifyEvent read FOnAppTermination write FOnAppTermination;
   end;
@@ -86,6 +88,7 @@ begin
   if (not (csDesigning in ComponentState)) then begin // Only Allocate Resources If App Is Run
     //Set Flag To Ensure Terminate Window Not Called Recursively
     FCountDownScreenDisplayed := False;
+    FShowAppName := False;
 
     // Set WindowsHook Procedures
     MouseHook := SetWindowsHookEx(WH_MOUSE, TrapMouseInput, 0, GetCurrentThreadID);
@@ -169,7 +172,8 @@ begin
   FCountDownScreenDisplayed := True;
 
   // Prompt User With About To Close Warning
-  if TfmAppIdleWarn.OpenfmAppIdleWarn(FSecondsPromptedOnShutdown) = 0 then begin // TfmAppIdleWarn.OpenfmAppIdleWarn Opens The User Prompt To Keep The Application Open
+  // TfmAppIdleWarn.OpenfmAppIdleWarn Opens The User Prompt To Keep The Application Open
+  if TfmAppIdleWarn.OpenfmAppIdleWarn(FSecondsPromptedOnShutdown, FShowAppName) = 0 then begin
       // No Response From User - Close App
 
       // Call AppOnTerminate Event If Defined
