@@ -17,6 +17,7 @@ uses
 
 type
   TOnApplicationMsg = procedure(var Msg: TMsg; var Handled: Boolean) of object;
+  TAppIdleWarnFunc = function(CloseTime: Integer; const ShouldShowAppName: Boolean = False): Integer of object;
 
   [ComponentPlatforms(pfidWindows)]
   TCloseApplication = class(TComponent)
@@ -31,6 +32,8 @@ type
     FPreventCancelEditInserts: Boolean; // Flag To Prevent Cancellation of Edits & Inserts On Shutdown
     IdleTimer: TTimer;
     FShowAppName: Boolean;
+    FOnWarning: TAppIdleWarnFunc;
+    FOnResume: TNotifyEvent;
 
     procedure CloseAppBecauseIdleTimeExceeded;
     procedure CancelEditsInsertsInDatamodules;
@@ -50,6 +53,8 @@ type
     property ShowAppName: Boolean read FShowAppName write FShowAppName default False;
     property TimerInterval: Integer read FTimerInterval write FTimerInterval default 60000;
     property OnAppTermination: TNotifyEvent read FOnAppTermination write FOnAppTermination;
+    property OnWarning: TAppIdleWarnFunc read FOnWarning write FOnWarning;
+    property OnResume: TNotifyEvent read FOnResume write FOnResume;
   end;
 
 // Windows Hook Procedures To Intercept Keyboard & Mouse Input
@@ -99,7 +104,7 @@ begin
     IdleTimer.Enabled := False;
     IdleTimer.OnTimer := IdleTimerTimer;
     IdleTimer.Enabled := True;
-      // Assign Variables Used To Track Idle Time
+    // Assign Variables Used To Track Idle Time
     MinutesAppHasBeenIdle := 0;
   end;
 end;
@@ -108,7 +113,7 @@ procedure TCloseApplication.Loaded;
 // Proc To Load Properties After Component Creation And After Component properties have been streamed in
 begin
   inherited Loaded;
-  
+
   if (not (csDesigning in ComponentState)) then begin
     if FTimerInterval <> 0 then
       IdleTimer.Interval := FTimerInterval
@@ -127,7 +132,7 @@ begin
     Result := CallNextHookEx(KeyBoardHook, nCode, wp, lp)
   else begin
     if nCode = HC_ACTION then begin
-          // All Keyoard Activity Gets Here
+      // All Keyoard Activity Gets Here
       MinutesAppHasBeenIdle := 0;
       Result := 0;
     end
@@ -144,14 +149,13 @@ begin
     Result := CallNextHookEx(MouseHook, nCode, wp, lp)
   else begin
     if nCode = HC_ACTION then begin
-          // Must Test For Specific Mouse Input Here
+      // Must Test For Specific Mouse Input Here
       case wp of
         WM_LBUTTONDOWN, WM_RBUTTONDOWN, WM_MBUTTONDOWN: MinutesAppHasBeenIdle := 0; // 0 Counter For App Idle Time
         WM_LBUTTONDBLCLK, WM_RBUTTONDBLCLK, WM_MBUTTONDBLCLK: MinutesAppHasBeenIdle := 0; // 0 Counter For App Idle Time
       end;
       Result := 0;
-    end
-    else
+    end else
       result := 0;
   end;
 end;
@@ -167,28 +171,41 @@ end;
 
 procedure TCloseApplication.CloseAppBecauseIdleTimeExceeded;
 // Application Has Been Idle For Too Long
+var
+  ShouldClose: Boolean;
 begin
   // Set Flag To Ensure Proc Is Not Called Recursively By Timer Event
   FCountDownScreenDisplayed := True;
 
   // Prompt User With About To Close Warning
   // TfmAppIdleWarn.OpenfmAppIdleWarn Opens The User Prompt To Keep The Application Open
-  if TfmAppIdleWarn.OpenfmAppIdleWarn(FSecondsPromptedOnShutdown, FShowAppName) = 0 then begin
-      // No Response From User - Close App
+  if Assigned(FOnWarning) then
+    ShouldClose := FOnWarning(FSecondsPromptedOnShutdown, FShowAppName) = 0
+  else
+    ShouldClose := TfmAppIdleWarn.OpenfmAppIdleWarn(FSecondsPromptedOnShutdown, FShowAppName) = 0;
 
-      // Call AppOnTerminate Event If Defined
+  if ShouldClose then begin
+    // No Response From User - Close App
+
+    // Call AppOnTerminate Event If Defined
     if Assigned(FOnAppTermination) then
       FOnAppTermination(Self);
 
-      // Cancel All DataSet Edits/Inserts Unless Prevent=True
+    // Cancel All DataSet Edits/Inserts Unless Prevent=True
     if FPreventCancelEditInserts <> True then begin // Cancel All Pending Edits/Inserts In Tables
       CancelEditsInsertsInDatamodules;
       CancelEditsInsertsInOpenForms;
     end;
     Application.Terminate;
-  end
-  else // User Elected To Keep App Open
+  end else begin
+    // User Elected To Keep App Open
     MinutesAppHasBeenIdle := 0;
+
+    // notify caller
+    if Assigned(FOnResume) then
+      FOnResume(self);
+  end;
+
   FCountDownScreenDisplayed := False;
 end;
 
