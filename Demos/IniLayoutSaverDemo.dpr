@@ -1,7 +1,7 @@
 program IniLayoutSaverDemo;
 
 uses
-  Vcl.Forms,
+  Forms,
   ufrmIniLayoutSaverDemo in 'ufrmIniLayoutSaverDemo.pas' {frmIniLayoutSaver};
 
 {$R *.res}

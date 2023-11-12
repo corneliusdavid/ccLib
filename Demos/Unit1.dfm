@@ -2,72 +2,57 @@ object frmTestAppIdleWarn: TfrmTestAppIdleWarn
   Left = 0
   Top = 0
   Caption = 'AppIdleWarn Test App'
-  ClientHeight = 483
-  ClientWidth = 717
+  ClientHeight = 272
+  ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -24
+  Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OldCreateOrder = True
   Position = poMainFormCenter
-  PixelsPerInch = 192
-  TextHeight = 32
+  PixelsPerInch = 96
+  TextHeight = 15
   object Label1: TLabel
-    Left = 96
-    Top = 48
-    Width = 529
-    Height = 145
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Left = 48
+    Top = 24
+    Width = 265
+    Height = 73
     AutoSize = False
     Caption = 
       'Demo of using the CloseApplication component. Close-down set to ' +
       '1 minute with a 20 second warning.'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -32
+    Font.Height = -16
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     WordWrap = True
   end
   object chkShowAppName: TCheckBox
-    Left = 96
-    Top = 242
-    Width = 529
-    Height = 34
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Left = 48
+    Top = 121
+    Width = 265
+    Height = 17
     Caption = 'Show Application Name in Warning Message'
     TabOrder = 0
     OnClick = chkShowAppNameClick
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 445
-    Width = 717
-    Height = 38
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Top = 253
+    Width = 338
+    Height = 19
     Panels = <>
     SimplePanel = True
   end
   object chkUseCustomWarningMessage: TCheckBox
-    Left = 96
-    Top = 304
-    Width = 513
-    Height = 34
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Left = 48
+    Top = 152
+    Width = 257
+    Height = 17
     Caption = 'Use Custom Warning Event Handler'
     TabOrder = 2
     OnClick = chkUseCustomWarningMessageClick
@@ -77,14 +62,14 @@ object frmTestAppIdleWarn: TfrmTestAppIdleWarn
     SecondsPromptedOnShutdown = 20
     TimerInterval = 0
     OnResume = CloseApplication1Resume
-    Left = 184
-    Top = 344
+    Left = 110
+    Top = 182
   end
   object tmrStatusMessage: TTimer
     Enabled = False
     Interval = 5000
     OnTimer = tmrStatusMessageTimer
-    Left = 512
-    Top = 336
+    Left = 224
+    Top = 188
   end
 end

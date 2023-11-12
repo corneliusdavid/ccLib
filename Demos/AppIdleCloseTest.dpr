@@ -1,7 +1,7 @@
 program AppIdleCloseTest;
 
 uses
-  Vcl.Forms,
+  Forms,
   Unit1 in 'Unit1.pas' {frmTestAppIdleWarn};
 
 {$R *.res}

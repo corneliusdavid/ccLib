@@ -2,9 +2,16 @@ unit Unit1;
 
 interface
 
+{$I ..\source\cc.inc}
+
 uses
+  {$IFDEF XE2orHigher}
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, CloseApplication, Vcl.ExtCtrls, Vcl.ComCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
+  {$ELSE}
+  Forms, Messages, SysUtils, ExtCtrls, ComCtrls, Controls, StdCtrls, Classes,
+  {$ENDIF}
+  CloseApplication;
 
 type
   TfrmTestAppIdleWarn = class(TForm)

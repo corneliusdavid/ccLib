@@ -1,7 +1,7 @@
 program RegLayoutSaverDemo;
 
 uses
-  Vcl.Forms,
+  Forms,
   ufrmRegLayoutSaverDemo in 'ufrmRegLayoutSaverDemo.pas' {frmRegLayoutSaver};
 
 {$R *.res}

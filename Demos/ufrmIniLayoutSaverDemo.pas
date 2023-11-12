@@ -3,8 +3,13 @@ unit ufrmIniLayoutSaverDemo;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Samples.Spin, LayoutSaver;
+  Forms, Windows, Messages, SysUtils, Variants, Classes,
+  {$IFDEF XE2orHigher}
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Samples.Spin,
+  {$ELSE}
+  Spin, StdCtrls, Controls, ExtCtrls,
+  {$ENDIF}
+  LayoutSaver;
 
 type
   TfrmIniLayoutSaver = class(TForm)
