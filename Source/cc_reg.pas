@@ -6,7 +6,7 @@ procedure Register;
 
 implementation
 
-{$I cc.inc}
+{$I ..\..\source\cc.inc}
 
 uses
   SysUtils, Windows, Graphics, ToolsAPI,
