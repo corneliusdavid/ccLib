@@ -19,7 +19,7 @@ type
   TOnApplicationMsg = procedure(var Msg: TMsg; var Handled: Boolean) of object;
   TAppIdleWarnFunc = function(CloseTime: Integer; const ShouldShowAppName: Boolean = False): Integer of object;
 
-  [ComponentPlatforms(pfidWindows)]
+  [ComponentPlatforms(pidWin32 or pidWin64)]
   TCloseApplication = class(TComponent)
     procedure IdleTimerTimer(Sender: TObject);
   private

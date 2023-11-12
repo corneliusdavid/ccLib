@@ -27,7 +27,7 @@ type
     base class that could be extended to use any save/restore mechanism
     (i.e. Registry or .INI file)
   }
-  [ComponentPlatforms(pfidWindows)]
+  [ComponentPlatforms(pidWin32 or pidWin64)]
   TccCustomLayoutSaver = class(TComponent)
   private
     FLocation: string;
@@ -74,7 +74,7 @@ type
     INI LayoutSaver
     extended from CustomLayoutSaver to use an .INI file
   }
-  [ComponentPlatforms(pfidWindows)]
+  [ComponentPlatforms(pidWin32 or pidWin64)]
   TccIniLayoutSaver = class(TccCustomLayoutSaver)
   private
     FIniFile: TIniFile;
@@ -101,7 +101,7 @@ type
     Registry LayoutSaver
     extended from CustomLayoutSaver to use the registry
   }
-  [ComponentPlatforms(pfidWindows)]
+  [ComponentPlatforms(pidWin32 or pidWin64)]
   TccRegistryLayoutSaver = class(TccCustomLayoutSaver)
   private
     FRegistry: TRegistry;
