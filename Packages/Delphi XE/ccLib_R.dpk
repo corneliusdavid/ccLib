@@ -1,4 +1,4 @@
-package cc_DXE_R;
+package ccLib_R;
 
 {$R *.res}
 {$ALIGN 8}
@@ -23,6 +23,7 @@ package cc_DXE_R;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$DESCRIPTION 'Cornelius Concepts Delphi Library'}
+{$LIBSUFFIX '15'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -32,9 +33,9 @@ requires
   dbrtl;
 
 contains
-  ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
-  AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
-  CloseApplication in 'idleclose\CloseApplication.pas',
-  LayoutSaver in 'layoutsaver\LayoutSaver.pas';
+  ElapsedTimer in '..\..\source\elapsedtimer\ElapsedTimer.pas',
+  AppIdleWarn in '..\..\source\idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
+  CloseApplication in '..\..\source\idleclose\CloseApplication.pas',
+  LayoutSaver in '..\..\source\layoutsaver\LayoutSaver.pas';
 
 end.
