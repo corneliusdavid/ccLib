@@ -167,6 +167,15 @@
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 
+{ Delphi 12 Athens }
+{$IFDEF VER360}
+  {$DEFINE DELPHI6ANDUP}
+  {$DEFINE VERSION2005orHigher}
+  {$DEFINE XE2orHigher}
+  {$DEFINE 103RioOrHigher}
+  {$DEFINE SupportedCompiler}
+{$ENDIF}
+
 
 {$IFNDEF SupportedCompiler}
   {$MESSAGE FATAL 'Non-supported compiler.'}
