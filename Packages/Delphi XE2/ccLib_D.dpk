@@ -1,4 +1,4 @@
-package cc_DXE2_R;
+package ccLib_D;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -25,18 +25,23 @@ package cc_DXE2_R;
 {$IMAGEBASE $400000}
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$RUNONLY}
+{$DESCRIPTION 'Cornelius Concepts Components'}
+{$LIBSUFFIX '16'}
+{$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
+  designide,
+  vcldb,
+  dbrtl,
   vcl,
-  dbrtl;
+  ccLib_R;
 
 contains
-  ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
-  AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
-  CloseApplication in 'idleclose\CloseApplication.pas',
-  LayoutSaver in 'layoutsaver\LayoutSaver.pas';
+  CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas',
+  ElapsedTimerReg in '..\..\source\elapsedtimer\ElapsedTimerReg.pas',
+  LayoutSaverReg in '..\..\source\layoutsaver\LayoutSaverReg.pas',
+  cc_reg in '..\..\source\cc_reg.pas';
 
 end.
