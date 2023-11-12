@@ -1,9 +1,6 @@
-package cc_D101Berlin_D;
+package ccLib_D;
 
 {$R *.res}
-{$R 'elapsedtimer\ElapsedTimerReg.dcr'}
-{$R 'idleclose\CloseApplicationReg.dcr'}
-{$R 'layoutsaver\LayoutSaverReg.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -12,23 +9,24 @@ package cc_D101Berlin_D;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION OFF}
+{$OPTIMIZATION ON}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
-{$REFERENCEINFO ON}
+{$REFERENCEINFO OFF}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES ON}
+{$STACKFRAMES OFF}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE DEBUG}
+{$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Cornelius Concepts Components'}
+{$LIBSUFFIX '18'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -38,12 +36,12 @@ requires
   vcldb,
   dbrtl,
   vcl,
-  cc_D101Berlin_R;
+  ccLib_R;
 
 contains
-  CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
-  ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
-  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
-  cc_reg in 'cc_reg.pas';
+  CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas',
+  ElapsedTimerReg in '..\..\source\elapsedtimer\ElapsedTimerReg.pas',
+  LayoutSaverReg in '..\..\source\layoutsaver\LayoutSaverReg.pas',
+  cc_reg in '..\..\source\cc_reg.pas';
 
 end.
