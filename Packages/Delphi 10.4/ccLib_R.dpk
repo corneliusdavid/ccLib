@@ -1,4 +1,4 @@
-package cc_D104Sydney_R;
+package ccLib_R;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -26,6 +26,7 @@ package cc_D104Sydney_R;
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Cornelius Concepts Delphi Library'}
+{$LIBSUFFIX AUTO}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -35,8 +36,8 @@ requires
   dbrtl;
 
 contains
-  LayoutSaver in 'layoutsaver\LayoutSaver.pas',
-  AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
-  CloseApplication in 'idleclose\CloseApplication.pas';
+  LayoutSaver in '..\..\source\layoutsaver\LayoutSaver.pas',
+  AppIdleWarn in '..\..\source\idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
+  CloseApplication in '..\..\source\idleclose\CloseApplication.pas';
 
 end.

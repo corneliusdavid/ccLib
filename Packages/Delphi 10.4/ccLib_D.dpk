@@ -1,4 +1,4 @@
-package cc_D104Sydney_D;
+package ccLib_D;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -26,18 +26,19 @@ package cc_D104Sydney_D;
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Cornelius Concepts Components'}
+{$LIBSUFFIX AUTO}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
   vcl,
-  cc_D104Sydney_R,
-  DesignIDE;
+  DesignIDE,
+  ccLib_R;
 
 contains
-  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
-  cc_reg in 'cc_reg.pas',
-  CloseApplicationReg in 'idleclose\CloseApplicationReg.pas';
+  LayoutSaverReg in '..\..\source\layoutsaver\LayoutSaverReg.pas',
+  CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas',
+  cc_reg in '..\..\source\cc_reg.pas';
 
 end.
