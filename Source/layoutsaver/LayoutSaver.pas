@@ -8,7 +8,7 @@ unit LayoutSaver;
 
 interface
 
-{$I cc.inc}
+{$I ..\..\source\cc.inc}
 
 uses
   {$IFDEF XE2orHIGHER}
@@ -235,7 +235,6 @@ begin
     Restore;
 end;
 
-
 procedure TccCustomLayoutSaver.CheckSaveOnDestroy(Sender: TObject);
 begin
   if FAutoSave and (not(csDesigning in ComponentState)) then
@@ -246,13 +245,11 @@ end;
 
 { TccIniLayoutSaver }
 
-
 constructor TccIniLayoutSaver.Create(AOwner: TComponent);
 begin
   inherited;
   FUseAppDataFolder := True;
 end;
-
 
 function TccIniLayoutSaver.GetAppDataPath: string;
 var
@@ -263,7 +260,6 @@ begin
   if SHGetFolderPath(0, CSIDL_LOCAL_APPDATA, 0, 0, @LStr) = S_OK then
     Result := LStr;
 end;
-
 
 procedure TccIniLayoutSaver.AssignDefaultLocation;
 var

@@ -7,7 +7,7 @@ unit LayoutSaverReg;
 
 interface
 
-{$I cc.inc}
+{$I ..\..\source\cc.inc}
 
 uses
   Classes,

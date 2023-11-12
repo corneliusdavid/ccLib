@@ -12,12 +12,13 @@ object fmAppIdleWarn: TfmAppIdleWarn
   Font.Height = -20
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  OldCreateOrder = True
   Position = poOwnerFormCenter
   OnShow = FormShow
-  PixelsPerInch = 192
   DesignSize = (
     874
     361)
+  PixelsPerInch = 192
   TextHeight = 25
   object LabSeconds: TLabel
     Left = 11

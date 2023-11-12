@@ -2,7 +2,7 @@ unit AppIdleWarn;
 
 interface
 
-{$I cc.inc}
+{$I ..\..\source\cc.inc}
 
 uses
   {$IFDEF XE2orHIGHER}

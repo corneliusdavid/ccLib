@@ -7,7 +7,7 @@ unit ElapsedTimer;
 
 interface
 
-{$I cc.inc}
+{$I ..\..\source\cc.inc}
 
 uses
   {$IFDEF XE2orHIGHER}
