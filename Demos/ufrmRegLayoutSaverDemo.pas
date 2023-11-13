@@ -3,7 +3,7 @@ unit ufrmRegLayoutSaverDemo;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Spin, StdCtrls,
+  SysUtils, Variants, Classes, Graphics, Spin, StdCtrls,
   Forms, Controls, ExtCtrls, LayoutSaver;
 
 type

@@ -3,7 +3,7 @@ unit ufrmIniLayoutSaverDemo;
 interface
 
 uses
-  Forms, Windows, Messages, SysUtils, Variants, Classes,
+  Forms, SysUtils, Variants, Classes,
   {$IFDEF XE2orHigher}
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Samples.Spin,
   {$ELSE}
