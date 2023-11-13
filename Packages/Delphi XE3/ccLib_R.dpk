@@ -1,4 +1,4 @@
-package cc_DXE3_R;
+package ccLib_R;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -25,6 +25,7 @@ package cc_DXE3_R;
 {$IMAGEBASE $400000}
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
+{$LIBSUFFIX '17'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -35,9 +36,9 @@ requires
   dbrtl;
 
 contains
-  CloseApplication in 'idleclose\CloseApplication.pas',
-  AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
-  ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
-  LayoutSaver in 'layoutsaver\LayoutSaver.pas';
+  CloseApplication in '..\..\source\idleclose\CloseApplication.pas',
+  AppIdleWarn in '..\..\source\idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
+  ElapsedTimer in '..\..\source\elapsedtimer\ElapsedTimer.pas',
+  LayoutSaver in '..\..\source\layoutsaver\LayoutSaver.pas';
 
 end.

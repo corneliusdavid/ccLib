@@ -1,12 +1,9 @@
-package cc_DXE3_D;
+package ccLib_R;
 
 {$R *.res}
-{$R 'elapsedtimer\ElapsedTimerReg.dcr'}
-{$R 'idleclose\CloseApplicationReg.dcr'}
-{$R 'layoutsaver\LayoutSaverReg.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
-{$ASSERTIONS ON}
+{$ASSERTIONS OFF}
 {$BOOLEVAL OFF}
 {$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
@@ -28,22 +25,21 @@ package cc_DXE3_D;
 {$IMAGEBASE $400000}
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Cornelius Concepts Components'}
-{$DESIGNONLY}
+{$DESCRIPTION 'Cornelius Concepts Delphi Library'}
+{$LIBSUFFIX '22'}
+{$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
-  cc_DXE3_R,
-  designide,
-  vcldb,
+  vcl,
   dbrtl,
-  vcl;
+  vcldb;
 
 contains
-  CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
-  ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
-  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
-  cc_reg in 'cc_reg.pas';
+  ElapsedTimer in '..\..\source\elapsedtimer\ElapsedTimer.pas',
+  AppIdleWarn in '..\..\source\idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
+  CloseApplication in '..\..\source\idleclose\CloseApplication.pas',
+  LayoutSaver in '..\..\source\layoutsaver\LayoutSaver.pas';
 
 end.

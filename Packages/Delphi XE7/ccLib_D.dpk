@@ -1,9 +1,6 @@
-package cc_DXE5_D;
+package ccLib_D;
 
 {$R *.res}
-{$R 'elapsedtimer\ElapsedTimerReg.dcr'}
-{$R 'idleclose\CloseApplicationReg.dcr'}
-{$R 'layoutsaver\LayoutSaverReg.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -28,18 +25,19 @@ package cc_DXE5_D;
 {$IMAGEBASE $400000}
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
+{$LIBSUFFIX '21'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   DesignIDE,
-  cc_DXE5_R,
-  rtl;
+  rtl,
+  ccLib_R;
 
 contains
-  ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
-  CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
-  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
-  cc_reg in 'cc_reg.pas';
+  ElapsedTimerReg in '..\..\source\elapsedtimer\ElapsedTimerReg.pas',
+  LayoutSaverReg in '..\..\source\layoutsaver\LayoutSaverReg.pas',
+  CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas',
+  cc_reg in '..\..\source\cc_reg.pas';
 
 end.
