@@ -6,7 +6,7 @@
 			<FrameworkType>VCL</FrameworkType>
 			<Base>True</Base>
 			<Config Condition="'$(Config)'==''">Release</Config>
-			<Platform Condition="'$(Platform)'==''">Win64</Platform>
+			<Platform Condition="'$(Platform)'==''">Win32</Platform>
 			<TargetedPlatforms>3</TargetedPlatforms>
 			<AppType>Package</AppType>
 		</PropertyGroup>
@@ -39,6 +39,12 @@
 			<CfgParent>Base</CfgParent>
 			<Base>true</Base>
 		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win64)'!=''">
+			<Cfg_2_Win64>true</Cfg_2_Win64>
+			<CfgParent>Cfg_2</CfgParent>
+			<Cfg_2>true</Cfg_2>
+			<Base>true</Base>
+		</PropertyGroup>
 		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
 			<Cfg_2_Win32>true</Cfg_2_Win32>
 			<CfgParent>Cfg_2</CfgParent>
@@ -46,6 +52,9 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<DllSuffix>16</DllSuffix>
+			<PostBuildEvent><![CDATA[copy /y "$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm" "$(OUTPUTDIR)"
+$(PostBuildEvent)]]></PostBuildEvent>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<RuntimeOnlyPackage>true</RuntimeOnlyPackage>
@@ -67,7 +76,6 @@
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<DllSuffix>16</DllSuffix>
 			<VerInfo_Keys>CompanyName=Cornelius Concepts, LLC;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -89,6 +97,9 @@
 			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
 			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
 			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<PostBuildEvent><![CDATA[copy /y "$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm" "$(OUTPUTDIR)"
@@ -157,9 +168,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files (x86)\Raize\CS5\Bin\CodeSiteLoggingPkg_Design160.bpl">CodeSite Studio 5.3.3 - Logging Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files (x86)\Raize\CS5\Bin\CodeSiteDBToolsPkg_Design160.bpl">CodeSite Studio 5.3.3 - DB Tools</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\QRWDesignDXE2.bpl">QuickReport 6 Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
@@ -175,12 +183,36 @@ $(PostBuildEvent)]]></PostBuildEvent>
 		</ProjectExtensions>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
 		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+		<PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win64'">
+			<PreBuildEvent/>
+			<PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+			<PreLinkEvent/>
+			<PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+			<PostBuildEvent>copy /y &quot;$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+			<PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win32'">
+			<PreBuildEvent/>
+			<PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+			<PreLinkEvent/>
+			<PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+			<PostBuildEvent>copy /y &quot;$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+			<PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win64'">
+			<PreBuildEvent/>
+			<PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+			<PreLinkEvent/>
+			<PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+			<PostBuildEvent>copy /y &quot;$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+			<PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win32'">
 			<PreBuildEvent/>
 			<PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
 			<PreLinkEvent/>
 			<PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-			<PostBuildEvent>copy /y &quot;$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+			<PostBuildEvent>copy /y &quot;$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm&quot; &quot;$(OUTPUTDIR)&quot;&amp;&amp;copy /y &quot;$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm&quot; &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
 			<PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
 		</PropertyGroup>
 	</Project>
