@@ -52,6 +52,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_UnitSearchPath>..\..\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<DllSuffix>16</DllSuffix>
 			<PostBuildEvent><![CDATA[copy /y "$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm" "$(OUTPUTDIR)"
 $(PostBuildEvent)]]></PostBuildEvent>

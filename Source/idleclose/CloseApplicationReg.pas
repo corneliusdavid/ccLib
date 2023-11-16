@@ -7,7 +7,7 @@ unit CloseApplicationReg;
 
 interface
 
-{$I ..\..\source\cc.inc}
+{$I cc.inc}
 
 uses
   {$IFDEF	Delphi5}

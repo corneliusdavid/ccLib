@@ -47,6 +47,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_UnitSearchPath>..\..\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <PostBuildEvent><![CDATA[copy /y "$(PROJECTDIR)\..\..\source\idleclose\AppIdleWarn.dfm" "$(OUTPUTDIR)"
 $(PostBuildEvent)]]></PostBuildEvent>
         <DllSuffix>22</DllSuffix>
@@ -183,14 +184,14 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\16.0\Bpl\ccLib_R.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\Win64\ccLib_R.bpl" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64">
                         <RemoteName>ccLib_R.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\Win64\ccLib_R.bpl" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="Win64">
+                <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\16.0\Bpl\ccLib_R.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
                         <RemoteName>ccLib_R.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -513,13 +514,13 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <ModelSupport>True</ModelSupport>
         </BorlandProject>
