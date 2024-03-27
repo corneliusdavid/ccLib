@@ -22,3 +22,4 @@ Packages/Delphi XE6/__history/
 Packages/Delphi XE7/__history/
 Packages/Delphi XE8/ModelSupport_ccLib_R/
 Demos/Win32/
+*.res
