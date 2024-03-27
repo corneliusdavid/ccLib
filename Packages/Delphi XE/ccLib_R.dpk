@@ -23,7 +23,7 @@ package ccLib_R;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$DESCRIPTION 'Cornelius Concepts Delphi Library'}
-{$LIBSUFFIX '15'}
+{$LIBSUFFIX '150'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
