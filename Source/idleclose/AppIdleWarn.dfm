@@ -4,56 +4,46 @@ object fmAppIdleWarn: TfmAppIdleWarn
   BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Application Will Close'
-  ClientHeight = 361
-  ClientWidth = 874
+  ClientHeight = 181
+  ClientWidth = 437
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -20
+  Font.Height = -10
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = True
   Position = poOwnerFormCenter
   OnShow = FormShow
   DesignSize = (
-    874
-    361)
-  PixelsPerInch = 192
-  TextHeight = 25
+    437
+    181)
+  TextHeight = 13
   object LabSeconds: TLabel
-    Left = 11
-    Top = 80
-    Width = 852
-    Height = 40
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Left = 6
+    Top = 40
+    Width = 426
+    Height = 20
     Alignment = taCenter
     Anchors = [akLeft, akTop, akRight]
     AutoSize = False
     Caption = 'Application will close in 30 seconds'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -26
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object BBCancel: TBitBtn
-    Left = 243
-    Top = 176
-    Width = 388
-    Height = 98
-    Margins.Left = 6
-    Margins.Top = 6
-    Margins.Right = 6
-    Margins.Bottom = 6
+    Left = 122
+    Top = 88
+    Width = 194
+    Height = 49
     Caption = 'Do NOT Close'
     Default = True
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -26
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = []
     Glyph.Data = {
