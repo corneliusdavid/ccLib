@@ -120,7 +120,7 @@
 						<VersionInfoKeys Name="ProductName"/>
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
-						<VersionInfoKeys Name="Last Compile">2023-11-16 07:05</VersionInfoKeys>
+						<VersionInfoKeys Name="Last Compile">2024-03-27 11:13</VersionInfoKeys>
 					</VersionInfoKeys>
 					<Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dacvcl150.bpl">File c:\program files (x86)\embarcadero\rad studio\8.0\bin\dacvcl150.bpl not found</Excluded_Packages>
