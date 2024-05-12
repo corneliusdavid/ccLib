@@ -190,7 +190,7 @@ type
     ///	  TCustomSettings settings that have properties seldom used in
     ///	  applications.
     ///	</param>
-    class procedure Load(FileName : String; obj: TObject; IgnoreBaseProperties: Boolean = True);
+    class procedure Load(const FileName : String; obj: TObject; IgnoreBaseProperties: Boolean = True);
     ///	<summary>
     ///	  Save writes a configuration file using the settings from the given
     ///	  object.
@@ -209,7 +209,7 @@ type
     ///	  TCustomSettings settings that have properties seldom used in
     ///	  applications.
     ///	</param>
-    class procedure Save(FileName : String;obj : TObject; IgnoreBaseProperties: Boolean = True);
+    class procedure Save(const FileName : String;obj : TObject; IgnoreBaseProperties: Boolean = True);
   end;
 
 
@@ -285,7 +285,7 @@ begin
     end;
 end;
 
-class procedure TIniPersist.Load(FileName: String; obj: TObject; IgnoreBaseProperties: Boolean = True);
+class procedure TIniPersist.Load(const FileName: String; obj: TObject; IgnoreBaseProperties: Boolean = True);
 var
   ctx : TRttiContext;
   objType : TRttiType;
@@ -329,9 +329,9 @@ begin
         // always ignore TInterfacedObject properties
         if PropClass <> TInterfacedObject then begin
           // optionally ignore TCustomSettings properties
-          if IgnoreBaseProperties and (PropClass = TBaseCustomConfigSettings) then begin
-            {$IFDEF xxxUseCodeSite} CodeSite.Send(csmLevel1, 'ignoring base property', Prop.Name); {$ENDIF}
-          end else begin
+          if IgnoreBaseProperties and (PropClass = TBaseCustomConfigSettings) then
+            continue
+          else begin
             // look at each of the properties
             {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
             Data := EmptyStr;
@@ -340,7 +340,8 @@ begin
             IniValue := GetIniAttribute(Prop);
             if Assigned(IniValue) then begin
               ObjSection := (Obj as TBaseCustomConfigSettings).Section;
-              Data := Ini.ReadString(ObjSection, IniValue.Name, IniValue.DefaultValue);
+              //Data := Ini.ReadString(ObjSection, IniValue.Name, IniValue.DefaultValue);
+              Data :=  Ini.ReadString(ObjSection, IniValue.Name, IniValue.DefaultValue);
               {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, ObjSection, IniValue.Name])); {$ENDIF}
             end else if Length(IniClassSection) > 0 then begin
               // if using class-level keys, check to see if this property is ignored in the INI file
@@ -416,7 +417,7 @@ begin
   end;
 end;
 
-class procedure TIniPersist.Save(FileName: String; obj: TObject; IgnoreBaseProperties: Boolean = True);
+class procedure TIniPersist.Save(const FileName: String; obj: TObject; IgnoreBaseProperties: Boolean = True);
 var
   ctx : TRttiContext;
   objType : TRttiType;
