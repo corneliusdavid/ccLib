@@ -61,7 +61,7 @@ type
 implementation
 
 uses
-  System.SysUtils, uConfigIniPersist;
+  SysUtils, uConfigIniPersist;
 
 {$REGION 'TBaseCustomConfigSettings'}
 

@@ -36,21 +36,37 @@ type
 implementation
 
 uses
-  System.SysUtils, System.DateUtils;
+  SysUtils, DateUtils;
 
 { TIniPersisteDemoSettings }
 
 function TIniPersisteDemoSettings.GetRandomDate: TDateTime;
 begin
   if Length(FRandomDateStr) > 0 then
-    Result := ISO8601ToDate(FRandomDateStr, False)
+    {$IFDEF CONDITIONALEXPRESSIONS}
+      {$IF CompilerVersion >= 23.0}
+      Result := ISO8601ToDate(FRandomDateStr, False)
+      {$ELSE}
+      Result := StrToDate(FRandomDateStr)
+      {$IFEND}
+    {$ELSE}
+    Result := StrToDate(FRandomDateStr)
+    {$ENDIF}
   else
     Result := Date;
 end;
 
 procedure TIniPersisteDemoSettings.SetRandomDate(const Value: TDateTime);
 begin
-  FRandomDateStr := DateToISO8601(Value, False);
+  {$IFDEF CONDITIONALEXPRESSIONS}
+    {$IF CompilerVersion >= 23.0}
+    FRandomDateStr := DateToISO8601(Value, False);
+    {$ELSE}
+    FRandomDateStr := DateToStr(Value);
+    {$IFEND}
+  {$ELSE}
+  FRandomDateStr := DateToStr(Value);
+  {$ENDIF}
 end;
 
 end.

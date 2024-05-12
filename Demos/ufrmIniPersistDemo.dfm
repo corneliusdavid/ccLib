@@ -2,8 +2,8 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   Left = 0
   Top = 0
   Caption = 'IniPersist Demo'
-  ClientHeight = 376
-  ClientWidth = 637
+  ClientHeight = 389
+  ClientWidth = 634
   Color = clBtnFace
   Constraints.MinHeight = 415
   Constraints.MinWidth = 650
@@ -12,17 +12,19 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   Font.Height = -13
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OldCreateOrder = True
   Position = poMainFormCenter
   OnCreate = FormCreate
   DesignSize = (
-    637
-    376)
+    634
+    389)
+  PixelsPerInch = 96
   TextHeight = 17
   object Label1: TLabel
     AlignWithMargins = True
     Left = 10
     Top = 10
-    Width = 617
+    Width = 614
     Height = 51
     Margins.Left = 10
     Margins.Top = 10
@@ -35,7 +37,6 @@ object frmIniPersistDemo: TfrmIniPersistDemo
       'allows very simple loading and storing of configuration data to ' +
       'and from a standard .INI file.'
     WordWrap = True
-    ExplicitWidth = 602
   end
   object Label2: TLabel
     Left = 384
@@ -56,7 +57,7 @@ object frmIniPersistDemo: TfrmIniPersistDemo
     Left = 10
     Top = 69
     Width = 368
-    Height = 302
+    Height = 315
     Margins.Left = 10
     Margins.Bottom = 5
     TabStop = False
@@ -69,15 +70,13 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   object edtDescription: TLabeledEdit
     Left = 384
     Top = 89
-    Width = 231
+    Width = 228
     Height = 25
     Anchors = [akLeft, akTop, akRight]
     EditLabel.Width = 66
     EditLabel.Height = 17
     EditLabel.Caption = '&Description'
     TabOrder = 1
-    Text = ''
-    ExplicitWidth = 274
   end
   object chkOption1: TCheckBox
     Left = 384
@@ -128,8 +127,8 @@ object frmIniPersistDemo: TfrmIniPersistDemo
     Top = 175
     Width = 89
     Height = 25
-    Date = 45422.000000000000000000
-    Time = 0.974756909723510000
+    Date = 45422.974756909720000000
+    Time = 45422.974756909720000000
     TabOrder = 7
   end
 end
