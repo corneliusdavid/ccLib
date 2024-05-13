@@ -37,6 +37,9 @@ uses
   SysUtils, Classes, Rtti, TypInfo, IniFiles;
 
 type
+  {=========================================}
+  {   ATTRIBUTE CLASSES                     }
+  {=========================================}
   ///	<summary>
   ///	  An Attribute class that should be applied at the class level to define the "Config Section"
   ///	</summary>
@@ -106,6 +109,9 @@ type
   ///	</remarks>
   EIniPersist = class(Exception);
 
+  {=========================================}
+  {   CONFIG CLASSES - BASE                 }
+  {=========================================}
   ///	<summary>
   ///	  Base class for classes that use attributes to load/save themselves. Descend from one of the descendants of this class.
   ///	</summary>
@@ -122,8 +128,13 @@ type
     function GetClassSection(ClassType: TRttiType): string;
     function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; virtual; abstract;
     procedure SetDataValue(const SectionName, ValueName, StrValue: string); virtual; abstract;
+    procedure LoadRttiClass;
+    procedure SaveRttiClass;
   end;
 
+  {=========================================}
+  {   IniPersist                            }
+  {=========================================}
   ///	<summary>
   ///	  Descend your configuration classes from this class and define an IniClass attribute to define the section.
   ///   Then simply call load/save methods for very simple by loading and saving of all the property values of the class.
@@ -164,6 +175,50 @@ type
     ///	  <c>String. Required.</c> The name of the .INI file to write.
     ///	</param>
     procedure Save(const FileName : String);
+  end;
+
+  {=========================================}
+  {   StrPersist                            }
+  {=========================================}
+  /// <summary>
+  ///  Instead of loading and saving config settings in an INI file, this class handles a string configuration data.
+  ///  The string consists of NAME=VALUE pairs separated by semicolons. The attributes of the class are handled the
+  ///  same as the TIniPersist
+  /// </summary>
+  /// <example>
+  ///  <code>
+  ///  type
+  ///    [MySection]
+  ///    TMySettings = class(TIniPersist)
+  ///      ...
+  ///    end;
+  ///  var MySettings: TMySettings;
+  ///  MySettings := TMySettings.Create;
+  ///  MySettings.Load(MyIniFilename);
+  ///  </code>
+  /// </example>
+  TStrPersist = class(TCfgPersist)
+  private
+    var
+      NameValueStrings: TStringList;
+  protected
+    function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; override;
+    procedure SetDataValue(const SectionName, ValueName, StrValue: string); override;
+  public
+    ///	<summary>
+    ///	  Load parse the string and fills the given object with the settings found.
+    ///	</summary>
+    ///	<param name="ConfigStr">
+    ///	  <c>String. Required.</c> A series of NAME=VALUE pairs separated by semicolons.
+    ///	</param>
+    procedure Load(const ConfigStr : String);
+    ///	<summary>
+    ///	  Saves a configuration string, concatentating NAME=VALUE pairs with semicolons.
+    ///	</summary>
+    ///	<param name="FileName">
+    ///	  <c>String. Required.</c> The resultant configuration string;
+    ///	</param>
+    procedure Save(var ConfigStr : String);
   end;
 
 implementation
@@ -278,19 +333,7 @@ begin
      raise EIniPersist.Create('GetValue - Type not supported');
 end;
 
-{ TIniPersist }
-
-function TIniPersist.GetDataValue(const SectionName, ValueName, ValueDefault: string): string;
-begin
-  Result := FIni.ReadString(SectionName, ValueName, ValueDefault);
-end;
-
-procedure TIniPersist.SetDataValue(const SectionName, ValueName, StrValue: string);
-begin
-  FIni.WriteString(SectionName, ValueName, StrValue);
-end;
-
-procedure TIniPersist.Load(const FileName: String);
+procedure TCfgPersist.LoadRttiClass;
 var
   ctx : TRttiContext;
   objType : TRttiType;
@@ -302,12 +345,7 @@ var
   IniClassSection: string;
   IniDefault: string;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Load');  {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('filename', FileName); {$ENDIF}
-
-  ctx := TRttiContext.Create;
-  try
-    FIni := TIniFile.Create(FileName);
+    ctx := TRttiContext.Create;
     try
       objType := ctx.GetType(Self.ClassType);
 
@@ -345,16 +383,11 @@ begin
         end;
       end;
     finally
-      FIni.Free;
+      ctx.Free;
     end;
-  finally
-    ctx.Free;
-  end;
-
-  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.Load'); {$ENDIF}
 end;
 
-procedure TIniPersist.Save(const FileName: String);
+procedure TCfgPersist.SaveRttiClass;
 var
   ctx : TRttiContext;
   objType : TRttiType;
@@ -365,12 +398,7 @@ var
   Data : String;
   IniClassSection: string;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Save'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('filename', Filename); {$ENDIF}
-
-  ctx := TRttiContext.Create;
-  try
-    FIni := TIniFile.Create(FileName);
+    ctx := TRttiContext.Create;
     try
       objType := ctx.GetType(self.ClassInfo);
 
@@ -400,13 +428,92 @@ begin
         end;
       end;
     finally
-      FIni.Free;
+      ctx.Free;
     end;
+end;
+
+{ TIniPersist }
+
+function TIniPersist.GetDataValue(const SectionName, ValueName, ValueDefault: string): string;
+begin
+  Result := FIni.ReadString(SectionName, ValueName, ValueDefault);
+end;
+
+procedure TIniPersist.SetDataValue(const SectionName, ValueName, StrValue: string);
+begin
+  FIni.WriteString(SectionName, ValueName, StrValue);
+end;
+
+procedure TIniPersist.Load(const FileName: String);
+begin
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Load');  {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.Send('filename', FileName); {$ENDIF}
+
+  FIni := TIniFile.Create(FileName);
+  try
+    LoadRttiClass;
   finally
-    ctx.Free;
+    FIni.Free;
+  end;
+
+  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.Load'); {$ENDIF}
+end;
+
+procedure TIniPersist.Save(const FileName: String);
+begin
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Save'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.Send('filename', Filename); {$ENDIF}
+
+  FIni := TIniFile.Create(FileName);
+  try
+    SaveRttiClass;
+  finally
+    FIni.Free;
   end;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.Save');  {$ENDIF}
+end;
+
+{ TStrPersist }
+
+function TStrPersist.GetDataValue(const SectionName, ValueName, ValueDefault: string): string;
+begin
+  if NameValueStrings.ContainsName(ValueName) then
+    Result := NameValueStrings.Values[ValueName];
+end;
+
+procedure TStrPersist.SetDataValue(const SectionName, ValueName, StrValue: string);
+begin
+  NameValueStrings.Values[ValueName] := StrValue;
+end;
+
+procedure TStrPersist.Load(const ConfigStr: String);
+begin
+  NameValueStrings := TStringList.Create;
+  try
+    NameValueStrings.Delimiter := ';';
+    NameValueStrings.StrictDelimiter := True;
+    NameValueStrings.DelimitedText := ConfigStr;
+
+    LoadRttiClass;
+  finally
+    NameValueStrings.Free;
+  end;
+end;
+
+procedure TStrPersist.Save(var ConfigStr: String);
+begin
+  NameValueStrings := TStringList.Create;
+  try
+    NameValueStrings.Delimiter := ';';
+    NameValueStrings.StrictDelimiter := True;
+
+    SaveRttiClass;
+
+    ConfigStr := NameValueStrings.DelimitedText;
+  finally
+    NameValueStrings.Free;
+  end;
 end;
 
 end.
