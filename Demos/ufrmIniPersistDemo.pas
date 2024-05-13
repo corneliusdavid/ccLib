@@ -89,7 +89,7 @@ var
   ConfigFile: string;
 begin
   ConfigFile := GetIniFilename;
-  TIniPersist.Load(ConfigFile, IniPersistSettings);
+  IniPersistSettings.Load(ConfigFile);
   ShowRawConfigFile(ConfigFile);
 
   FillGuiFromSettings;
@@ -102,7 +102,7 @@ begin
   FillSettingsFromGUI;
 
   IniFilename := GetIniFileName;
-  TIniPersist.Save(IniFilename, IniPersistSettings);
+  IniPersistSettings.Save(IniFilename);
   ShowRawConfigFile(IniFilename);
 end;
 
