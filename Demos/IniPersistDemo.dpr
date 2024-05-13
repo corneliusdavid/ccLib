@@ -4,8 +4,7 @@ uses
   Forms,
   ufrmIniPersistDemo in 'ufrmIniPersistDemo.pas' {frmIniPersistDemo},
   uConfigIniPersist in '..\Source\misc\uConfigIniPersist.pas',
-  uIniPersistDemoSettings in 'uIniPersistDemoSettings.pas',
-  uConfigBaseIni in '..\Source\misc\uConfigBaseIni.pas';
+  uIniPersistDemoSettings in 'uIniPersistDemoSettings.pas';
 
 {$R *.res}
 
