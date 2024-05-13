@@ -2,7 +2,7 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   Left = 0
   Top = 0
   Caption = 'IniPersist Demo'
-  ClientHeight = 389
+  ClientHeight = 379
   ClientWidth = 634
   Color = clBtnFace
   Constraints.MinHeight = 415
@@ -12,13 +12,11 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   Font.Height = -13
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = True
   Position = poMainFormCenter
   OnCreate = FormCreate
   DesignSize = (
     634
-    389)
-  PixelsPerInch = 96
+    379)
   TextHeight = 17
   object Label1: TLabel
     AlignWithMargins = True
@@ -37,6 +35,7 @@ object frmIniPersistDemo: TfrmIniPersistDemo
       'allows very simple loading and storing of configuration data to ' +
       'and from a standard .INI file.'
     WordWrap = True
+    ExplicitWidth = 612
   end
   object Label2: TLabel
     Left = 384
@@ -57,7 +56,7 @@ object frmIniPersistDemo: TfrmIniPersistDemo
     Left = 10
     Top = 69
     Width = 368
-    Height = 315
+    Height = 305
     Margins.Left = 10
     Margins.Bottom = 5
     TabStop = False
@@ -66,6 +65,8 @@ object frmIniPersistDemo: TfrmIniPersistDemo
       '==RAW Config File==')
     ReadOnly = True
     TabOrder = 0
+    ExplicitTop = 89
+    ExplicitHeight = 295
   end
   object edtDescription: TLabeledEdit
     Left = 384
@@ -77,6 +78,7 @@ object frmIniPersistDemo: TfrmIniPersistDemo
     EditLabel.Height = 17
     EditLabel.Caption = '&Description'
     TabOrder = 1
+    Text = ''
   end
   object chkOption1: TCheckBox
     Left = 384
@@ -127,8 +129,21 @@ object frmIniPersistDemo: TfrmIniPersistDemo
     Top = 175
     Width = 89
     Height = 25
-    Date = 45422.974756909720000000
-    Time = 45422.974756909720000000
+    Date = 45422.000000000000000000
+    Time = 0.974756909723510000
     TabOrder = 7
+  end
+  object grpConfigType: TRadioGroup
+    Left = 480
+    Top = 288
+    Width = 146
+    Height = 80
+    Caption = 'Config Type'
+    ItemIndex = 0
+    Items.Strings = (
+      'INI File'
+      'TXT w/ Semicolons')
+    TabOrder = 8
+    OnClick = grpConfigTypeClick
   end
 end
