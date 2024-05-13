@@ -25,6 +25,8 @@ unit uConfigIniPersist;
 (*
  * Modified by David Cornelius of Retail Dimensions, Inc.
  * Used by permission from Kurt Beeken of RDi.
+ *
+ * Modified further by David Cornelius of Cornelius Concepts, LLC
  *)
 
 {$TYPEINFO ON}
@@ -32,54 +34,16 @@ unit uConfigIniPersist;
 interface
 
 uses
-  SysUtils, Classes, Rtti, TypInfo;
+  SysUtils, Classes, Rtti, TypInfo, IniFiles;
 
 type
   ///	<summary>
-  ///	  An Attribute class that can be applied to a member of an object so that
-  ///	  when the object is passed to the Load or Save methods of TIniPersist,
-  ///	  the member will be loaded or saved to/from the .INI file.
-  ///	</summary>
-  IniValueAttribute = class(TCustomAttribute)
-  private
-    FName: string;
-    FDefaultValue: string;
-  published
-     ///	<summary>
-     ///	  The Constructor of IniValueAttribute simply establishes the field
-     ///	  values used by TIniPersist.
-     ///	</summary>
-     ///	<param name="AName">
-     ///	  <c>String. Required.</c> Is used as the Key name in the Name=Value
-     ///	  pair in the .INI file.
-     ///	</param>
-     ///	<param name="ADefaultValue">
-     ///	  <c>String. Optional.</c> Is used as the default value of the
-     ///	  property is the Name=Value pair is not found in the .INI file.
-     ///	</param>
-     constructor Create(const AName: string;
-                        const ADefaultValue: string = '');
-     ///	<summary>
-     ///	  This is the Name part of a Name=Value line in the .INI file.
-     ///	</summary>
-     property Name : string read FName write FName;
-     ///	<summary>
-     ///	  This is the default value of a Name=Value line of the .INI file.
-     ///	</summary>
-     property DefaultValue : string read FDefaultValue write FDefaultValue;
-  end;
-
-  ///	<summary>
-  ///	  An Attribute class that can be applied to a class so that when it is
-  ///	  passed to the Load or Save methods of TIniPersist, the members will be
-  ///	  loaded or saved to/from the .INI file.
+  ///	  An Attribute class that should be applied at the class level to define the "Config Section"
   ///	</summary>
   ///	<remarks>
-  ///	  This attribute class can be used instead of IniValueAttribute for
-  ///	  convenience because all the properties get saved to the .INI file by
-  ///	  default, but the [Section] of the .INI file for the class is determined
-  ///	  at design-time and therefore only one instance of a class with
-  ///	  IniClassAttribute can be used.
+  ///	  This attribute class defines the [Section] of the .INI file for the class; all the properties
+  ///   get saved as NAME=VALUE pairs within this section; the property names become the value names.
+  ///	  Only one instance of a class with IniClassAttribute can be used.
   ///	</remarks>
   IniClassAttribute = class(TCustomAttribute)
   private
@@ -105,22 +69,16 @@ type
   end;
 
   ///	<summary>
-  ///	  When an IniClassAttribute is in use for a class, this attribute class
-  ///	  will exclude a member from the INI file.
+  ///	  This attribute class excludes a property from being loaded/saved.
   ///	</summary>
-  ///	<remarks>
-  ///	  This class is intended to be used only in conjunction with
-  ///	  IniClassAttribute.
-  ///	</remarks>
+  /// <remarks>
+  ///   This class doesn't have any properties or methods; it's mere existence in a class is a flag to the member
+  /// </remarks>
   IniIgnoreAttribute = class(TCustomAttribute);
 
   ///	<summary>
-  ///	  When an IniClassAttribute is in use for a class, this member-level
-  ///	  attribute class provides optional INI value defaults
+  ///	  This attribute class provides an optional default value for a property
   ///	</summary>
-  ///	<remarks>
-  ///	  Is intended to be used only in conjunction with IniClassAttribute.
-  ///	</remarks>
   IniDefaultAttribute = class(TCustomAttribute)
   private
     FDefaultValue: string;
@@ -149,27 +107,46 @@ type
   EIniPersist = class(Exception);
 
   ///	<summary>
-  ///	  A class for making reading/saving configuration settings very simple by
-  ///	  passing in an object peppered with specific attributes.
+  ///	  Base class for classes that use attributes to load/save themselves. Descend from one of the descendants of this class.
+  ///	</summary>
+  TCfgPersist = class (TObject)
+  private
+    const
+       CLASS_SECTION_MISSING = 'IniClass[SectionName] missing';
+    procedure SetValue(aData : String;var aValue : TValue);
+    function GetValue(var aValue : TValue) : String;
+    function GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
+    function GetDefaultAttributeValue(Obj: TRttiObject): string;
+    function GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
+  protected
+    function GetClassSection(ClassType: TRttiType): string;
+    function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; virtual; abstract;
+    procedure SetDataValue(const SectionName, ValueName, StrValue: string); virtual; abstract;
+  end;
+
+  ///	<summary>
+  ///	  Descend your configuration classes from this class and define an IniClass attribute to define the section.
+  ///   Then simply call load/save methods for very simple by loading and saving of all the property values of the class.
   ///	</summary>
   /// <example>
   ///  <code>
-  ///  uses
-  ///    uConfigIniPersist;
   ///  type
+  ///    [MySection]
   ///    TMySettings = class(TIniPersist)
   ///      ...
   ///    end;
+  ///  var MySettings: TMySettings;
+  ///  MySettings := TMySettings.Create;
+  ///  MySettings.Load(MyIniFilename);
   ///  </code>
   /// </example>
-  TIniPersist = class (TObject)
+  TIniPersist = class (TCfgPersist)
   private
-    class procedure SetValue(aData : String;var aValue : TValue);
-    class function GetValue(var aValue : TValue) : String;
-    class function GetIniAttribute(Obj : TRttiObject) : IniValueAttribute;
-    class function GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
-    class function GetDefaultAttributeValue(Obj: TRttiObject): string;
-    class function GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
+    var
+      FIni : TIniFile;
+  protected
+    function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; override;
+    procedure SetDataValue(const SectionName, ValueName, StrValue: string); override;
   public
     ///	<summary>
     ///	  Load reads a configuration file and fills the given object with the
@@ -178,19 +155,7 @@ type
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to read from.
     ///	</param>
-    ///	<param name="obj">
-    ///	  The object with attributes applied that will be filled with the
-    ///	  values read.
-    ///	</param>
-    ///	<param name="IgnoreBaseProperties">
-    ///	  <c>Boolean. Optional.</c> If the IniClass attribute is applied
-    ///	  (which automatically reads all properties), this optional parameter
-    ///	  (False by default) will ignore the properties in the base class of
-    ///	  the object supplied. This is useful when using the common
-    ///	  TCustomSettings settings that have properties seldom used in
-    ///	  applications.
-    ///	</param>
-    class procedure Load(const FileName : String; obj: TObject; IgnoreBaseProperties: Boolean = True);
+    procedure Load(const FileName : String);
     ///	<summary>
     ///	  Save writes a configuration file using the settings from the given
     ///	  object.
@@ -198,38 +163,29 @@ type
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to write.
     ///	</param>
-    ///	<param name="obj">
-    ///	  The object with attributes applied that contain the values to write.
-    ///	</param>
-    ///	<param name="IgnoreBaseProperties">
-    ///	  <c>Boolean. Optional.</c> If the IniClass attribute is applied
-    ///	  (which automatically writes all properties), this optional parameter
-    ///	  (False by default) will ignore the properties in the base class of
-    ///	  the object supplied. This is useful when using the common
-    ///	  TCustomSettings settings that have properties seldom used in
-    ///	  applications.
-    ///	</param>
-    class procedure Save(const FileName : String;obj : TObject; IgnoreBaseProperties: Boolean = True);
+    procedure Save(const FileName : String);
   end;
-
 
 implementation
 
-uses
-  {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
-  IniFiles, uConfigBaseIni;
 
-{ TIniValue }
+{ IniClassAttribute }
 
-constructor IniValueAttribute.Create(const AName: string; const ADefaultValue: string);
+constructor IniClassAttribute.Create(const NewIniKey: string);
 begin
-  FName := aName;
-  FDefaultValue := aDefaultValue;
+  FIniKey := NewIniKey;
 end;
 
-{ TIniPersist }
+{ IniDefaultAttribute }
 
-class function TIniPersist.GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
+constructor IniDefaultAttribute.Create(const NewDefaultValue: string);
+begin
+  FDefaultValue := NewDefaultValue;
+end;
+
+{ TCfgPersist }
+
+function TCfgPersist.GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
 { check to see if the IniClassAttribute is assigned }
 var
   Attr: TCustomAttribute;
@@ -243,7 +199,20 @@ begin
     end;
 end;
 
-class function TIniPersist.GetDefaultAttributeValue(Obj: TRttiObject): string;
+function TCfgPersist.GetClassSection(ClassType: TRttiType): string;
+var
+  IniClass: IniClassAttribute;
+begin
+  // ensure this class is using "class-level" keys
+  IniClass := GetClassAttribute(ClassType);
+  if Assigned(IniClass) then
+    // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Key Names
+    Result := IniClass.IniKey
+  else
+    raise EIniPersist.Create(CLASS_SECTION_MISSING);
+end;
+
+function TCfgPersist.GetDefaultAttributeValue(Obj: TRttiObject): string;
 { check to see if the IniDefaultAttribute is assigned; if so, return the default string }
 var
   Attr: TCustomAttribute;
@@ -257,21 +226,7 @@ begin
     end;
 end;
 
-class function TIniPersist.GetIniAttribute(Obj: TRttiObject): IniValueAttribute;
-{ check to see if the IniValueAttribute is assigned }
-var
-  Attr: TCustomAttribute;
-begin
-  Result := nil;
-
-  for Attr in Obj.GetAttributes do
-    if Attr is IniValueAttribute then begin
-      Result := IniValueAttribute(Attr);
-      Break;
-    end;
-end;
-
-class function TIniPersist.GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
+function TCfgPersist.GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
 { check to see if the IniIgnoreAttribute is assigned }
 var
   Attr: TCustomAttribute;
@@ -285,110 +240,7 @@ begin
     end;
 end;
 
-class procedure TIniPersist.Load(const FileName: String; obj: TObject; IgnoreBaseProperties: Boolean = True);
-var
-  ctx : TRttiContext;
-  objType : TRttiType;
-  Field : TRttiField;
-  Prop  : TRttiProperty;
-  PropClass: TClass;
-  Value : TValue;
-  IniValue: IniValueAttribute;
-  IniClass: IniClassAttribute;
-  IniPropIgnore: IniIgnoreAttribute;
-  Ini : TIniFile;
-  Data : String;
-  ObjSection: string;
-
-  IniClassSection: string;
-  IniDefault: string;
-begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Load');  {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('filename', FileName); {$ENDIF}
-
-  ctx := TRttiContext.Create;
-  try
-    Ini := TIniFile.Create(FileName);
-    try
-      objType := ctx.GetType(Obj.ClassInfo);
-
-      // is this class using the "class-level" keys?
-      IniClass := GetClassAttribute(ObjType);
-      if Assigned(IniClass) then begin
-        // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Value Names
-        IniClassSection := IniClass.IniKey;
-        {$IFDEF UseCodeSite} CodeSite.Send('using class level [section] for ' + Obj.ClassName, IniClassSection); {$ENDIF}
-      end else
-        IniClassSection := EmptyStr;
-
-      // look at all the properties of the object
-      for Prop in objType.GetProperties do begin
-        // get the class to which the current property belongs
-        PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
-
-        // always ignore TInterfacedObject properties
-        if PropClass <> TInterfacedObject then begin
-          // optionally ignore TCustomSettings properties
-          if IgnoreBaseProperties and (PropClass = TBaseCustomConfigSettings) then
-            continue
-          else begin
-            // look at each of the properties
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
-            Data := EmptyStr;
-
-            // if class-level keys are in use then these will override the class-level settings
-            IniValue := GetIniAttribute(Prop);
-            if Assigned(IniValue) then begin
-              ObjSection := (Obj as TBaseCustomConfigSettings).Section;
-              //Data := Ini.ReadString(ObjSection, IniValue.Name, IniValue.DefaultValue);
-              Data :=  Ini.ReadString(ObjSection, IniValue.Name, IniValue.DefaultValue);
-              {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, ObjSection, IniValue.Name])); {$ENDIF}
-            end else if Length(IniClassSection) > 0 then begin
-              // if using class-level keys, check to see if this property is ignored in the INI file
-              IniPropIgnore := GetPropIgnoreAttribute(Prop);
-              if not Assigned(IniPropIgnore) then begin
-                // not ignored, check to see if there's a default value
-                IniDefault := GetDefaultAttributeValue(Prop);
-
-                // finally, read the data using the property name as the value name
-                Data := Ini.ReadString(IniClassSection, Prop.Name, IniDefault);
-                {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, IniClassSection, Prop.Name])); {$ENDIF}
-              end;
-            end;
-
-            // whichever way we read in the data, if it's available, we can now assign it
-            if Length(Data) > 0 then begin
-              {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data read from .INI file', Data); {$ENDIF}
-              Value := Prop.GetValue(Obj);
-              SetValue(Data, Value);
-              if prop.IsWritable then
-                prop.SetValue(Obj, Value);
-            end;
-          end;
-        end;
-      end;
-
-      // this section is rarely used as the INI keys/names are typically defined at the Property level, not the Field level
-      for Field in objType.GetFields do begin
-        IniValue := GetIniAttribute(Field);
-        if Assigned(IniValue) then begin
-          Data := Ini.ReadString((Obj as TBaseCustomConfigSettings).Section, IniValue.Name, IniValue.DefaultValue);
-          Value := Field.GetValue(Obj);
-          SetValue(Data,Value);
-          Field.SetValue(Obj,Value);
-        end;
-      end;
-    finally
-      Ini.Free;
-    end;
-  finally
-    ctx.Free;
-  end;
-
-  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.Load'); {$ENDIF}
-end;
-
-class procedure TIniPersist.SetValue(aData: String;var aValue: TValue);
+procedure TCfgPersist.SetValue(aData: String;var aValue: TValue);
 var
   I: Integer;
   x: Double;
@@ -417,41 +269,49 @@ begin
   end;
 end;
 
-class procedure TIniPersist.Save(const FileName: String; obj: TObject; IgnoreBaseProperties: Boolean = True);
+function TCfgPersist.GetValue(var aValue: TValue) : string;
+begin
+   if aValue.Kind in [tkWChar, tkLString, tkWString, tkString, tkChar, tkUString,
+                      tkInteger, tkInt64, tkFloat, tkEnumeration, tkSet] then
+     Result := aValue.ToString
+   else
+     raise EIniPersist.Create('GetValue - Type not supported');
+end;
+
+{ TIniPersist }
+
+function TIniPersist.GetDataValue(const SectionName, ValueName, ValueDefault: string): string;
+begin
+  Result := FIni.ReadString(SectionName, ValueName, ValueDefault);
+end;
+
+procedure TIniPersist.SetDataValue(const SectionName, ValueName, StrValue: string);
+begin
+  FIni.WriteString(SectionName, ValueName, StrValue);
+end;
+
+procedure TIniPersist.Load(const FileName: String);
 var
   ctx : TRttiContext;
   objType : TRttiType;
-  Field : TRttiField;
   Prop  : TRttiProperty;
   PropClass: TClass;
   Value : TValue;
-  IniValue : IniValueAttribute;
-  IniClass: IniClassAttribute;
   IniPropIgnore: IniIgnoreAttribute;
-  Ini : TIniFile;
-  ObjSection: string;
   Data : String;
-
-
   IniClassSection: string;
+  IniDefault: string;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Save'); {$ENDIF}
-  {$IFDEF UseCodeSite} CodeSite.Send('filename', Filename); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Load');  {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.Send('filename', FileName); {$ENDIF}
 
   ctx := TRttiContext.Create;
   try
-    Ini := TIniFile.Create(FileName);
+    FIni := TIniFile.Create(FileName);
     try
-      objType := ctx.GetType(Obj.ClassInfo);
+      objType := ctx.GetType(Self.ClassType);
 
-      // is this class using the new "class-level" keys?
-      IniClass := GetClassAttribute(ObjType);
-      if Assigned(IniClass) then begin
-        // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Key Names
-        IniClassSection := IniClass.IniKey;
-        {$IFDEF UseCodeSite} CodeSite.Send('using class level [section] for ' + Obj.ClassName, IniClassSection); {$ENDIF}
-      end else
-        IniClassSection := EmptyStr;
+      IniClassSection := GetClassSection(ObjType);
 
       // look at all the properties of the object
       for Prop in objType.GetProperties do begin
@@ -459,81 +319,94 @@ begin
         PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
 
         // always ignore TInterfacedObject properties
-        if (PropClass <> TInterfacedObject) { and (PropClass <> TCustomSettings) } then begin
-          // optionally ignore TCustomSettings properties
-          if IgnoreBaseProperties and (PropClass = TBaseCustomConfigSettings) then begin
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'ignoring base property', Prop.Name); {$ENDIF}
-          end else begin
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
-            // get the value to be saved
-            Value := Prop.GetValue(Obj);
-            Data := GetValue(Value);
+        if PropClass <> TInterfacedObject then begin
+          // look at each of the properties
+          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
+          Data := EmptyStr;
 
-            // if class-level keys are in use then these will override the class-level settings
-            IniValue := GetIniAttribute(Prop);
-            if Assigned(IniValue) then begin
-              ObjSection := (Obj as TBaseCustomConfigSettings).Section;
-              Ini.WriteString(ObjSection, IniValue.Name, Data);
-              {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, Format('data written to .INI file under [%s]', [ObjSection]), Data); {$ENDIF}
-            end else begin
-              // if not using IniValue for the properties, check to see if this property is ignored
-              IniPropIgnore := GetPropIgnoreAttribute(Prop);
-              if Assigned(IniPropIgnore) then begin
-                {$IFDEF UseCodeSite} CodeSite.Send('ignoring...'); {$ENDIF}
-              end else begin
-                // not ignored and the IniClassSection is set, write out the data using property name as value name
-                if Length(IniClassSection) > 0 then begin
-                  Ini.WriteString(IniClassSection, Prop.Name, Data);
-                  {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
-                end;
-              end;
-            end;
+          // check to see if this property is ignored in the INI file
+          IniPropIgnore := GetPropIgnoreAttribute(Prop);
+          if not Assigned(IniPropIgnore) then begin
+            // not ignored, check to see if there's a default value
+            IniDefault := GetDefaultAttributeValue(Prop);
+
+            // finally, read the data using the property name as the value name
+            Data := GetDataValue(IniClassSection, Prop.Name, IniDefault);
+            {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, IniClassSection, Prop.Name])); {$ENDIF}
+          end;
+
+          // if the data is available, we can now assign it
+          if (not Data.IsEmpty) and prop.IsWritable then begin
+            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data read from .INI file', Data); {$ENDIF}
+            Value := Prop.GetValue(Self);
+            SetValue(Data, Value);
+            prop.SetValue(Self, Value);
           end;
         end;
       end;
+    finally
+      FIni.Free;
+    end;
+  finally
+    ctx.Free;
+  end;
 
-      // this section is rarely used as the INI keys/names are typically defined at the Property level, not the Field level
-      for Field in objType.GetFields do begin
-        {$IFDEF UseCodeSite} CodeSite.Send(csmLevel3, 'checking field', Field.Name); {$ENDIF}
-        IniValue := GetIniAttribute(Field);
-        if Assigned(IniValue) then begin
-          Value := Field.GetValue(Obj);
+  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.Load'); {$ENDIF}
+end;
+
+procedure TIniPersist.Save(const FileName: String);
+var
+  ctx : TRttiContext;
+  objType : TRttiType;
+  Prop  : TRttiProperty;
+  PropClass: TClass;
+  Value : TValue;
+  IniPropIgnore: IniIgnoreAttribute;
+  Data : String;
+  IniClassSection: string;
+begin
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Save'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.Send('filename', Filename); {$ENDIF}
+
+  ctx := TRttiContext.Create;
+  try
+    FIni := TIniFile.Create(FileName);
+    try
+      objType := ctx.GetType(self.ClassInfo);
+
+      IniClassSection := GetClassSection(ObjType);
+
+      // look at all the properties of the object
+      for Prop in objType.GetProperties do begin
+        // get the class to which the current property belongs
+        PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
+
+        // always ignore TInterfacedObject properties
+        if (PropClass <> TInterfacedObject) then begin
+          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
+          // get the value to be saved
+          Value := Prop.GetValue(Self);
           Data := GetValue(Value);
-          Ini.WriteString((Obj as TBaseCustomConfigSettings).Section, IniValue.Name, Data);
-          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel4, 'data written to .INI file', Data); {$ENDIF}
+
+          // check to see if this property is ignored
+          IniPropIgnore := GetPropIgnoreAttribute(Prop);
+          if Assigned(IniPropIgnore) then
+            continue
+          else begin
+            // not ignored and the IniClassSection is set, write out the data using property name as value name
+            SetDataValue(IniClassSection, Prop.Name, Data);
+            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
+          end;
         end;
       end;
     finally
-      Ini.Free;
+      FIni.Free;
     end;
   finally
     ctx.Free;
   end;
 
   {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.Save');  {$ENDIF}
-end;
-
-class function TIniPersist.GetValue(var aValue: TValue) : string;
-begin
-   if aValue.Kind in [tkWChar, tkLString, tkWString, tkString, tkChar, tkUString,
-                      tkInteger, tkInt64, tkFloat, tkEnumeration, tkSet] then
-     result := aValue.ToString
-   else
-     raise EIniPersist.Create('GetValue - Type not supported');
-end;
-
-{ IniClassAttribute }
-
-constructor IniClassAttribute.Create(const NewIniKey: string);
-begin
-  FIniKey := NewIniKey;
-end;
-
-{ IniDefaultAttribute }
-
-constructor IniDefaultAttribute.Create(const NewDefaultValue: string);
-begin
-  FDefaultValue := NewDefaultValue;
 end;
 
 end.
