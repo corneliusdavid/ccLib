@@ -27,7 +27,9 @@ type
     base class that could be extended to use any save/restore mechanism
     (i.e. Registry or .INI file)
   }
+  {$IF CompilerVersion >= 23.0} // Delphi XE2
   [ComponentPlatforms(pidWin32 or pidWin64)]
+  {$IFEND}
   TccCustomLayoutSaver = class(TComponent)
   private
     FLocation: string;
@@ -74,7 +76,9 @@ type
     INI LayoutSaver
     extended from CustomLayoutSaver to use an .INI file
   }
+  {$IF CompilerVersion >= 23.0} // Delphi XE2
   [ComponentPlatforms(pidWin32 or pidWin64)]
+  {$IFEND}
   TccIniLayoutSaver = class(TccCustomLayoutSaver)
   private
     FIniFile: TIniFile;
@@ -101,7 +105,9 @@ type
     Registry LayoutSaver
     extended from CustomLayoutSaver to use the registry
   }
+  {$IF CompilerVersion >= 23.0} // Delphi XE2
   [ComponentPlatforms(pidWin32 or pidWin64)]
+  {$IFEND}
   TccRegistryLayoutSaver = class(TccCustomLayoutSaver)
   private
     FRegistry: TRegistry;

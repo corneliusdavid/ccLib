@@ -374,7 +374,7 @@ begin
           end;
 
           // if the data is available, we can now assign it
-          if (not Data.IsEmpty) and prop.IsWritable then begin
+          if (Length(Data) = 0) and prop.IsWritable then begin
             {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data read from .INI file', Data); {$ENDIF}
             Value := Prop.GetValue(Self);
             SetValue(Data, Value);
@@ -478,7 +478,11 @@ end;
 
 function TStrPersist.GetDataValue(const SectionName, ValueName, ValueDefault: string): string;
 begin
+  {$if CompilerVersion >= 36.0} // Delphi 12 Athens
   if NameValueStrings.ContainsName(ValueName) then
+  {$ELSE}
+  if NameValueStrings.IndexOf(ValueName) > -1 then  
+  {$IFEND}
     Result := NameValueStrings.Values[ValueName];
 end;
 

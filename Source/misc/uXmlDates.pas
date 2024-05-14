@@ -14,7 +14,11 @@ implementation
 
 uses
   {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
+  {$IF CompilerVersion >= 23.0} // Delphi XE2
   WinAPI.Windows, System.SysUtils, System.StrUtils, System.DateUtils;
+  {$ELSE}
+  Windows, SysUtils, StrUtils, DateUtils;
+  {$IFEND}
 
 function GetTimeZoneOffset: string;
 var

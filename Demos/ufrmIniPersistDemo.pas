@@ -139,16 +139,16 @@ procedure TfrmIniPersistDemo.LoadSemicolonTxtFile;
 var
   ConfigFile: string;
   TxtFile: TStreamReader;
+  s: string;
   ConfigStr: string;
 begin
   ConfigFile := GetTxtFilename;
   TxtFile := TStreamReader.Create(ConfigFile);
   try
     ConfigStr := EmptyStr;
-    while not TxtFile.EndOfStream do
-    begin
-      var s := TxtFile.ReadLine;
-      if not s.IsEmpty then
+    while not TxtFile.EndOfStream do begin
+      s := TxtFile.ReadLine;
+      if Length(s) > 0 then
         ConfigStr := ConfigStr + s;
     end;
     StrPersistSettings.Load(ConfigStr);
