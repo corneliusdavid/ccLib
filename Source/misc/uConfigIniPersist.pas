@@ -118,7 +118,7 @@ type
   TCfgPersist = class (TObject)
   private
     const
-       CLASS_SECTION_MISSING = 'IniClass[SectionName] missing';
+       CLASS_SECTION_MISSING = '[IniClass{''[SectionName'')] missing';
     procedure SetValue(aData : String;var aValue : TValue);
     function GetValue(var aValue : TValue) : String;
     function GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
