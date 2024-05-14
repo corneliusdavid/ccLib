@@ -118,12 +118,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>fmAppIdleWarn</Form>
         </DCCReference>
         <DCCReference Include="..\..\source\idleclose\CloseApplication.pas"/>
-        <DCCReference Include="..\..\source\misc\uConfigBaseIni.pas"/>
         <DCCReference Include="..\..\source\misc\uConfigIniPersist.pas"/>
         <DCCReference Include="..\..\source\misc\uSearchRecList.pas"/>
         <DCCReference Include="..\..\source\misc\uTestUtils.pas"/>
         <DCCReference Include="..\..\source\misc\uXmlDates.pas"/>
-        <None Include="README.md"/>
+        <None Include="..\..\README.md"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -149,7 +148,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
-                <WelcomePageFile Path="README.md"/>
+                <WelcomePageFile/>
                 <WelcomePageFolder/>
             </Delphi.Personality>
             <Platforms>

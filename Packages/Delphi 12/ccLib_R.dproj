@@ -148,7 +148,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>fmAppIdleWarn</Form>
         </DCCReference>
         <DCCReference Include="..\..\source\idleclose\CloseApplication.pas"/>
-        <DCCReference Include="..\..\source\misc\uConfigBaseIni.pas"/>
         <DCCReference Include="..\..\source\misc\uConfigIniPersist.pas"/>
         <DCCReference Include="..\..\source\misc\uSearchRecList.pas"/>
         <DCCReference Include="..\..\source\misc\uTestUtils.pas"/>
