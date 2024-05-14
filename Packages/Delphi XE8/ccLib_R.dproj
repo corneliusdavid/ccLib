@@ -114,6 +114,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </DCCReference>
         <DCCReference Include="..\..\source\idleclose\CloseApplication.pas"/>
         <DCCReference Include="..\..\source\layoutsaver\LayoutSaver.pas"/>
+        <DCCReference Include="..\..\Source\misc\uConfigIniPersist.pas"/>
+        <DCCReference Include="..\..\Source\misc\uSearchRecList.pas"/>
+        <DCCReference Include="..\..\Source\misc\uTestUtils.pas"/>
+        <DCCReference Include="..\..\Source\misc\uXmlDates.pas"/>
         <None Include="ModelSupport_cc_DXE8_R\default.txvpck"/>
         <None Include="ModelSupport_cc_DXE8_R\LayoutSaver\default.txvpck"/>
         <None Include="ModelSupport_ccLib_R\default.txaPackage"/>
@@ -178,7 +182,13 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <Platform value="Win64">True</Platform>
             </Platforms>
             <Deployment Version="2">
-                <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\16.0\Bpl\Win32\ccLib_R.bpl" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\ccLib_R22.bpl" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>ccLib_R.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\16.0\Bpl\ccLib_R.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ccLib_R.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -186,12 +196,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 </DeployFile>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Bpl\Win64\ccLib_R.bpl" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>ccLib_R.bpl</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\..\..\..\..\Public\Documents\Embarcadero\Studio\16.0\Bpl\ccLib_R.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
                         <RemoteName>ccLib_R.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -514,13 +518,13 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <ModelSupport>True</ModelSupport>
         </BorlandProject>

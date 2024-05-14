@@ -112,6 +112,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="..\..\source\idleclose\CloseApplication.pas"/>
         <DCCReference Include="..\..\source\elapsedtimer\ElapsedTimer.pas"/>
         <DCCReference Include="..\..\source\layoutsaver\LayoutSaver.pas"/>
+        <DCCReference Include="..\..\Source\misc\uConfigIniPersist.pas"/>
+        <DCCReference Include="..\..\Source\misc\uSearchRecList.pas"/>
+        <DCCReference Include="..\..\Source\misc\uTestUtils.pas"/>
+        <DCCReference Include="..\..\Source\misc\uXmlDates.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
