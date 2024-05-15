@@ -40,7 +40,6 @@ contains
   AppIdleWarn in '..\..\source\idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
   CloseApplication in '..\..\source\idleclose\CloseApplication.pas',
   uXmlDates in '..\..\Source\misc\uXmlDates.pas',
-  uConfigBaseIni in '..\..\Source\misc\uConfigBaseIni.pas',
   uConfigIniPersist in '..\..\Source\misc\uConfigIniPersist.pas',
   uSearchRecList in '..\..\Source\misc\uSearchRecList.pas',
   uTestUtils in '..\..\Source\misc\uTestUtils.pas';
