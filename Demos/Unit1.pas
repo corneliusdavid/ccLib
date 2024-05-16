@@ -26,6 +26,7 @@ type
     procedure tmrStatusMessageTimer(Sender: TObject);
     procedure chkUseCustomWarningMessageClick(Sender: TObject);
     procedure chkShowAppNameClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -53,6 +54,12 @@ begin
     Result := 0
   else
     Result := 1;
+end;
+
+procedure TfrmTestAppIdleWarn.FormCreate(Sender: TObject);
+begin
+  Label1.Caption := Format(Label1.Caption, [CloseApplication1.MinutesAppAllowedToBeIdle,
+                                            CloseApplication1.SecondsPromptedOnShutdown]);
 end;
 
 procedure TfrmTestAppIdleWarn.chkShowAppNameClick(Sender: TObject);
