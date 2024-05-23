@@ -109,6 +109,8 @@ type
   ///	</remarks>
   EIniPersist = class(Exception);
 
+  TGetCfgValueFunction = function (const SectionName, ValueName, ValueDefault: string): string of object;
+
   {=========================================}
   {   CONFIG CLASSES - BASE                 }
   {=========================================}
@@ -118,7 +120,7 @@ type
   TCfgPersist = class (TObject)
   private
     const
-       CLASS_SECTION_MISSING = '[IniClass{''[SectionName'')] missing';
+       CLASS_SECTION_MISSING = '[IniClass(''SectionName'')] missing';
     procedure SetValue(aData : String;var aValue : TValue);
     function GetValue(var aValue : TValue) : String;
     function GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
@@ -128,7 +130,7 @@ type
     function GetClassSection(ClassType: TRttiType): string;
     function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; virtual; abstract;
     procedure SetDataValue(const SectionName, ValueName, StrValue: string); virtual; abstract;
-    procedure LoadRttiClass;
+    procedure LoadRttiClass(GetCfgValueFunc: TGetCfgValueFunction);
     procedure SaveRttiClass;
   end;
 
@@ -155,26 +157,27 @@ type
   private
     var
       FIni : TIniFile;
+      NameValueStrings: TStringList;
   protected
     function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; override;
     procedure SetDataValue(const SectionName, ValueName, StrValue: string); override;
   public
     ///	<summary>
-    ///	  Load reads a configuration file and fills the given object with the
+    ///	  LoadFromFile reads a configuration file and fills the given object with the
     ///	  settings found.
     ///	</summary>
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to read from.
     ///	</param>
-    procedure Load(const FileName : String);
+    procedure LoadFromFile(const FileName : String);
     ///	<summary>
-    ///	  Save writes a configuration file using the settings from the given
+    ///	  SaveToFile writes a configuration file using the settings from the given
     ///	  object.
     ///	</summary>
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to write.
     ///	</param>
-    procedure Save(const FileName : String);
+    procedure SaveToFile(const FileName : String);
   end;
 
   {=========================================}
@@ -333,7 +336,7 @@ begin
      raise EIniPersist.Create('GetValue - Type not supported');
 end;
 
-procedure TCfgPersist.LoadRttiClass;
+procedure TCfgPersist.LoadRttiClass(GetCfgValueFunc: TGetCfgValueFunction);
 var
   ctx : TRttiContext;
   objType : TRttiType;
@@ -369,7 +372,7 @@ begin
             IniDefault := GetDefaultAttributeValue(Prop);
 
             // finally, read the data using the property name as the value name
-            Data := GetDataValue(IniClassSection, Prop.Name, IniDefault);
+            Data := GetCfgValueFunc(IniClassSection, Prop.Name, IniDefault);
             {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, IniClassSection, Prop.Name])); {$ENDIF}
           end;
 
@@ -444,24 +447,27 @@ begin
   FIni.WriteString(SectionName, ValueName, StrValue);
 end;
 
-procedure TIniPersist.Load(const FileName: String);
+procedure TIniPersist.LoadFromFile(const FileName: String);
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Load');  {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.LoadFromFile');  {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('filename', FileName); {$ENDIF}
 
   FIni := TIniFile.Create(FileName);
   try
-    LoadRttiClass;
+    LoadRttiClass(function(const SectionName, ValueName, ValueDefault: string): string
+      begin
+        Result := FIni.ReadString(SectionName, ValueName, ValueDefault);
+      end);
   finally
     FIni.Free;
   end;
 
-  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.Load'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.LoadFromFile'); {$ENDIF}
 end;
 
-procedure TIniPersist.Save(const FileName: String);
+procedure TIniPersist.SaveToFile(const FileName: String);
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.Save'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.SaveToFile'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('filename', Filename); {$ENDIF}
 
   FIni := TIniFile.Create(FileName);
@@ -471,7 +477,7 @@ begin
     FIni.Free;
   end;
 
-  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.Save');  {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.SaveToFile');  {$ENDIF}
 end;
 
 { TStrPersist }
