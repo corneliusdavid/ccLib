@@ -165,7 +165,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </DCCReference>
         <DCCReference Include="..\..\source\idleclose\CloseApplication.pas"/>
         <DCCReference Include="..\..\Source\misc\uXmlDates.pas"/>
-        <DCCReference Include="..\..\Source\misc\uConfigBaseIni.pas"/>
         <DCCReference Include="..\..\Source\misc\uConfigIniPersist.pas"/>
         <DCCReference Include="..\..\Source\misc\uSearchRecList.pas"/>
         <DCCReference Include="..\..\Source\misc\uTestUtils.pas"/>

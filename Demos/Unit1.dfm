@@ -12,6 +12,7 @@ object frmTestAppIdleWarn: TfrmTestAppIdleWarn
   Font.Style = []
   OldCreateOrder = True
   Position = poMainFormCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 15
   object Label1: TLabel
@@ -22,7 +23,7 @@ object frmTestAppIdleWarn: TfrmTestAppIdleWarn
     AutoSize = False
     Caption = 
       'Demo of using the CloseApplication component. Close-down set to ' +
-      '1 minute with a 20 second warning.'
+      '%d minute with a %d second warning.'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -59,7 +60,7 @@ object frmTestAppIdleWarn: TfrmTestAppIdleWarn
   end
   object CloseApplication1: TCloseApplication
     MinutesAppAllowedToBeIdle = 1
-    SecondsPromptedOnShutdown = 20
+    SecondsPromptedOnShutdown = 15
     TimerInterval = 0
     OnResume = CloseApplication1Resume
     Left = 110

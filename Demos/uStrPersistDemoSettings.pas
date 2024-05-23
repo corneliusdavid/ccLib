@@ -13,8 +13,6 @@ type
     FDescription: string;
     FOption1: Boolean;
     FOption2: Boolean;
-    FFirstDate: TDateTime;
-    FLastDate: TDateTime;
     FFavNum: Integer;
     FRandomDateStr: string;
     function GetRandomDate: TDateTime;
