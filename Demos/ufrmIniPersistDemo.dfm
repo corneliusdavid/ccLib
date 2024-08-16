@@ -3,7 +3,7 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   Top = 0
   Caption = 'IniPersist Demo'
   ClientHeight = 379
-  ClientWidth = 634
+  ClientWidth = 638
   Color = clBtnFace
   Constraints.MinHeight = 415
   Constraints.MinWidth = 650
@@ -15,14 +15,14 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   Position = poMainFormCenter
   OnCreate = FormCreate
   DesignSize = (
-    634
+    638
     379)
   TextHeight = 17
   object Label1: TLabel
     AlignWithMargins = True
     Left = 10
     Top = 10
-    Width = 614
+    Width = 618
     Height = 51
     Margins.Left = 10
     Margins.Top = 10
@@ -33,9 +33,9 @@ object frmIniPersistDemo: TfrmIniPersistDemo
       'This program demonstrates the uConfigIniPersist unit in the \Sou' +
       'rce\Misc folder of this library. This unit defines a class that ' +
       'allows very simple loading and storing of configuration data to ' +
-      'and from a standard .INI file.'
+      'and from a standard .INI file either as standard IniFile methods' +
+      ' or as a raw text file with strings.'
     WordWrap = True
-    ExplicitWidth = 612
   end
   object Label2: TLabel
     Left = 384
@@ -69,7 +69,7 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   object edtDescription: TLabeledEdit
     Left = 384
     Top = 89
-    Width = 228
+    Width = 232
     Height = 25
     Anchors = [akLeft, akTop, akRight]
     EditLabel.Width = 66
@@ -125,7 +125,7 @@ object frmIniPersistDemo: TfrmIniPersistDemo
   object edtDateTimePicker: TDateTimePicker
     Left = 493
     Top = 175
-    Width = 89
+    Width = 100
     Height = 25
     Date = 45422.000000000000000000
     Time = 0.974756909723510000
@@ -142,6 +142,5 @@ object frmIniPersistDemo: TfrmIniPersistDemo
       'INI File'
       'TXT w/ Semicolons')
     TabOrder = 8
-    OnClick = grpConfigTypeClick
   end
 end

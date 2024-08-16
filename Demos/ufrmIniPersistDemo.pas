@@ -22,7 +22,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure btnLoadClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
-    procedure grpConfigTypeClick(Sender: TObject);
   private
     function GetIniFilename: string;
     function GetTxtFilename: string;
@@ -96,17 +95,12 @@ begin
   Result := ChangeFileExt(Application.ExeName, '.txt');
 end;
 
-procedure TfrmIniPersistDemo.grpConfigTypeClick(Sender: TObject);
-begin
-  ///
-end;
-
 procedure TfrmIniPersistDemo.LoadConfigFile;
 var
   ConfigFile: string;
 begin
   ConfigFile := GetIniFilename;
-  IniPersistSettings.LoadFromFile(ConfigFile);
+  IniPersistSettings.LoadFromIni(ConfigFile);
   ShowRawConfigFile(ConfigFile);
 
   FillGuiFromIniSettings;
@@ -125,8 +119,11 @@ begin
     ConfigStr := EmptyStr;
     while not TxtFile.EndOfStream do begin
       s := TxtFile.ReadLine;
-      if Length(s) > 0 then
-        ConfigStr := ConfigStr + s;
+      if Length(s) > 0 then begin
+        if Length(ConfigStr) > 0 then
+          ConfigStr := ConfigStr + ';';
+        ConfigStr := Trim(ConfigStr + s);
+      end;
     end;
     IniPersistSettings.LoadFromStr(ConfigStr);
     ShowRawConfigFile(ConfigFile);
@@ -152,7 +149,7 @@ begin
   FillIniSettingsFromGUI;
 
   IniFilename := GetIniFileName;
-  IniPersistSettings.SaveToFile(IniFilename);
+  IniPersistSettings.SaveToIni(IniFilename);
   ShowRawConfigFile(IniFilename);
 end;
 
@@ -162,7 +159,7 @@ var
   TxtFile: TStreamWriter;
   ConfigStr: string;
 begin
-  FillGUIFromIniSettings;
+  FillIniSettingsFromGUI;
 
   ConfigFile := GetTxtFilename;
   TxtFile := TStreamWriter.Create(ConfigFile, False);
@@ -188,7 +185,7 @@ begin
   mmoRawConfig.Lines.Clear;
   if FileExists(CfgFilename) then
     mmoRawConfig.Lines.LoadFromFile(CfgFilename);
-  mmoRawConfig.Lines.Insert(0, '== Raw Config File ==');
+  mmoRawConfig.Lines.Insert(0, '== Raw Config File (' + CfgFilename + ') ==');
 end;
 
 end.
