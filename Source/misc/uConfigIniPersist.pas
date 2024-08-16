@@ -116,7 +116,7 @@ type
   {=========================================}
   ///	<summary>
   ///	  Descend your configuration classes from this class and define an IniClass attribute to define the section,
-  ///   then call loadFromFile/SaveToFile for very simple by loading and saving of all the property values of the
+  ///   then call LoadFromIni/SaveToIni for very simple by loading and saving of all the property values of the
   ///   class to an .INI file; -OR- call LoadFromStr/SaveToStr to load and save the property values of the class
   ///   to a single string of NAME=VALUE pairs separated by semicolons (note that the LoadFromStr/SaveToStr methods
   ///   do not use a [Section] like the INI file methods do).
@@ -130,12 +130,13 @@ type
   ///    end;
   ///  var MySettings: TMySettings;
   ///  MySettings := TMySettings.Create;
-  ///  MySettings.LoadFromFile(MyIniFilename);
+  ///  MySettings.LoadFromIni(MyIniFilename);
   ///  </code>
   /// </example>
   /// <remarks>
   ///   You might use LoadFromStr/SaveToStr when you're loading/storing configuration settings in a web service
   ///   or database instead of an .INI file as it provides flexibility where the names and values are stored.
+  ///   Remember, an .INI file's NAME=VALUE pairs must be indexed with a [Section] while the String version does not.
   /// </remarks>
   TIniPersist = class (TObject)
   private
@@ -152,19 +153,19 @@ type
     procedure SaveRttiClass(PutCfgValue: TPutIniValueProc);
   public
     ///	<summary>
-    ///	  LoadFromFile reads a configuration file and fills the given object with the settings found.
+    ///	  LoadFromIni reads a configuration file and fills the given object with the settings found.
     ///	</summary>
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to read from.
     ///	</param>
-    procedure LoadFromFile(const FileName : String);
+    procedure LoadFromIni(const FileName : String);
     ///	<summary>
-    ///	  SaveToFile writes a configuration file using the settings from the given object.
+    ///	  SaveToIni writes a configuration file using the settings from the given object.
     ///	</summary>
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to write.
     ///	</param>
-    procedure SaveToFile(const FileName : String);
+    procedure SaveToIni(const FileName : String);
     ///	<summary>
     ///	  Parse the given string and fill the configuration object with the settings found.
     ///	</summary>
@@ -225,7 +226,7 @@ begin
     // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Key Names
     Result := IniClass.IniKey
   else
-    raise EIniPersist.Create(CLASS_SECTION_MISSING);
+    Result := EmptyStr;
 end;
 
 function TIniPersist.GetDefaultAttributeValue(Obj: TRttiObject): string;
@@ -395,11 +396,11 @@ end;
 
 { TIniPersist }
 
-procedure TIniPersist.LoadFromFile(const FileName: String);
+procedure TIniPersist.LoadFromIni(const FileName: String);
 var
   FIni : TIniFile;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.LoadFromFile');  {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.LoadFromIni');  {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('filename', FileName); {$ENDIF}
 
   FIni := TIniFile.Create(FileName);
@@ -407,20 +408,22 @@ begin
     LoadRttiClass(
       function (const SectionName, ValueName, DefaultValue: string): string
       begin
+        if Length(SectionName) = 0 then
+          raise EProgrammerNotFound.Create(CLASS_SECTION_MISSING);
         Result := FIni.ReadString(SectionName, ValueName, DefaultValue);
       end);
   finally
     FIni.Free;
   end;
 
-  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.LoadFromFile'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.LoadFromIni'); {$ENDIF}
 end;
 
-procedure TIniPersist.SaveToFile(const FileName: String);
+procedure TIniPersist.SaveToIni(const FileName: String);
 var
   FIni : TIniFile;
 begin
-  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.SaveToFile'); {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.SaveToIni'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('filename', Filename); {$ENDIF}
 
   FIni := TIniFile.Create(FileName);
@@ -428,13 +431,15 @@ begin
     SaveRttiClass(
       procedure (const SectionName, ValueName, StrValue: string)
       begin
+        if Length(SectionName) = 0 then
+          raise EProgrammerNotFound.Create(CLASS_SECTION_MISSING);
         FIni.WriteString(SectionName, ValueName, StrValue);
       end);
   finally
     FIni.Free;
   end;
 
-  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.SaveToFile');  {$ENDIF}
+  {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.SaveToIni');  {$ENDIF}
 end;
 
 procedure TIniPersist.LoadFromStr(const ConfigStr: String);
@@ -450,6 +455,7 @@ begin
     LoadRttiClass(
       function(const SectionName, ValueName, DefaultValue: string): string
       begin
+        // SectionName is not used in string configs
         {$if CompilerVersion >= 36.0} // Delphi 12 Athens
         if NameValueStrings.ContainsName(ValueName) then
         {$ELSE}
