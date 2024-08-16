@@ -25,7 +25,6 @@ unit uConfigIniPersist;
 (*
  * Modified by David Cornelius of Retail Dimensions, Inc.
  * Used by permission from Kurt Beeken of RDi.
- *
  * Modified further by David Cornelius of Cornelius Concepts, LLC
  *)
 
@@ -109,37 +108,18 @@ type
   ///	</remarks>
   EIniPersist = class(Exception);
 
-  TGetCfgValueFunction = function (const SectionName, ValueName, ValueDefault: string): string of object;
-
-  {=========================================}
-  {   CONFIG CLASSES - BASE                 }
-  {=========================================}
-  ///	<summary>
-  ///	  Base class for classes that use attributes to load/save themselves. Descend from one of the descendants of this class.
-  ///	</summary>
-  TCfgPersist = class (TObject)
-  private
-    const
-       CLASS_SECTION_MISSING = '[IniClass(''SectionName'')] missing';
-    procedure SetValue(aData : String;var aValue : TValue);
-    function GetValue(var aValue : TValue) : String;
-    function GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
-    function GetDefaultAttributeValue(Obj: TRttiObject): string;
-    function GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
-  protected
-    function GetClassSection(ClassType: TRttiType): string;
-    function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; virtual; abstract;
-    procedure SetDataValue(const SectionName, ValueName, StrValue: string); virtual; abstract;
-    procedure LoadRttiClass(GetCfgValueFunc: TGetCfgValueFunction);
-    procedure SaveRttiClass;
-  end;
+  TGetIniValueFunc = reference to function (const SectionName, ValueName, DefaultValue: string): string;
+  TPutIniValueProc = reference to procedure (const SectionName, ValueName, StrValue: string);
 
   {=========================================}
   {   IniPersist                            }
   {=========================================}
   ///	<summary>
-  ///	  Descend your configuration classes from this class and define an IniClass attribute to define the section.
-  ///   Then simply call load/save methods for very simple by loading and saving of all the property values of the class.
+  ///	  Descend your configuration classes from this class and define an IniClass attribute to define the section,
+  ///   then call loadFromFile/SaveToFile for very simple by loading and saving of all the property values of the
+  ///   class to an .INI file; -OR- call LoadFromStr/SaveToStr to load and save the property values of the class
+  ///   to a single string of NAME=VALUE pairs separated by semicolons (note that the LoadFromStr/SaveToStr methods
+  ///   do not use a [Section] like the INI file methods do).
   ///	</summary>
   /// <example>
   ///  <code>
@@ -150,79 +130,57 @@ type
   ///    end;
   ///  var MySettings: TMySettings;
   ///  MySettings := TMySettings.Create;
-  ///  MySettings.Load(MyIniFilename);
+  ///  MySettings.LoadFromFile(MyIniFilename);
   ///  </code>
   /// </example>
-  TIniPersist = class (TCfgPersist)
+  /// <remarks>
+  ///   You might use LoadFromStr/SaveToStr when you're loading/storing configuration settings in a web service
+  ///   or database instead of an .INI file as it provides flexibility where the names and values are stored.
+  /// </remarks>
+  TIniPersist = class (TObject)
   private
-    var
-      FIni : TIniFile;
-      NameValueStrings: TStringList;
+    const
+       CLASS_SECTION_MISSING = '[IniClass(''SectionName'')] missing';
+    procedure SetValue(const aData: string; var aValue : TValue);
+    function GetValue(var aValue: TValue): string;
+    function GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
+    function GetDefaultAttributeValue(Obj: TRttiObject): string;
+    function GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
   protected
-    function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; override;
-    procedure SetDataValue(const SectionName, ValueName, StrValue: string); override;
+    function GetClassSection(ClassType: TRttiType): string;
+    procedure LoadRttiClass(GetCfgValue: TGetIniValueFunc);
+    procedure SaveRttiClass(PutCfgValue: TPutIniValueProc);
   public
     ///	<summary>
-    ///	  LoadFromFile reads a configuration file and fills the given object with the
-    ///	  settings found.
+    ///	  LoadFromFile reads a configuration file and fills the given object with the settings found.
     ///	</summary>
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to read from.
     ///	</param>
     procedure LoadFromFile(const FileName : String);
     ///	<summary>
-    ///	  SaveToFile writes a configuration file using the settings from the given
-    ///	  object.
+    ///	  SaveToFile writes a configuration file using the settings from the given object.
     ///	</summary>
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to write.
     ///	</param>
     procedure SaveToFile(const FileName : String);
-  end;
-
-  {=========================================}
-  {   StrPersist                            }
-  {=========================================}
-  /// <summary>
-  ///  Instead of loading and saving config settings in an INI file, this class handles a string configuration data.
-  ///  The string consists of NAME=VALUE pairs separated by semicolons. The attributes of the class are handled the
-  ///  same as the TIniPersist
-  /// </summary>
-  /// <example>
-  ///  <code>
-  ///  type
-  ///    [MySection]
-  ///    TMySettings = class(TIniPersist)
-  ///      ...
-  ///    end;
-  ///  var MySettings: TMySettings;
-  ///  MySettings := TMySettings.Create;
-  ///  MySettings.Load(MyIniFilename);
-  ///  </code>
-  /// </example>
-  TStrPersist = class(TCfgPersist)
-  private
-    var
-      NameValueStrings: TStringList;
-  protected
-    function GetDataValue(const SectionName, ValueName, ValueDefault: string): string; override;
-    procedure SetDataValue(const SectionName, ValueName, StrValue: string); override;
-  public
     ///	<summary>
-    ///	  Load parse the string and fills the given object with the settings found.
+    ///	  Parse the given string and fill the configuration object with the settings found.
     ///	</summary>
     ///	<param name="ConfigStr">
     ///	  <c>String. Required.</c> A series of NAME=VALUE pairs separated by semicolons.
     ///	</param>
-    procedure Load(const ConfigStr : String);
+    procedure LoadFromStr(const ConfigStr: string);
     ///	<summary>
-    ///	  Saves a configuration string, concatentating NAME=VALUE pairs with semicolons.
+    ///	  Save a configuration object, concatentating the settings to a single string.
     ///	</summary>
-    ///	<param name="FileName">
-    ///	  <c>String. Required.</c> The resultant configuration string;
+    ///	<param name="ConfigStr">
+    ///	  <c>String. Required.</c> The resultant configuration string of NAME=VALUE pairs separated by semicolons.
     ///	</param>
-    procedure Save(var ConfigStr : String);
+    procedure SaveToStr(var ConfigStr: string);
   end;
+
 
 implementation
 
@@ -241,9 +199,9 @@ begin
   FDefaultValue := NewDefaultValue;
 end;
 
-{ TCfgPersist }
+{ TIniPersist }
 
-function TCfgPersist.GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
+function TIniPersist.GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
 { check to see if the IniClassAttribute is assigned }
 var
   Attr: TCustomAttribute;
@@ -257,7 +215,7 @@ begin
     end;
 end;
 
-function TCfgPersist.GetClassSection(ClassType: TRttiType): string;
+function TIniPersist.GetClassSection(ClassType: TRttiType): string;
 var
   IniClass: IniClassAttribute;
 begin
@@ -270,7 +228,7 @@ begin
     raise EIniPersist.Create(CLASS_SECTION_MISSING);
 end;
 
-function TCfgPersist.GetDefaultAttributeValue(Obj: TRttiObject): string;
+function TIniPersist.GetDefaultAttributeValue(Obj: TRttiObject): string;
 { check to see if the IniDefaultAttribute is assigned; if so, return the default string }
 var
   Attr: TCustomAttribute;
@@ -284,7 +242,7 @@ begin
     end;
 end;
 
-function TCfgPersist.GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
+function TIniPersist.GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
 { check to see if the IniIgnoreAttribute is assigned }
 var
   Attr: TCustomAttribute;
@@ -298,7 +256,7 @@ begin
     end;
 end;
 
-procedure TCfgPersist.SetValue(aData: String;var aValue: TValue);
+procedure TIniPersist.SetValue(const aData: string; var aValue: TValue);
 var
   I: Integer;
   x: Double;
@@ -327,7 +285,7 @@ begin
   end;
 end;
 
-function TCfgPersist.GetValue(var aValue: TValue) : string;
+function TIniPersist.GetValue(var aValue: TValue) : string;
 begin
    if aValue.Kind in [tkWChar, tkLString, tkWString, tkString, tkChar, tkUString,
                       tkInteger, tkInt64, tkFloat, tkEnumeration, tkSet] then
@@ -336,7 +294,7 @@ begin
      raise EIniPersist.Create('GetValue - Type not supported');
 end;
 
-procedure TCfgPersist.LoadRttiClass(GetCfgValueFunc: TGetCfgValueFunction);
+procedure TIniPersist.LoadRttiClass(GetCfgValue: TGetIniValueFunc);
 var
   ctx : TRttiContext;
   objType : TRttiType;
@@ -344,53 +302,53 @@ var
   PropClass: TClass;
   Value : TValue;
   IniPropIgnore: IniIgnoreAttribute;
-  Data : String;
+  Data : string;
   IniClassSection: string;
   IniDefault: string;
 begin
-    ctx := TRttiContext.Create;
-    try
-      objType := ctx.GetType(Self.ClassType);
+  ctx := TRttiContext.Create;
+  try
+    objType := ctx.GetType(Self.ClassType);
 
-      IniClassSection := GetClassSection(ObjType);
+    IniClassSection := GetClassSection(ObjType);
 
-      // look at all the properties of the object
-      for Prop in objType.GetProperties do begin
-        // get the class to which the current property belongs
-        PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
+    // look at all the properties of the object
+    for Prop in objType.GetProperties do begin
+      // get the class to which the current property belongs
+      PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
 
-        // always ignore TInterfacedObject properties
-        if PropClass <> TInterfacedObject then begin
-          // look at each of the properties
-          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
-          Data := EmptyStr;
+      // always ignore TInterfacedObject properties
+      if PropClass <> TInterfacedObject then begin
+        // look at each of the properties
+        {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
+        Data := EmptyStr;
 
-          // check to see if this property is ignored in the INI file
-          IniPropIgnore := GetPropIgnoreAttribute(Prop);
-          if not Assigned(IniPropIgnore) then begin
-            // not ignored, check to see if there's a default value
-            IniDefault := GetDefaultAttributeValue(Prop);
+        // check to see if this property is ignored in the INI file
+        IniPropIgnore := GetPropIgnoreAttribute(Prop);
+        if not Assigned(IniPropIgnore) then begin
+          // not ignored, check to see if there's a default value
+          IniDefault := GetDefaultAttributeValue(Prop);
 
-            // finally, read the data using the property name as the value name
-            Data := GetCfgValueFunc(IniClassSection, Prop.Name, IniDefault);
-            {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, IniClassSection, Prop.Name])); {$ENDIF}
-          end;
+          // finally, read the data using the property name as the value name
+          Data := GetCfgValue(IniClassSection, Prop.Name, IniDefault);
+          {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, IniClassSection, Prop.Name])); {$ENDIF}
+        end;
 
-          // if the data is available, we can now assign it
-          if (Length(Data) = 0) and prop.IsWritable then begin
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data read from .INI file', Data); {$ENDIF}
-            Value := Prop.GetValue(Self);
-            SetValue(Data, Value);
-            prop.SetValue(Self, Value);
-          end;
+        // if the data is available, we can now assign it
+        if (Length(Data) > 0) and prop.IsWritable then begin
+          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data read from .INI file', Data); {$ENDIF}
+          Value := Prop.GetValue(Self);
+          SetValue(Data, Value);
+          prop.SetValue(Self, Value);
         end;
       end;
-    finally
-      ctx.Free;
     end;
+  finally
+    ctx.Free;
+  end;
 end;
 
-procedure TCfgPersist.SaveRttiClass;
+procedure TIniPersist.SaveRttiClass(PutCfgValue: TPutIniValueProc);
 var
   ctx : TRttiContext;
   objType : TRttiType;
@@ -425,7 +383,7 @@ begin
             continue
           else begin
             // not ignored and the IniClassSection is set, write out the data using property name as value name
-            SetDataValue(IniClassSection, Prop.Name, Data);
+            PutCfgValue(IniClassSection, Prop.Name, Data);
             {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
           end;
         end;
@@ -437,26 +395,19 @@ end;
 
 { TIniPersist }
 
-function TIniPersist.GetDataValue(const SectionName, ValueName, ValueDefault: string): string;
-begin
-  Result := FIni.ReadString(SectionName, ValueName, ValueDefault);
-end;
-
-procedure TIniPersist.SetDataValue(const SectionName, ValueName, StrValue: string);
-begin
-  FIni.WriteString(SectionName, ValueName, StrValue);
-end;
-
 procedure TIniPersist.LoadFromFile(const FileName: String);
+var
+  FIni : TIniFile;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.LoadFromFile');  {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('filename', FileName); {$ENDIF}
 
   FIni := TIniFile.Create(FileName);
   try
-    LoadRttiClass(function(const SectionName, ValueName, ValueDefault: string): string
+    LoadRttiClass(
+      function (const SectionName, ValueName, DefaultValue: string): string
       begin
-        Result := FIni.ReadString(SectionName, ValueName, ValueDefault);
+        Result := FIni.ReadString(SectionName, ValueName, DefaultValue);
       end);
   finally
     FIni.Free;
@@ -466,13 +417,19 @@ begin
 end;
 
 procedure TIniPersist.SaveToFile(const FileName: String);
+var
+  FIni : TIniFile;
 begin
   {$IFDEF UseCodeSite} CodeSite.EnterMethod('TIniPersist.SaveToFile'); {$ENDIF}
   {$IFDEF UseCodeSite} CodeSite.Send('filename', Filename); {$ENDIF}
 
   FIni := TIniFile.Create(FileName);
   try
-    SaveRttiClass;
+    SaveRttiClass(
+      procedure (const SectionName, ValueName, StrValue: string)
+      begin
+        FIni.WriteString(SectionName, ValueName, StrValue);
+      end);
   finally
     FIni.Free;
   end;
@@ -480,24 +437,9 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.SaveToFile');  {$ENDIF}
 end;
 
-{ TStrPersist }
-
-function TStrPersist.GetDataValue(const SectionName, ValueName, ValueDefault: string): string;
-begin
-  {$if CompilerVersion >= 36.0} // Delphi 12 Athens
-  if NameValueStrings.ContainsName(ValueName) then
-  {$ELSE}
-  if NameValueStrings.IndexOf(ValueName) > -1 then  
-  {$IFEND}
-    Result := NameValueStrings.Values[ValueName];
-end;
-
-procedure TStrPersist.SetDataValue(const SectionName, ValueName, StrValue: string);
-begin
-  NameValueStrings.Values[ValueName] := StrValue;
-end;
-
-procedure TStrPersist.Load(const ConfigStr: String);
+procedure TIniPersist.LoadFromStr(const ConfigStr: String);
+var
+  NameValueStrings: TStringList;
 begin
   NameValueStrings := TStringList.Create;
   try
@@ -505,20 +447,39 @@ begin
     NameValueStrings.StrictDelimiter := True;
     NameValueStrings.DelimitedText := ConfigStr;
 
-    LoadRttiClass;
+    LoadRttiClass(
+      function(const SectionName, ValueName, DefaultValue: string): string
+      begin
+        {$if CompilerVersion >= 36.0} // Delphi 12 Athens
+        if NameValueStrings.ContainsName(ValueName) then
+        {$ELSE}
+        if NameValueStrings.IndexOf(ValueName) > -1 then
+        {$IFEND}
+          Result := NameValueStrings.Values[ValueName]
+        else
+          Result := DefaultValue;
+      end
+    );
   finally
     NameValueStrings.Free;
   end;
 end;
 
-procedure TStrPersist.Save(var ConfigStr: String);
+procedure TIniPersist.SaveToStr(var ConfigStr: String);
+var
+  NameValueStrings: TStringList;
 begin
   NameValueStrings := TStringList.Create;
   try
     NameValueStrings.Delimiter := ';';
     NameValueStrings.StrictDelimiter := True;
 
-    SaveRttiClass;
+    SaveRttiClass(
+      procedure (const SectionName, ValueName, StrValue: string)
+      begin
+        // SectionName is not used in string configs
+        NameValueStrings.Values[ValueName] := StrValue;
+      end);
 
     ConfigStr := NameValueStrings.DelimitedText;
   finally
