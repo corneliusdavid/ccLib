@@ -83,7 +83,6 @@
         </DCCReference>
         <DCCReference Include="..\Source\misc\uConfigIniPersist.pas"/>
         <DCCReference Include="uIniPersistDemoSettings.pas"/>
-        <DCCReference Include="uStrPersistDemoSettings.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

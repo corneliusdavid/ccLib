@@ -65,8 +65,6 @@ object frmIniPersistDemo: TfrmIniPersistDemo
       '==RAW Config File==')
     ReadOnly = True
     TabOrder = 0
-    ExplicitTop = 89
-    ExplicitHeight = 295
   end
   object edtDescription: TLabeledEdit
     Left = 384

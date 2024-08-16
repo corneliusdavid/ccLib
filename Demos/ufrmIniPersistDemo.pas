@@ -35,8 +35,6 @@ type
     procedure SaveSettings;
     procedure FillGUIFromIniSettings;
     procedure FillIniSettingsFromGUI;
-    procedure FillGUIFromTxtSettings;
-    procedure FillTxtSettingsFromGUI;
   end;
 
 var
@@ -48,12 +46,10 @@ implementation
 
 uses
   uConfigIniPersist,
-  uIniPersistDemoSettings,
-  uStrPersistDemoSettings;
+  uIniPersistDemoSettings;
 
 var
   IniPersistSettings: TIniPersisteDemoSettings;
-  StrPersistSettings: TStrPersisteDemoSettings;
 
 
 procedure TfrmIniPersistDemo.btnLoadClick(Sender: TObject);
@@ -75,15 +71,6 @@ begin
   edtDateTimePicker.DateTime := IniPersistSettings.RandomDate;
 end;
 
-procedure TfrmIniPersistDemo.FillGUIFromTxtSettings;
-begin
-  edtDescription.Text := StrPersistSettings.Description;
-  chkOption1.Checked := StrPersistSettings.Option1;
-  chkOption2.Checked := StrPersistSettings.Option2;
-  edtFavNum.Value := StrPersistSettings.FavoriteNumber;
-  edtDateTimePicker.DateTime := StrPersistSettings.RandomDate;
-end;
-
 procedure TfrmIniPersistDemo.FillIniSettingsFromGUI;
 begin
   IniPersistSettings.Description := edtDescription.Text;
@@ -93,19 +80,9 @@ begin
   IniPersistSettings.RandomDate := edtDateTimePicker.DateTime;
 end;
 
-procedure TfrmIniPersistDemo.FillTxtSettingsFromGUI;
-begin
-  StrPersistSettings.Description := edtDescription.Text;
-  StrPersistSettings.Option1 := chkOption1.Checked;
-  StrPersistSettings.Option2 := chkOption2.Checked;
-  StrPersistSettings.FavoriteNumber := edtFavNum.Value;
-  StrPersistSettings.RandomDate := edtDateTimePicker.DateTime;
-end;
-
 procedure TfrmIniPersistDemo.FormCreate(Sender: TObject);
 begin
   IniPersistSettings := TIniPersisteDemoSettings.Create;
-  StrPersistSettings := TStrPersisteDemoSettings.Create;
   LoadConfigFile;
 end;
 
@@ -129,7 +106,7 @@ var
   ConfigFile: string;
 begin
   ConfigFile := GetIniFilename;
-  IniPersistSettings.Load(ConfigFile);
+  IniPersistSettings.LoadFromFile(ConfigFile);
   ShowRawConfigFile(ConfigFile);
 
   FillGuiFromIniSettings;
@@ -151,10 +128,10 @@ begin
       if Length(s) > 0 then
         ConfigStr := ConfigStr + s;
     end;
-    StrPersistSettings.Load(ConfigStr);
+    IniPersistSettings.LoadFromStr(ConfigStr);
     ShowRawConfigFile(ConfigFile);
 
-    FillGUIFromTxtSettings;
+    FillGUIFromIniSettings;
   finally
     TxtFile.Free;
   end;
@@ -175,7 +152,7 @@ begin
   FillIniSettingsFromGUI;
 
   IniFilename := GetIniFileName;
-  IniPersistSettings.Save(IniFilename);
+  IniPersistSettings.SaveToFile(IniFilename);
   ShowRawConfigFile(IniFilename);
 end;
 
@@ -185,12 +162,12 @@ var
   TxtFile: TStreamWriter;
   ConfigStr: string;
 begin
-  FillTxtSettingsFromGUI;
+  FillGUIFromIniSettings;
 
   ConfigFile := GetTxtFilename;
   TxtFile := TStreamWriter.Create(ConfigFile, False);
   try
-    StrPersistSettings.Save(ConfigStr);
+    IniPersistSettings.SaveToStr(ConfigStr);
     TxtFile.WriteLine(ConfigStr);
   finally
     TxtFile.Free;

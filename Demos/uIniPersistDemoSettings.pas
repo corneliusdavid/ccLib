@@ -18,7 +18,7 @@ type
     function GetRandomDate: TDateTime;
     procedure SetRandomDate(const Value: TDateTime);
   public
-    [IniDefault('Test of the ConfigIniPersist library')]
+    [IniDefault('Test of the IniPersist library')]
     property Description: string read FDescription write FDescription;
     [IniDefault('False')]
     property Option1: Boolean read FOption1 write FOption1;
