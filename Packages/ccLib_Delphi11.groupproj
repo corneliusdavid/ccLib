@@ -9,6 +9,9 @@
         <Projects Include="Delphi 11\ccLib_D.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\Demos\IniPersistDemo.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="ccLib_D:Make">
         <MSBuild Projects="Delphi 11\ccLib_D.dproj" Targets="Make"/>
     </Target>
+    <Target Name="IniPersistDemo">
+        <MSBuild Projects="..\Demos\IniPersistDemo.dproj"/>
+    </Target>
+    <Target Name="IniPersistDemo:Clean">
+        <MSBuild Projects="..\Demos\IniPersistDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="IniPersistDemo:Make">
+        <MSBuild Projects="..\Demos\IniPersistDemo.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="ccLib_R;ccLib_D"/>
+        <CallTarget Targets="ccLib_R;ccLib_D;IniPersistDemo"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ccLib_R:Clean;ccLib_D:Clean"/>
+        <CallTarget Targets="ccLib_R:Clean;ccLib_D:Clean;IniPersistDemo:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ccLib_R:Make;ccLib_D:Make"/>
+        <CallTarget Targets="ccLib_R:Make;ccLib_D:Make;IniPersistDemo:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
