@@ -459,7 +459,7 @@ begin
         {$if CompilerVersion >= 36.0} // Delphi 12 Athens
         if NameValueStrings.ContainsName(ValueName) then
         {$ELSE}
-        if NameValueStrings.IndexOf(ValueName) > -1 then
+        if NameValueStrings.IndexOfName(ValueName) > -1 then
         {$IFEND}
           Result := NameValueStrings.Values[ValueName]
         else
