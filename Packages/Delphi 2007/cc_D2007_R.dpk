@@ -22,7 +22,7 @@ package cc_D2007_R;
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DESCRIPTION 'Cornelius Concepts Delphi Library'}
+{$DESCRIPTION 'Cornelius Concepts Components'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 {$DEFINE RELEASE}
