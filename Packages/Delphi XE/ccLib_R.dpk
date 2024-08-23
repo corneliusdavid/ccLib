@@ -23,7 +23,7 @@ package ccLib_R;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$DESCRIPTION 'Cornelius Concepts Delphi Library'}
-{$LIBSUFFIX '15'}
+{$LIBSUFFIX '150'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -36,6 +36,9 @@ contains
   ElapsedTimer in '..\..\source\elapsedtimer\ElapsedTimer.pas',
   AppIdleWarn in '..\..\source\idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
   CloseApplication in '..\..\source\idleclose\CloseApplication.pas',
-  LayoutSaver in '..\..\source\layoutsaver\LayoutSaver.pas';
+  LayoutSaver in '..\..\source\layoutsaver\LayoutSaver.pas',
+  uConfigIniPersist in '..\..\Source\misc\uConfigIniPersist.pas',
+  uTestUtils in '..\..\Source\misc\uTestUtils.pas',
+  uXmlDates in '..\..\Source\misc\uXmlDates.pas';
 
 end.

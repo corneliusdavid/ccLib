@@ -39,7 +39,6 @@ contains
   LayoutSaver in '..\..\source\layoutsaver\LayoutSaver.pas',
   AppIdleWarn in '..\..\source\idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
   CloseApplication in '..\..\source\idleclose\CloseApplication.pas',
-  uConfigBaseIni in '..\..\source\misc\uConfigBaseIni.pas',
   uConfigIniPersist in '..\..\source\misc\uConfigIniPersist.pas',
   uSearchRecList in '..\..\source\misc\uSearchRecList.pas',
   uTestUtils in '..\..\source\misc\uTestUtils.pas',

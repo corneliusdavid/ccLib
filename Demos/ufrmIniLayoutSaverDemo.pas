@@ -5,7 +5,7 @@ interface
 uses
   Forms, SysUtils, Variants, Classes,
   {$IFDEF XE2orHigher}
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Samples.Spin,
+  Vcl.Graphics, Vcl.Mask, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Samples.Spin,
   {$ELSE}
   Spin, StdCtrls, Controls, ExtCtrls,
   {$ENDIF}

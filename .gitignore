@@ -24,3 +24,4 @@ Packages/Delphi XE8/ModelSupport_ccLib_R/
 Demos/Win32/
 *.~*
 *.res
+*.dsv

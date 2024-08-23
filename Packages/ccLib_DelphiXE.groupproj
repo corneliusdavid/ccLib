@@ -7,7 +7,7 @@
 				<Dependencies/>
 			</Projects>
 			<Projects Include="Delphi XE\ccLib_D.dproj">
-				<Dependencies/>
+				<Dependencies>Delphi XE\ccLib_R.dproj</Dependencies>
 			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
@@ -26,13 +26,13 @@
 		<Target Name="ccLib_R:Make">
 			<MSBuild Projects="Delphi XE\ccLib_R.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="ccLib_D">
+		<Target Name="ccLib_D" DependsOnTargets="ccLib_R">
 			<MSBuild Projects="Delphi XE\ccLib_D.dproj"/>
 		</Target>
-		<Target Name="ccLib_D:Clean">
+		<Target Name="ccLib_D:Clean" DependsOnTargets="ccLib_R:Clean">
 			<MSBuild Projects="Delphi XE\ccLib_D.dproj" Targets="Clean"/>
 		</Target>
-		<Target Name="ccLib_D:Make">
+		<Target Name="ccLib_D:Make" DependsOnTargets="ccLib_R:Make">
 			<MSBuild Projects="Delphi XE\ccLib_D.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
