@@ -1,9 +1,9 @@
 object frmTestAppIdleWarn: TfrmTestAppIdleWarn
-  Left = 0
-  Top = 0
+  Left = 451
+  Top = 420
+  Width = 364
+  Height = 282
   Caption = 'AppIdleWarn Test App'
-  ClientHeight = 272
-  ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -37,13 +37,15 @@ object frmTestAppIdleWarn: TfrmTestAppIdleWarn
     Width = 265
     Height = 17
     Caption = 'Show Application Name in Warning Message'
+    Checked = True
+    State = cbChecked
     TabOrder = 0
     OnClick = chkShowAppNameClick
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 253
-    Width = 338
+    Top = 232
+    Width = 356
     Height = 19
     Panels = <>
     SimplePanel = True
@@ -60,16 +62,10 @@ object frmTestAppIdleWarn: TfrmTestAppIdleWarn
   object CloseApplication1: TCloseApplication
     MinutesAppAllowedToBeIdle = 1
     SecondsPromptedOnShutdown = 20
+    ShowAppName = True
     TimerInterval = 0
     OnResume = CloseApplication1Resume
     Left = 110
     Top = 182
-  end
-  object tmrStatusMessage: TTimer
-    Enabled = False
-    Interval = 5000
-    OnTimer = tmrStatusMessageTimer
-    Left = 224
-    Top = 188
   end
 end

@@ -19,7 +19,9 @@ type
   TOnApplicationMsg = procedure(var Msg: TMsg; var Handled: Boolean) of object;
   TAppIdleWarnFunc = function(CloseTime: Integer; const ShouldShowAppName: Boolean = False): Integer of object;
 
+  {$IFDEF XE2orHIGHER}
   [ComponentPlatforms(pidWin32 or pidWin64)]
+  {$ENDIF}
   TCloseApplication = class(TComponent)
     procedure IdleTimerTimer(Sender: TObject);
   private
@@ -72,7 +74,7 @@ var
 destructor TCloseApplication.Destroy;
 begin
   if (not (csDesigning in ComponentState)) then begin
-      // Release Windows Hooks
+    // Release Windows Hooks
     {$IFDEF XE2orHIGHER}
     UnhookWindowsHookEx(MouseHook);
     UnHookWindowsHookEx(KeyboardHook);
@@ -80,7 +82,8 @@ begin
     Windows.UnhookWindowsHookEx(MouseHook);
     Windows.UnHookWindowsHookEx(KeyboardHook);
     {$ENDIF}
-      // Free Timer
+
+    // Free Timer
     IdleTimer.Free;
   end;
   inherited Destroy;
@@ -91,7 +94,7 @@ begin
   inherited Create(AOwner);
 
   if (not (csDesigning in ComponentState)) then begin // Only Allocate Resources If App Is Run
-    //Set Flag To Ensure Terminate Window Not Called Recursively
+    // Set Flag To Ensure Terminate Window Not Called Recursively
     FCountDownScreenDisplayed := False;
     FShowAppName := False;
 

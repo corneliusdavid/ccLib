@@ -8,7 +8,6 @@ uses
 
 begin
   Application.Initialize;
-  Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmTestAppIdleWarn, frmTestAppIdleWarn);
   Application.Run;
 end.

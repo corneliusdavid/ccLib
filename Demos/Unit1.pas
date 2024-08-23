@@ -19,17 +19,11 @@ type
     Label1: TLabel;
     chkShowAppName: TCheckBox;
     StatusBar1: TStatusBar;
-    tmrStatusMessage: TTimer;
     chkUseCustomWarningMessage: TCheckBox;
     procedure CloseApplication1Resume(Sender: TObject);
     function CloseApplication1Warning(CloseTime: Integer; const ShouldShowAppName: Boolean): Integer;
-    procedure tmrStatusMessageTimer(Sender: TObject);
     procedure chkUseCustomWarningMessageClick(Sender: TObject);
     procedure chkShowAppNameClick(Sender: TObject);
-  private
-    { Private declarations }
-  public
-    { Public declarations }
   end;
 
 var
@@ -37,19 +31,32 @@ var
 
 implementation
 
+uses
+  Dialogs;
+
 {$R *.dfm}
 
-uses
-  StrUtils;
 
 function TfrmTestAppIdleWarn.CloseApplication1Warning(CloseTime: Integer; const ShouldShowAppName: Boolean): Integer;
 var
   AppName: string;
 begin
+  {$IFDEF VER130}
+  if ShouldShowAppName then
+    AppName := frmTestAppIdleWarn.Caption
+  else
+    AppName := 'This application';
+  {$ELSE}
   AppName := IfThen(ShouldShowAppName, frmTestAppIdleWarn.Caption, 'This application');
+  {$ENDIF}
 
+  {$IFDEF VER130}
+  if (MessageDlg(AppName + ' will close in ' + IntToStr(CloseTime) + ' seconds. Allow it?', mtConfirmation,
+               [mbYes, mbNo], 0) = mrYes) then
+  {$ELSE}
   if MessageDlg(AppName + ' will close in ' + IntToStr(CloseTime) + ' seconds. Allow it?', TMsgDlgType.mtConfirmation,
                 mbYesNo, 0) = mrYes then
+  {$ENDIF}
     Result := 0
   else
     Result := 1;
@@ -71,13 +78,6 @@ end;
 procedure TfrmTestAppIdleWarn.CloseApplication1Resume(Sender: TObject);
 begin
   StatusBar1.SimpleText := 'Application close prevented--resuming.';
-  tmrStatusMessage.Enabled := True;
-end;
-
-procedure TfrmTestAppIdleWarn.tmrStatusMessageTimer(Sender: TObject);
-begin
-  tmrStatusMessage.Enabled := False;
-  StatusBar1.SimpleText := EmptyStr;
 end;
 
 end.

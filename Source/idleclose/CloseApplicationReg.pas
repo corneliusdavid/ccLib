@@ -70,4 +70,9 @@ begin
   Result := 1;
 end;
 
+{$IFDEF VER130}
+// for Delphi 5, register ONLY the TCloseApplication component
+initialization
+  RegisterCloseApp;
+{$ENDIF}
 end.
