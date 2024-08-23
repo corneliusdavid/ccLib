@@ -7,7 +7,7 @@ interface
 uses
   {$IFDEF XE2orHIGHER}
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.IOUtils,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.StdCtrls, VCL.ExtCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.StdCtrls, VCL.ExtCtrls;
   {$ELSE}
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, {$IFNDEF VER130} IOUtils, {$ENDIF}
   StdCtrls, Buttons, ExtCtrls;
