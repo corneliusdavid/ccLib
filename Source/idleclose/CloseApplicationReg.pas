@@ -43,10 +43,10 @@ end;
 { TCloseAppComponent }
 
 procedure TCloseAppComponent.ExecuteVerb(Index: Integer);
+{$IFDEF VER130}
 const
-  {$IFDEF VER130}
   sLineBreak = #13#10;
-  {$ENDIF}
+{$ENDIF}
 begin
   case Index of
     0: MessageBox(0, 'This nifty component automatically closes an application after a specified amount of time without ' +
