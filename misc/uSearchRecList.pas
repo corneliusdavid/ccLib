@@ -53,7 +53,8 @@ type
 ///   The path to search for files
 /// </param>
 /// <param name="Pattern">
-///   A file pattern to look for
+///   A file pattern to look for; note that this is not used if all you're looking
+///   for is folders.
 /// </param>
 /// <param name="Recursive">
 ///   True or False - whether to traverse subfolders or not
