@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{F2FE9219-7D2A-49ED-8C81-ECD35BB8D337}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Delphi 12\ccLib_R.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Delphi 12\ccLib_D.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\Demos\IniPersistDemo.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ccLib_R">
+        <MSBuild Projects="Delphi 12\ccLib_R.dproj"/>
+    </Target>
+    <Target Name="ccLib_R:Clean">
+        <MSBuild Projects="Delphi 12\ccLib_R.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ccLib_R:Make">
+        <MSBuild Projects="Delphi 12\ccLib_R.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ccLib_D">
+        <MSBuild Projects="Delphi 12\ccLib_D.dproj"/>
+    </Target>
+    <Target Name="ccLib_D:Clean">
+        <MSBuild Projects="Delphi 12\ccLib_D.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ccLib_D:Make">
+        <MSBuild Projects="Delphi 12\ccLib_D.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="IniPersistDemo">
+        <MSBuild Projects="..\Demos\IniPersistDemo.dproj"/>
+    </Target>
+    <Target Name="IniPersistDemo:Clean">
+        <MSBuild Projects="..\Demos\IniPersistDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="IniPersistDemo:Make">
+        <MSBuild Projects="..\Demos\IniPersistDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ccLib_R;ccLib_D;IniPersistDemo"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ccLib_R:Clean;ccLib_D:Clean;IniPersistDemo:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ccLib_R:Make;ccLib_D:Make;IniPersistDemo:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

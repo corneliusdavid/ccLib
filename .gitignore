@@ -1,6 +1,27 @@
+*.mes
+*.dsk
+*.tvsconfig
+*.stat
+*.dcu
+*.exe
+*.identcache
+*.local
+*.dcr
+*.~dsk
+__history/
 LibrarySupport/
 ModelSupport_cc_DXE8_R/
 ModelSupport_cc_D10Seattle_R/
 layoutsaver/demo/Win64/
 layoutsaver/demo/Win32/
-*.mes
+Packages/Delphi XE2/__history/
+Packages/Delphi XE3/__history/
+Packages/Delphi XE4/__history/
+Packages/Delphi XE5/__history/
+Packages/Delphi XE6/__history/
+Packages/Delphi XE7/__history/
+Packages/Delphi XE8/ModelSupport_ccLib_R/
+Demos/Win32/
+*.~*
+*.res
+*.dsv
