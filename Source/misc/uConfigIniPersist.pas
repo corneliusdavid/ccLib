@@ -71,6 +71,41 @@ type
   end;
 
   ///	<summary>
+  ///	  An Attribute class that can be optionally applied at the class level of a
+  ///   descendant class from a bass class to override the "Config Section"
+  ///	</summary>
+  ///	<remarks>
+  ///	  This attribute class overrides the [Section] of the .INI file for the class
+  ///   that is defined for a base class. For example, more than one FileExportClass
+  ///   may be defined in an application, one for customers and one for inventory.
+  ///   If left at default, both would use the INI Section name of 'FileExport'
+  ///   from the base class attribute; this way, each derivitive can store settings
+  ///   in a custom section, e.g. CustFileExport and InvFileExport.
+  ///	</remarks>
+  IniSectionOverrideAttribute = class(TCustomAttribute)
+  private
+    FIniSection: string;
+  public
+    ///	<summary>
+    ///	  The constructor simply establishes the one field of the class.
+    ///	</summary>
+    ///	<param name="NewIniSetion">
+    ///	  <c>String. Required.</c> Establishes the [Section] of the .INI file for the class and its properties.
+    ///	</param>
+    constructor Create(const NewIniSection: string);
+  published
+    ///	<summary>
+    ///	  The name of the [Section] in the .INI key for which this class is
+    ///	  saved.
+    ///	</summary>
+    ///	<remarks>
+    ///	  The property name should probably have been IniSection instead of
+    ///	  IniKey.
+    ///	</remarks>
+    property IniSection: string read FIniSection write FIniSection;
+  end;
+
+  ///	<summary>
   ///	  This attribute class excludes a property from being loaded/saved.
   ///	</summary>
   /// <remarks>
@@ -147,10 +182,12 @@ type
     function GetPropIgnoreAttribute(Obj: TRttiObject): IniIgnoreAttribute;
     function GetDefaultAttributeValue(Obj: TRttiObject): string;
     function GetClassAttribute(ObjTyp: TRttiType): IniClassAttribute;
+    function GetSectionOverrideAttribute(ObjTyp: TRttiType): IniSectionOverrideAttribute;
   protected
     function GetClassSection(ClassType: TRttiType): string;
-    procedure LoadRttiClass(GetCfgValue: TGetIniValueFunc);
-    procedure SaveRttiClass(PutCfgValue: TPutIniValueProc);
+    function GetOverrideSection(ClassType: TRttiType): string;
+    procedure LoadRttiClass(GetCfgValue: TGetIniValueFunc; const SectName: string = '');
+    procedure SaveRttiClass(PutCfgValue: TPutIniValueProc; const SectName: string = '');
   public
     ///	<summary>
     ///	  LoadFromIni reads a configuration file and fills the given object with the settings found.
@@ -158,14 +195,14 @@ type
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to read from.
     ///	</param>
-    procedure LoadFromIni(const FileName : String);
+    procedure LoadFromIni(const FileName: string; const OverrideSectionName: string = '');
     ///	<summary>
     ///	  SaveToIni writes a configuration file using the settings from the given object.
     ///	</summary>
     ///	<param name="FileName">
     ///	  <c>String. Required.</c> The name of the .INI file to write.
     ///	</param>
-    procedure SaveToIni(const FileName : String);
+    procedure SaveToIni(const FileName: string; const OverrideSectionName: string = '');
     ///	<summary>
     ///	  Parse the given string and fill the configuration object with the settings found.
     ///	</summary>
@@ -193,6 +230,13 @@ begin
   FIniKey := NewIniKey;
 end;
 
+{ IniSectionOverrideAttribute }
+
+constructor IniSectionOverrideAttribute.Create(const NewIniSection: string);
+begin
+  FIniSection := NewIniSection;
+end;
+
 { IniDefaultAttribute }
 
 constructor IniDefaultAttribute.Create(const NewDefaultValue: string);
@@ -216,6 +260,20 @@ begin
     end;
 end;
 
+function TIniPersist.GetSectionOverrideAttribute(ObjTyp: TRttiType): IniSectionOverrideAttribute;
+{ check to see if a descendant class added a section override attribute }
+var
+  Attr: TCustomAttribute;
+begin
+  Result := nil;
+
+  for Attr in ObjTyp.GetAttributes do
+    if Attr is IniSectionOverrideAttribute then begin
+      Result := IniSectionOverrideAttribute(Attr);
+      Break;
+    end;
+end;
+
 function TIniPersist.GetClassSection(ClassType: TRttiType): string;
 var
   IniClass: IniClassAttribute;
@@ -225,6 +283,19 @@ begin
   if Assigned(IniClass) then
     // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Key Names
     Result := IniClass.IniKey
+  else
+    Result := EmptyStr;
+end;
+
+function TIniPersist.GetOverrideSection(ClassType: TRttiType): string;
+var
+  IniClass: IniSectionOverrideAttribute;
+begin
+  // ensure this class is using "class-level" keys
+  IniClass := GetSectionOverrideAttribute(ClassType);
+  if Assigned(IniClass) then
+    // if using class-level INI keys, this is the [INIKEY] for the class and the properties define themselves as Key Names
+    Result := IniClass.IniSection
   else
     Result := EmptyStr;
 end;
@@ -295,7 +366,7 @@ begin
      raise EIniPersist.Create('GetValue - Type not supported');
 end;
 
-procedure TIniPersist.LoadRttiClass(GetCfgValue: TGetIniValueFunc);
+procedure TIniPersist.LoadRttiClass(GetCfgValue: TGetIniValueFunc; const SectName: string = '');
 var
   ctx : TRttiContext;
   objType : TRttiType;
@@ -304,14 +375,23 @@ var
   Value : TValue;
   IniPropIgnore: IniIgnoreAttribute;
   Data : string;
-  IniClassSection: string;
+  IniSection: string;
   IniDefault: string;
 begin
   ctx := TRttiContext.Create;
   try
     objType := ctx.GetType(Self.ClassType);
 
-    IniClassSection := GetClassSection(ObjType);
+    // Where does the INI [Section] come from?
+    // 1. Parameter "SectName"
+    // 2. Override attribute defined by a descendant class
+    // 3. Class attribute
+    IniSection := SectName;
+    if IniSection.IsEmpty then begin
+      IniSection := GetOverrideSection(ObjType);
+      if IniSection.IsEmpty then
+        IniSection := GetClassSection(ObjType);
+    end;
 
     // look at all the properties of the object
     for Prop in objType.GetProperties do begin
@@ -331,8 +411,8 @@ begin
           IniDefault := GetDefaultAttributeValue(Prop);
 
           // finally, read the data using the property name as the value name
-          Data := GetCfgValue(IniClassSection, Prop.Name, IniDefault);
-          {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, IniClassSection, Prop.Name])); {$ENDIF}
+          Data := GetCfgValue(IniSection, Prop.Name, IniDefault);
+          {$IFDEF UseCodeSite} CodeSite.Send(Format('read "%s" from [%s] %s', [Data, IniSection, Prop.Name])); {$ENDIF}
         end;
 
         // if the data is available, we can now assign it
@@ -349,7 +429,7 @@ begin
   end;
 end;
 
-procedure TIniPersist.SaveRttiClass(PutCfgValue: TPutIniValueProc);
+procedure TIniPersist.SaveRttiClass(PutCfgValue: TPutIniValueProc; const SectName: string = '');
 var
   ctx : TRttiContext;
   objType : TRttiType;
@@ -358,45 +438,54 @@ var
   Value : TValue;
   IniPropIgnore: IniIgnoreAttribute;
   Data : String;
-  IniClassSection: string;
+  IniSection: string;
 begin
-    ctx := TRttiContext.Create;
-    try
-      objType := ctx.GetType(self.ClassInfo);
+  ctx := TRttiContext.Create;
+  try
+    objType := ctx.GetType(self.ClassInfo);
 
-      IniClassSection := GetClassSection(ObjType);
+    // Where does the INI [Section] come from?
+    // 1. Parameter "SectName"
+    // 2. Override attribute defined by a descendant class
+    // 3. Class attribute
+    IniSection := SectName;
+    if IniSection.IsEmpty then begin
+      IniSection := GetOverrideSection(ObjType);
+      if IniSection.IsEmpty then
+        IniSection := GetClassSection(ObjType);
+    end;
 
-      // look at all the properties of the object
-      for Prop in objType.GetProperties do begin
-        // get the class to which the current property belongs
-        PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
+    // look at all the properties of the object
+    for Prop in objType.GetProperties do begin
+      // get the class to which the current property belongs
+      PropClass := TRttiInstanceType(Prop.Parent).MetaclassType;
 
-        // always ignore TInterfacedObject properties
-        if (PropClass <> TInterfacedObject) then begin
-          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
-          // get the value to be saved
-          Value := Prop.GetValue(Self);
-          Data := GetValue(Value);
+      // always ignore TInterfacedObject properties
+      if (PropClass <> TInterfacedObject) then begin
+        {$IFDEF UseCodeSite} CodeSite.Send(csmLevel1, 'checking property', Prop.Name); {$ENDIF}
+        // get the value to be saved
+        Value := Prop.GetValue(Self);
+        Data := GetValue(Value);
 
-          // check to see if this property is ignored
-          IniPropIgnore := GetPropIgnoreAttribute(Prop);
-          if Assigned(IniPropIgnore) then
-            continue
-          else begin
-            // not ignored and the IniClassSection is set, write out the data using property name as value name
-            PutCfgValue(IniClassSection, Prop.Name, Data);
-            {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
-          end;
+        // check to see if this property is ignored
+        IniPropIgnore := GetPropIgnoreAttribute(Prop);
+        if Assigned(IniPropIgnore) then
+          continue
+        else begin
+          // not ignored and the IniSection is set, write out the data using property name as value name
+          PutCfgValue(IniSection, Prop.Name, Data);
+          {$IFDEF UseCodeSite} CodeSite.Send(csmLevel2, 'data written to .INI file', Data); {$ENDIF}
         end;
       end;
-    finally
-      ctx.Free;
     end;
+  finally
+    ctx.Free;
+  end;
 end;
 
 { TIniPersist }
 
-procedure TIniPersist.LoadFromIni(const FileName: String);
+procedure TIniPersist.LoadFromIni(const FileName: String; const OverrideSectionName: string = '');
 var
   FIni : TIniFile;
 begin
@@ -411,7 +500,8 @@ begin
         if Length(SectionName) = 0 then
           raise EProgrammerNotFound.Create(CLASS_SECTION_MISSING);
         Result := FIni.ReadString(SectionName, ValueName, DefaultValue);
-      end);
+      end,
+      OverrideSectionName);
   finally
     FIni.Free;
   end;
@@ -419,7 +509,7 @@ begin
   {$IFDEF UseCodeSite} CodeSite.ExitMethodCollapse('TIniPersist.LoadFromIni'); {$ENDIF}
 end;
 
-procedure TIniPersist.SaveToIni(const FileName: String);
+procedure TIniPersist.SaveToIni(const FileName: String; const OverrideSectionName: string = '');
 var
   FIni : TIniFile;
 begin
@@ -434,7 +524,8 @@ begin
         if Length(SectionName) = 0 then
           raise EProgrammerNotFound.Create(CLASS_SECTION_MISSING);
         FIni.WriteString(SectionName, ValueName, StrValue);
-      end);
+      end,
+      OverrideSectionName);
   finally
     FIni.Free;
   end;
