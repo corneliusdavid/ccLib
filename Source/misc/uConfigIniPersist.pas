@@ -387,9 +387,9 @@ begin
     // 2. Override attribute defined by a descendant class
     // 3. Class attribute
     IniSection := SectName;
-    if IniSection.IsEmpty then begin
+    if Length(IniSection) = 0 then begin
       IniSection := GetOverrideSection(ObjType);
-      if IniSection.IsEmpty then
+      if Length(IniSection) = 0 then
         IniSection := GetClassSection(ObjType);
     end;
 
@@ -449,9 +449,9 @@ begin
     // 2. Override attribute defined by a descendant class
     // 3. Class attribute
     IniSection := SectName;
-    if IniSection.IsEmpty then begin
+    if Length(IniSection) = 0 then begin
       IniSection := GetOverrideSection(ObjType);
-      if IniSection.IsEmpty then
+      if Length(IniSection) = 0 then
         IniSection := GetClassSection(ObjType);
     end;
 
