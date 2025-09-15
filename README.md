@@ -7,6 +7,11 @@ Some useful Delphi units and components offered by Cornelius Concepts, LLC.
 
 This library contains units and components I've developed that come in handy in many situations. But they go beyond just being useful--they also teach. There are comments and samples, and the components show several aspects of how to write Delphi components, such the separation of packages between run-time and design-time, how to integrate component help activated by right-clicking on the component, and even integration into Delphi's splash screen and About box.
 
+## To Build
+
+These components support nearly every version of Delphi from version 5 up to the latest Delphi 13 Florence (I don't have Delphi 6, 7, or 2009 to test with but I'm sure those will work just fine). There are project groups containing packages for each of these up to Delphi 12 Athens. The packages support auto-numbering so we don't really need specific packages for the newer versions of Delphi so I renamed the project group for Delphi 12 to "Delphi12plus" meaning that you can use the same packages for Delphi 12 Athens and Delphi 13 Florence (and future versions of Delphi).
+
+Simply load the package for your version of Delphi, compile both run-time (`ccLib_R`) and design-time (`ccLib_D`), then install the design-time one and you're set to go. The run-time package has a Build Event to copy the .dfm for the IdleClose component out to the BPL folder so it'll be found at runtime.
 
 ## Component: LayoutSaver
 
