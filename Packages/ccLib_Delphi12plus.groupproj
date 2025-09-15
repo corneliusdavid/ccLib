@@ -57,4 +57,24 @@
         <CallTarget Targets="ccLib_R:Make;ccLib_D:Make;IniPersistDemo:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+    <ItemGroup Condition="'$(BuildGroup)'=='build all'">
+        <BuildGroupProject Include="..\Demos\IniPersistDemo.dproj">
+            <ProjectGuid>{33FDE6C1-52E4-41D4-95D4-9F18AD309D2A}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32;Win64</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Delphi 12\ccLib_R.dproj">
+            <ProjectGuid>{4CABD566-A878-4D91-92E2-DE1EB26EA1FF}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32;Win64</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Delphi 12\ccLib_D.dproj">
+            <ProjectGuid>{4BD59517-C377-4FAF-B255-58EEA7BA7662}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+    </ItemGroup>
 </Project>
