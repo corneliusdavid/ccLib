@@ -25,3 +25,4 @@ Demos/Win32/
 *.~*
 *.res
 *.dsv
+*.dpkg
