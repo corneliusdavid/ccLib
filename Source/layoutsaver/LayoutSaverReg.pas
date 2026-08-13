@@ -7,7 +7,7 @@ unit LayoutSaverReg;
 
 interface
 
-{$I ..\..\source\cc.inc}
+{$I cc.inc}
 
 uses
   Classes,
@@ -15,9 +15,10 @@ uses
   Dsgnintf;
   {$ELSE}
     {$IFDEF Delphi6AndUp}
-    DesignEditors, DesignIntf;
+    DesignEditors, DesignIntf,
     {$ENDIF}
   {$ENDIF}
+  ccRegCommon;
 
 type
   {$IFDEF 103RioOrHigher}
@@ -39,6 +40,7 @@ type
   end;
 
 procedure RegisterLayoutSaver;
+procedure Register;
 
 
 implementation
@@ -57,12 +59,9 @@ end;
 { TccIniLayoutSaverEditor }
 
 procedure TccIniLayoutSaverEditor.ExecuteVerb(Index: Integer);
-const
-  CR = #13;
-  LF = #10;
 begin
   case Index of
-    0: MessageBox(0, 'TccIniLayoutSaver vr. 2.0' + CR + LF +
+    0: MessageBox(0, 'TccIniLayoutSaver vr. 2.0' + sLineBreak +
                      'Freeware by Cornelius Concepts',
                      PChar('About this component ...'),
                      MB_OK + MB_ICONINFORMATION);
@@ -71,19 +70,19 @@ begin
                      'the Section property. By setting UseDefaultNames to True, the Location is ' +
                      'automatically assigned the Application.ExeName value in the Local Application Path ' +
                      '(if UseAppPath is True or the application''s directory otherwise) ' +
-                     'and the Section is set to the form''s name upon which the component resides.' + CR + LF +
-                     LF +
+                     'and the Section is set to the form''s name upon which the component resides.' + sLineBreak +
+                     sLineBreak +
                      'The AutoSave and AutoRestore properties allow a form to be ' +
                      'automatically saved and restored upon creation and destruction of the form.  ' +
                      'Therefore, by simply dropping this component on a form, its size and position will ' +
-                     'automatically be saved and restored in an .INI file--with no code!' + CR + LF +
+                     'automatically be saved and restored in an .INI file--with no code!' + sLineBreak +
                      'You can use the OnBeforeRestore and OnBeforeSave events to modify behavior just before ' +
                      'those actions take place.' + sLineBreak +
                      sLineBreak +
-                     LF +
+                     sLineBreak +
                      'Note: If the Position property of the form is set to poScreenCenter, the form will still ' +
-                     'retain its size (width and height), but always start centered.' + CR + LF +
-                     LF +
+                     'retain its size (width and height), but always start centered.' + sLineBreak +
+                     sLineBreak +
                      'Also provided are three sets of public methods, SaveIntValue/RestoreIntValue, ' +
                      'SaveStrValue/RestoreStrValue and SaveBoolValue/RestoreBoolValue that ' +
                      'will save/resotre any integer, string, or boolean values (respectively) in the same ' +
@@ -109,9 +108,6 @@ end;
 { TccRegistryLayoutSaverEditor }
 
 procedure TccRegistryLayoutSaverEditor.ExecuteVerb(Index: Integer);
-const
-  CR = #13;
-  LF = #10;
 begin
   case Index of
     0: MessageBox(0, 'TccRegistryLayoutSaver vr. 1.0' + sLineBreak +
@@ -154,6 +150,16 @@ end;
 function TccRegistryLayoutSaverEditor.GetVerbCount: Integer;
 begin
   Result := 2;
+end;
+
+procedure Register;
+begin
+  RegisterSplashScreen;
+  RegisterAboutBox;
+
+  RegisterLayoutSaver;
+
+  ForceDemandLoadState(dlDisable);
 end;
 
 end.
