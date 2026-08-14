@@ -22,19 +22,24 @@ targetPlatforms:
 templates:
   - name: default
     source:
+      - src: ./ccLib.LayoutSaver_R.dpk
+      - src: ./ccLib.LayoutSaver_R.dproj
+      - src: ./ccLib.LayoutSaver_D.dpk
+      - src: ./ccLib.LayoutSaver_D.dproj
       - src: ./../source/layoutsaver/*.pas
-      - src: ./../source/*.pas
+      - src: ./../source/ccRegCommon.pas
+      - src: ./../source/cc_reg.pas
       - src: ./../source/*.inc
       - src: ./cc.res
-      - src: ./*.dpk
-      - src: ./*.dproj
     build:
       - project: ./ccLib.LayoutSaver_R.dproj
         platforms:
           - win32
           - win64
+        defines: RELEASE
     design:
       - project: ./ccLib.LayoutSaver_D.dproj
         platforms:
           - win32
-        libSuffix: $libsuffix$
+        libSuffx: $libsuffix$
+        defines: RELEASE
