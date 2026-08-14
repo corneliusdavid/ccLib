@@ -7,7 +7,7 @@ unit LayoutSaverReg;
 
 interface
 
-{$I cc.inc}
+{$I ..\cc.inc}
 
 uses
   Classes,
@@ -46,7 +46,7 @@ procedure Register;
 implementation
 
 uses
-  SysUtils, Windows, Graphics, ToolsAPI,
+  SysUtils, Windows, Vcl.Graphics, ToolsAPI,
   LayoutSaver;
 
 procedure RegisterLayoutSaver;

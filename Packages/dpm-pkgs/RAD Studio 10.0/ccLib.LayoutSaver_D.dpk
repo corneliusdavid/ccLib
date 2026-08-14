@@ -5,25 +5,25 @@
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO ON}
+{$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION OFF}
+{$OPTIMIZATION ON}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
-{$REFERENCEINFO ON}
+{$REFERENCEINFO OFF}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES ON}
+{$STACKFRAMES OFF}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE DEBUG}
+{$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$LIBSUFFIX '230'}
 {$DESIGNONLY}
@@ -35,8 +35,6 @@ requires
   ccLib.LayoutSaver_R;
 
 contains
-  LayoutSaver in '..\..\..\source\layoutsaver\LayoutSaver.pas',
   LayoutSaverReg in '..\..\..\source\layoutsaver\LayoutSaverReg.pas',
-  ccRegCommon in '..\..\..\source\ccRegCommon.pas',
-  cc_reg in '..\..\..\source\cc_reg.pas';
+  ccRegCommon in '..\..\..\source\ccRegCommon.pas';
 end.

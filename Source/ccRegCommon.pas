@@ -11,7 +11,7 @@ implementation
 {$I cc.inc}
 
 uses
-  SysUtils, Windows, Graphics,
+  SysUtils, Windows, Vcl.Graphics,
   {$IFDEF	Delphi5}
   Dsgnintf,
   {$ELSE}
