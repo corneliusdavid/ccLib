@@ -3,7 +3,8 @@
  * by: Cornelius Concepts, LLC
  * on: long time ago
  * in: many versions of Delphi
- * to: provide compiler definitions that can be used in libraries and units to allow flexible coding
+ * to: provide compiler definitions that can be used in libraries and units to
+ *     allow flexible coding
  *)
 
 
@@ -57,6 +58,7 @@
 {$IFDEF VER220}
   {$DEFINE DELPHI6ANDUP}
   {$DEFINE VERSION2005orHigher}
+  {$DEFINE XEorHigher}
   {$DEFINE SupportedCompiler}
 {$ENDIF}
 

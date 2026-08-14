@@ -8,7 +8,7 @@ unit LayoutSaver;
 
 interface
 
-{$I cc.inc}
+{$I ..\cc.inc}
 
 uses
   {$IFDEF XE2orHIGHER}
@@ -129,7 +129,7 @@ implementation
 
 uses
   {$IFDEF UseCodeSite} CodeSiteLogging, {$ENDIF}
-  {$IFDEF XEorHIGHER}
+  {$IFDEF XE2orHIGHER}
   Winapi.Windows, Winapi.SHFolder,
   VCL.Forms;
   {$ELSE}
