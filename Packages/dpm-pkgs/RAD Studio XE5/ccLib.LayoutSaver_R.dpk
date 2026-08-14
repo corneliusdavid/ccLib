@@ -34,7 +34,5 @@ requires
 
 contains
   LayoutSaver in '..\..\..\source\layoutsaver\LayoutSaver.pas',
-  LayoutSaverReg in '..\..\..\source\layoutsaver\LayoutSaverReg.pas',
-  ccRegCommon in '..\..\..\source\ccRegCommon.pas',
-  cc_reg in '..\..\..\source\cc_reg.pas';
+  cc.inc in '..\..\..\source\cc.inc';  
 end.
