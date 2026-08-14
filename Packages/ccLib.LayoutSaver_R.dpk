@@ -26,7 +26,6 @@ package ccLib.LayoutSaver_R;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Cornelius Concepts LayoutSaver for VCL'}
-{$LIBSUFFIX AUTO}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
