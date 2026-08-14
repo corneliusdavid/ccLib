@@ -154,7 +154,6 @@ end;
 
 procedure Register;
 begin
-  RegisterSplashScreen;
   RegisterAboutBox;
 
   RegisterLayoutSaver;
