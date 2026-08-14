@@ -54,7 +54,6 @@ templates:
       - src: ./../source/layoutsaver/*.pas
       - src: ./../source/*.pas
       - src: ./../source/*.inc
-      - src: ./cc.res
     build:
       - project: ./ccLib.LayoutSaver_R.dproj
         platforms:
