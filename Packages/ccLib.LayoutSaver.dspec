@@ -4,7 +4,7 @@ metadata:
   id: ccLib.LayoutSaver
   version: 1.0.0
   description: VCL LayoutSaver by Cornelius Concepts
-  icon: E:\BUSINESS\Cornelius Concepts\marketing\LOGO\Logo150.png
+  icon: Logo64.png
   authors:
     - David Cornelius
   projectUrl: https://github.com/corneliusdavid/ccLib
@@ -15,11 +15,36 @@ metadata:
     - vcl
 targetPlatforms:
   - compiler from: delphixe2
+    compiler to: delphi10.4
+    platforms:
+      - Win32
+      - Win64
+    template: classic
+  - compiler from: delphi11.0
     compiler to: delphi13.0
     platforms:
-      - win32
-      - win64
+      - Win32
+      - Win64
+    template: default
 templates:
+  - name: classic
+    source:
+      - src: ./dpm-pkgs/RAD Studio $compilernoprefix$/*.dpk
+      - src: ./dpm-pkgs/RAD Studio $compilernoprefix$/*.dproj
+      - src: ./../source/layoutsaver/*.pas
+      - src: ./../source/*.pas
+      - src: ./../source/*.inc
+    build:
+      - project: ./dpm-pkgs/RAD Studio $compilernoprefix$/ccLib.LayoutSaver_R.dproj
+        platforms:
+          - win32
+          - win64
+        defines: RELEASE
+    design:
+      - project: ./dpm-pkgs/RAD Studio $compilernoprefix$/ccLib.LayoutSaver_D.dproj
+        platforms:
+          - win32
+        defines: RELEASE
   - name: default
     source:
       - src: ./ccLib.LayoutSaver_R.dpk
@@ -27,8 +52,7 @@ templates:
       - src: ./ccLib.LayoutSaver_D.dpk
       - src: ./ccLib.LayoutSaver_D.dproj
       - src: ./../source/layoutsaver/*.pas
-      - src: ./../source/ccRegCommon.pas
-      - src: ./../source/cc_reg.pas
+      - src: ./../source/*.pas
       - src: ./../source/*.inc
       - src: ./cc.res
     build:

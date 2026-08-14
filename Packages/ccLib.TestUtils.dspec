@@ -4,7 +4,7 @@ metadata:
   id: ccLib.TestUtils
   version: 1.0.0
   description: Testing Functions by Cornelius Concepts
-  icon: E:\BUSINESS\Cornelius Concepts\marketing\LOGO\Logo150.png
+  icon: Logo64.png
   authors:
     - David Cornelius
   projectUrl: https://github.com/corneliusdavid/ccLib
@@ -17,8 +17,8 @@ targetPlatforms:
   - compiler from: delphixe2
     compiler to: delphi13.0
     platforms:
-      - win32
-      - win64
+      - Win32
+      - Win64
 templates:
   - name: default
     source:
