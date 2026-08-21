@@ -17,19 +17,19 @@ Simply load the package for your version of Delphi, compile both run-time (`ccLi
 
 Simply drop this component on a form and it's size and position are automatically saved when closed and restored when opened. Additionally save other values with convenient methods. There are two variations:
 
-* **ccRegistryLayoutSaver** - saves settings to the windows registry, under the CURRENT_USER/SOFTWARE key.
-* **ccIniLayoutSaver** - saves settings to an INI file (text file with NAME=Value pairs). You can control where the file lives or set it to the default of the application data path.
+* **`ccRegistryLayoutSaver`** - saves settings to the windows registry, under the HKCU/SOFTWARE key.
+* **`ccIniLayoutSaver`** - saves settings to an INI file (text file with NAME=Value pairs). You can control where the file lives or set it to the default of the application data path.
 
 Both of these components have defaults to save files or registry settings in appropriate places with minimal settings and create keys or sections based on the name of the form. So you can quickly and easily drop one of these components on each form.
 
 With the additional methods for saving/restoring integer, string, and Boolean values, it makes remembering simple user data very easy:
 
-    - procedure SaveStrValue(const Name:string;const Value:string);
-    - procedure SaveIntValue(const Name:string;const Value: Integer);
-    - procedure SaveBoolValue(const Name:string;const Value: Boolean);
-    - function RestoreStrValue(const Name:string; const Default: string = ''):string;
-    - function RestoreIntValue(const Name:string; const Default: Integer = 0): Integer;
-    - function RestoreBoolValue(const Name:string; const Default: Boolean = False): Boolean;
+  - `procedure SaveStrValue(const Name:string;const Value:string);`
+  - `procedure SaveIntValue(const Name:string;const Value: Integer);`
+  - `procedure SaveBoolValue(const Name:string;const Value: Boolean);`
+  - `function RestoreStrValue(const Name:string; const Default: string = ''):string;`
+  - `function RestoreIntValue(const Name:string; const Default: Integer = 0): Integer;`
+  - `function RestoreBoolValue(const Name:string; const Default: Boolean = False): Boolean;`
 
 ## Component: CloseApplication
 
@@ -95,7 +95,7 @@ The first one, **uSearchRecList**, contains a couple of procedure type declarati
 	TFileFoundProc = reference to procedure (FileInfo: TSearchRec);
 	procedure GetSearchRecs(const Path, Pattern: string; const Recursive: Boolean; PathStatusProc: TPathStatusProc; FileFoundProc: TFileFoundProc);
 
-GetSearchRecs traverses a directory tree looking for files matching a pattern and calls PathStatusProc for every path found and FileFoundProc for every file found that matches the pattern.
+**`GetSearchRecs`** traverses a directory tree looking for files matching a pattern and calls `PathStatusProc` for every path found and `FileFoundProc` for every file found that matches the pattern.
 
 Here's an example call that would delete old log files:
 
@@ -106,7 +106,7 @@ Here's an example call that would delete old log files:
 			FileDelete(TPath.Combine(LogFolder, FileInfo.Name), True);
 		end);
 
-The second unit, **uXmlDates**, makes it easy to work with dates found in XML files. The common format is: yyyy-mm-dd"T"hh:mm:ss, but the method, ConvertToDelphiDateFromXml, can take a string without the time part.
+The second unit, **`uXmlDates`**, makes it easy to work with dates found in XML files. The common format is: `yyyy-mm-dd"T"hh:mm:ss`, but the method, `ConvertToDelphiDateFromXml`, can take a string without the time part.
 
-The third unit, **uTestUtils**, provides some functions used in a few projects where I need to generate test data such as dates, times, numbers, payment types, etc.  They're just handy to have around.
+The third unit, **`uTestUtils`**, provides some functions used in a few projects where I need to generate test data such as dates, times, numbers, payment types, etc.  They're just handy to have around. NOTE: No further work will be done on this unit as I now recommend to use the full-featured [Delphi Fake Data Utils](https://github.com/danieleteti/delphi_fake_data_utils) repository by Daniele Teti.
 
