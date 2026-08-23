@@ -1,0 +1,45 @@
+package ccLib_D7_D;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'Cornelius Concepts Components'}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+{$DEFINE RELEASE}
+
+requires
+  ccLib_D7_R,
+  DesignIDE,
+  vcl,
+  rtl,
+  vclactnband,
+  vclx;
+
+contains
+  CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas',
+  LayoutSaverReg in '..\..\Source\layoutsaver\LayoutSaverReg.pas',
+  cc_reg in '..\..\Source\cc_reg.pas',
+  ccRegCommon in '..\..\source\ccRegCommon.pas',
+  ElapsedTimerReg in '..\..\Source\elapsedtimer\ElapsedTimerReg.pas';
+
+end.
