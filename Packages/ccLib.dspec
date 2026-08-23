@@ -15,23 +15,35 @@ metadata:
     - vcl
 targetPlatforms:
   - compiler from: delphixe2
-    compiler to:   delphi11
-    template: classic
+    compiler to:   delphixe8
+    template: XEseries
     platforms:
       - Win32
       - Win64
-  - compiler from: delphi12.0
+  - compiler: delphi10.0
+    template: d10seattle
+    platforms:
+      - Win32
+      - Win64
+  - compiler from: delphi10.1
+    compiler to:   delphi10.4
+    template: d10series
+    platforms:
+      - Win32
+      - Win64
+  - compiler from: delphi11.0
     compiler to:   delphi13.0
     template: default
     platforms:
       - Win32
       - Win64
 templates:
-  - name: classic
+  - name: XEseries
     source:
       - src: ./Delphi $compilermajornoprefix$/*.dpk
       - src: ./Delphi $compilermajornoprefix$/*.dproj
       - src: ./../source/layoutsaver/*.pas
+      - src: ./../source/elapsedtimer/*.pas
       - src: ./../source/idleclose/*.pas
       - src: ./../source/idleclose/*.dfm
       - src: ./../source/misc/*.pas
@@ -46,6 +58,52 @@ templates:
         defines: RELEASE
     design:
       - project: ./Delphi $compilermajornoprefix$/ccLib_D.dproj
+        platforms:
+          - win32
+        defines: RELEASE
+  - name: d10seattle
+    source:
+      - src: ./Delphi 10/*.dpk
+      - src: ./Delphi 10/*.dproj
+      - src: ./../source/layoutsaver/*.pas
+      - src: ./../source/elapsedtimer/*.pas
+      - src: ./../source/idleclose/*.pas
+      - src: ./../source/idleclose/*.dfm
+      - src: ./../source/misc/*.pas
+      - src: ./../source/*.res
+      - src: ./../source/*.pas
+      - src: ./../source/*.inc
+    build:
+      - project: ./Delphi 10/ccLib_R.dproj
+        platforms:
+          - win32
+          - win64
+        defines: RELEASE
+    design:
+      - project: ./Delphi 10/ccLib_D.dproj
+        platforms:
+          - win32
+        defines: RELEASE
+  - name: d10series
+    source:
+      - src: ./Delphi $compilernoprefix$/*.dpk
+      - src: ./Delphi $compilernoprefix$/*.dproj
+      - src: ./../source/layoutsaver/*.pas
+      - src: ./../source/elapsedtimer/*.pas
+      - src: ./../source/idleclose/*.pas
+      - src: ./../source/idleclose/*.dfm
+      - src: ./../source/misc/*.pas
+      - src: ./../source/*.res
+      - src: ./../source/*.pas
+      - src: ./../source/*.inc
+    build:
+      - project: ./Delphi $compilernoprefix$/ccLib_R.dproj
+        platforms:
+          - win32
+          - win64
+        defines: RELEASE
+    design:
+      - project: ./Delphi $compilernoprefix$/ccLib_D.dproj
         platforms:
           - win32
         defines: RELEASE
