@@ -9,7 +9,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.IOUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.StdCtrls, VCL.ExtCtrls;
   {$ELSE}
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, {$IFNDEF VER130} IOUtils, {$ENDIF}
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+    {$IFDEF XEorHigher} IOUtils, {$ENDIF}
   StdCtrls, Buttons, ExtCtrls;
   {$ENDIF}
 
@@ -57,7 +58,7 @@ end;
 
 procedure TfmAppIdleWarn.FormShow(Sender: TObject);
 begin
-  {$IFNDEF VER130}
+  {$IFDEF XEorHigher}
   MyFormatSettings := TFormatSettings.Create;
   {$ENDIF}
 

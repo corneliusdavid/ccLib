@@ -293,7 +293,7 @@ end;
 function TccIniLayoutSaver.Open: Boolean;
 begin
   {$IFDEF UseCodeSite}CodeSite.EnterMethod(Self, 'Open'); {$ENDIF}
-  inherited;
+  inherited Open;
 
   if Length(FLocation) > 0 then begin
     FIniFile := TIniFile.Create(FLocation);

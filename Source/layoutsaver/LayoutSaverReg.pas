@@ -40,13 +40,12 @@ type
   end;
 
 procedure RegisterLayoutSaver;
-procedure Register;
 
 
 implementation
 
 uses
-  SysUtils, Windows, Vcl.Graphics, ToolsAPI,
+  SysUtils, Windows, Graphics, ToolsAPI,
   LayoutSaver;
 
 procedure RegisterLayoutSaver;
@@ -150,15 +149,6 @@ end;
 function TccRegistryLayoutSaverEditor.GetVerbCount: Integer;
 begin
   Result := 2;
-end;
-
-procedure Register;
-begin
-  RegisterAboutBox;
-
-  RegisterLayoutSaver;
-
-  ForceDemandLoadState(dlDisable);
 end;
 
 end.

@@ -11,7 +11,7 @@ implementation
 {$I cc.inc}
 
 uses
-  SysUtils, Windows, Vcl.Graphics,
+  SysUtils, Windows, Graphics,
   {$IFDEF	Delphi5}
   Dsgnintf,
   {$ELSE}
@@ -26,9 +26,11 @@ resourcestring
   ComponentPkgLic  = 'OpenSource by Cornelius Concepts';
   ComponentPkgDesc = 'TccIniLayoutSaver/TccRegistryLayoutSaver - save/restore form size/position.';
 
+{$IFDEF VERSION2005orHigher}
 var
   AboutBoxServices : IOTAAboutBoxServices = nil;
   AboutBoxIndex : Integer = 0;
+{$ENDIF}
 
 procedure RegisterAboutBox;
 begin

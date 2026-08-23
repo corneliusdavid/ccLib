@@ -30,9 +30,11 @@ resourcestring
                      'TCloseApplication - auto close an application with no activity;' + #13#10 +
                      'TccIniLayoutSaver/TccRegistryLayoutSaver - save/restore form size/position.';
 
+{$IFDEF VERSION2005orHigher}
 var
   AboutBoxServices : IOTAAboutBoxServices = nil;
   AboutBoxIndex : Integer = 0;
+{$ENDIF}
 
 procedure RegisterSplashScreen;
 var
@@ -85,7 +87,9 @@ begin
   {$ENDIF}
   RegisterLayoutSaver;
 
+  {$IFDEF VERSION2005orHigher}
   ForceDemandLoadState(dlDisable);
+  {$ENDIF}
 end;
 
 initialization
