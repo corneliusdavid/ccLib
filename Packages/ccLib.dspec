@@ -1,9 +1,9 @@
 # DPM package spec file
 min dpm client version: 1.0.0
 metadata:
-  id: ccLib.LayoutSaver
+  id: ccLib.Utils
   version: 1.0.0
-  description: VCL LayoutSaver by Cornelius Concepts
+  description: Cornelius Concepts Library
   icon: Logo64.png
   authors:
     - David Cornelius
@@ -15,54 +15,59 @@ metadata:
     - vcl
 targetPlatforms:
   - compiler from: delphixe2
-    compiler to: delphi10.4
-    platforms:
-      - Win32
-      - Win64
+    compiler to:   delphi11
     template: classic
-  - compiler from: delphi11.0
-    compiler to: delphi13.0
     platforms:
       - Win32
       - Win64
+  - compiler from: delphi12.0
+    compiler to:   delphi13.0
     template: default
+    platforms:
+      - Win32
+      - Win64
 templates:
   - name: classic
     source:
-      - src: ./dpm-pkgs/RAD Studio $compilernoprefix$/*.dpk
-      - src: ./dpm-pkgs/RAD Studio $compilernoprefix$/*.dproj
+      - src: ./Delphi $compilermajornoprefix$/*.dpk
+      - src: ./Delphi $compilermajornoprefix$/*.dproj
       - src: ./../source/layoutsaver/*.pas
+      - src: ./../source/idleclose/*.pas
+      - src: ./../source/idleclose/*.dfm
+      - src: ./../source/misc/*.pas
+      - src: ./../source/*.res
       - src: ./../source/*.pas
       - src: ./../source/*.inc
     build:
-      - project: ./dpm-pkgs/RAD Studio $compilernoprefix$/ccLib.LayoutSaver_R.dproj
+      - project: ./Delphi $compilermajornoprefix$/ccLib_R.dproj
         platforms:
           - win32
           - win64
         defines: RELEASE
     design:
-      - project: ./dpm-pkgs/RAD Studio $compilernoprefix$/ccLib.LayoutSaver_D.dproj
+      - project: ./Delphi $compilermajornoprefix$/ccLib_D.dproj
         platforms:
           - win32
         defines: RELEASE
   - name: default
     source:
-      - src: ./ccLib.LayoutSaver_R.dpk
-      - src: ./ccLib.LayoutSaver_R.dproj
-      - src: ./ccLib.LayoutSaver_D.dpk
-      - src: ./ccLib.LayoutSaver_D.dproj
+      - src: ./Delphi 12/*.dpk
+      - src: ./Delphi 12/*.dproj
       - src: ./../source/layoutsaver/*.pas
+      - src: ./../source/idleclose/*.pas
+      - src: ./../source/idleclose/*.dfm
+      - src: ./../source/misc/*.pas
+      - src: ./../source/*.res
       - src: ./../source/*.pas
       - src: ./../source/*.inc
     build:
-      - project: ./ccLib.LayoutSaver_R.dproj
+      - project: ./Delphi 12/ccLib_R.dproj
         platforms:
           - win32
           - win64
         defines: RELEASE
     design:
-      - project: ./ccLib.LayoutSaver_D.dproj
+      - project: ./Delphi 12/ccLib_D.dproj
         platforms:
           - win32
-        libSuffx: $libsuffix$
         defines: RELEASE
