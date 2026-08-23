@@ -61,6 +61,10 @@ These components support every version of Delphi from version 5 up to the latest
 
 Simply load the package group for your version of Delphi, compile both run-time (`ccLib_R`) and design-time (`ccLib_D`), then install the design-time one and you're set to go. The run-time package has a Build Event to copy the `.dfm` for the `AppIdleWarn` form out to the BPL folder so it'll be found when compiling/linking.
 
+## DPM
+
+Support has been added for [DPM](https://docs.delphi.dev/). To add as your own local packages, run `dpm pack ccLib.dspec` from the `Packages` folder, then call `dpm push ccLib.Utils-delphi<version>.dpkg` for each generated package of the compiler(s) you need. 
+
 ---
 
 ## Deprecated
