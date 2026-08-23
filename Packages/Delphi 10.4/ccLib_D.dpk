@@ -39,6 +39,7 @@ requires
 contains
   LayoutSaverReg in '..\..\source\layoutsaver\LayoutSaverReg.pas',
   CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas',
-  cc_reg in '..\..\source\cc_reg.pas';
+  cc_reg in '..\..\source\cc_reg.pas',
+  ccRegCommon in '..\..\Source\ccRegCommon.pas';
 
 end.

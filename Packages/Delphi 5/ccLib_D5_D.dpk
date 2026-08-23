@@ -32,6 +32,8 @@ requires
   ccLib_D5_R;
 
 contains
-  CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas';
+  CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas',
+  cc_reg in '..\..\source\cc_reg.pas',
+  ccRegCommon in '..\..\source\ccRegCommon.pas';
 
 end.

@@ -40,6 +40,7 @@ contains
   CloseApplicationReg in '..\..\source\idleclose\CloseApplicationReg.pas',
   ElapsedTimerReg in '..\..\source\elapsedtimer\ElapsedTimerReg.pas',
   LayoutSaverReg in '..\..\source\layoutsaver\LayoutSaverReg.pas',
-  cc_reg in '..\..\source\cc_reg.pas';
+  cc_reg in '..\..\source\cc_reg.pas',
+  ccRegCommon in '..\..\source\ccRegCommon.pas';
 
 end.
