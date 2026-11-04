@@ -1,4 +1,4 @@
-package cc_D102Tokyo_D;
+package ccLib_D;
 
 {$R *.res}
 {$R 'elapsedtimer\ElapsedTimerReg.dcr'}
@@ -34,7 +34,7 @@ package cc_D102Tokyo_D;
 
 requires
   rtl,
-  cc_D102Tokyo_R,
+  ccLib_R,
   designide,
   vcldb,
   dbrtl,

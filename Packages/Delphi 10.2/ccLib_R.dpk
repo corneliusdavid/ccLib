@@ -1,4 +1,4 @@
-package cc_D102Tokyo_R;
+package ccLib_R;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}

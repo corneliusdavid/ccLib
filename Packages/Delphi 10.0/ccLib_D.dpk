@@ -1,9 +1,12 @@
-package cc_D10Seattle_R;
+package ccLib_D;
 
 {$R *.res}
+{$R 'elapsedtimer\ElapsedTimerReg.dcr'}
+{$R 'idleclose\CloseApplicationReg.dcr'}
+{$R 'layoutsaver\LayoutSaverReg.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
-{$ASSERTIONS OFF}
+{$ASSERTIONS ON}
 {$BOOLEVAL OFF}
 {$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
@@ -25,19 +28,23 @@ package cc_D10Seattle_R;
 {$IMAGEBASE $400000}
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Cornelius Concepts Delphi Library'}
-{$RUNONLY}
+{$DESCRIPTION 'Cornelius Concepts Components'}
+{$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
-  vcl,
-  dbrtl;
+  ccLib_R,
+  designide,
+  vcldb,
+  dbrtl,
+  vcl;
 
 contains
-  ElapsedTimer in 'elapsedtimer\ElapsedTimer.pas',
-  AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
-  CloseApplication in 'idleclose\CloseApplication.pas',
-  LayoutSaver in 'layoutsaver\LayoutSaver.pas';
+  CloseApplicationReg in 'idleclose\CloseApplicationReg.pas',
+  ElapsedTimerReg in 'elapsedtimer\ElapsedTimerReg.pas',
+  LayoutSaverReg in 'layoutsaver\LayoutSaverReg.pas',
+  cc_reg in 'cc_reg.pas',
+  ccRegCommon in 'ccRegCommon.pas';
 
 end.

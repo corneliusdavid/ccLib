@@ -1,12 +1,12 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{C0AC716A-95AC-4AE4-8052-2FCC2E5CBCAD}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="Delphi 11\ccLib_R.dproj">
+        <Projects Include="Delphi 11.0\ccLib_R.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Delphi 11\ccLib_D.dproj">
+        <Projects Include="Delphi 11.0\ccLib_D.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="..\Demos\IniPersistDemo.dproj">
@@ -21,22 +21,22 @@
         </BorlandProject>
     </ProjectExtensions>
     <Target Name="ccLib_R">
-        <MSBuild Projects="Delphi 11\ccLib_R.dproj"/>
+        <MSBuild Projects="Delphi 11.0\ccLib_R.dproj"/>
     </Target>
     <Target Name="ccLib_R:Clean">
-        <MSBuild Projects="Delphi 11\ccLib_R.dproj" Targets="Clean"/>
+        <MSBuild Projects="Delphi 11.0\ccLib_R.dproj" Targets="Clean"/>
     </Target>
     <Target Name="ccLib_R:Make">
-        <MSBuild Projects="Delphi 11\ccLib_R.dproj" Targets="Make"/>
+        <MSBuild Projects="Delphi 11.0\ccLib_R.dproj" Targets="Make"/>
     </Target>
     <Target Name="ccLib_D">
-        <MSBuild Projects="Delphi 11\ccLib_D.dproj"/>
+        <MSBuild Projects="Delphi 11.0\ccLib_D.dproj"/>
     </Target>
     <Target Name="ccLib_D:Clean">
-        <MSBuild Projects="Delphi 11\ccLib_D.dproj" Targets="Clean"/>
+        <MSBuild Projects="Delphi 11.0\ccLib_D.dproj" Targets="Clean"/>
     </Target>
     <Target Name="ccLib_D:Make">
-        <MSBuild Projects="Delphi 11\ccLib_D.dproj" Targets="Make"/>
+        <MSBuild Projects="Delphi 11.0\ccLib_D.dproj" Targets="Make"/>
     </Target>
     <Target Name="IniPersistDemo">
         <MSBuild Projects="..\Demos\IniPersistDemo.dproj"/>
