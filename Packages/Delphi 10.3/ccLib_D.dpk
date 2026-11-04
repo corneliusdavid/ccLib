@@ -1,4 +1,4 @@
-package cc_D103Rio_R;
+package ccLib_D;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -25,18 +25,22 @@ package cc_D103Rio_R;
 {$IMAGEBASE $400000}
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Cornelius Concepts Delphi Library'}
-{$RUNONLY}
+{$DESCRIPTION 'Cornelius Concepts Components'}
+{$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
   rtl,
-  vcl,
-  dbrtl;
+  ccLib_R,
+  designide,
+  vcldb,
+  dbrtl,
+  vcl;
 
 contains
-  AppIdleWarn in 'idleclose\AppIdleWarn.pas' {fmAppIdleWarn},
-  CloseApplication in 'idleclose\CloseApplication.pas',
-  LayoutSaver in 'layoutsaver\LayoutSaver.pas';
+  CloseApplicationReg in '..\..\Source\idleclose\CloseApplicationReg.pas',
+  LayoutSaverReg in '..\..\Source\layoutsaver\LayoutSaverReg.pas',
+  cc_reg in '..\..\Source\cc_reg.pas',
+  ccRegCommon in '..\..\Source\ccRegCommon.pas';
 
 end.
