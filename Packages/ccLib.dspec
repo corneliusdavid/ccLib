@@ -37,8 +37,11 @@ templates:
       - src: ./$packageSource$/*.dpk
       - src: ./$packageSource$/*.dproj
       - src: ./../source/layoutsaver/*.pas
+      - src: ./../source/layoutsaver/*.dcr
       - src: ./../source/idleclose/*.pas
       - src: ./../source/idleclose/*.dfm
+      - src: ./../source/idleclose/*.dcr
+      - src: ./../source/elapsedtimer/*.pas
       - src: ./../source/misc/*.pas
       - src: ./../source/*.res
       - src: ./../source/*.pas
