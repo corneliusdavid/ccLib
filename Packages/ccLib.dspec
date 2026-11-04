@@ -2,115 +2,40 @@
 min dpm client version: 1.0.0
 metadata:
   id: ccLib.Utils
-  version: 1.0.0
-  description: Cornelius Concepts Library
+  version: 1.0.3
+  description: 'A few utilities from Cornelius Concepts: LayoutSaver and CloseApplication components; XML date conversion, test data generation; recursive directory search.'
   icon: Logo64.png
   authors:
     - David Cornelius
   projectUrl: https://github.com/corneliusdavid/ccLib
   repositoryUrl: https://github.com/corneliusdavid/ccLib
   license: MIT
-  copyright: David Cornelius and contributors
+  copyright: David Cornelius
+  tags:
+    - VCL
+    - Utilities
   frameworks:
     - vcl
+  readme: ..\README.md
+variables:
+  packagesource: ./Delphi $compilerNoPrefix$
 targetPlatforms:
   - compiler from: delphixe2
-    compiler to:   delphixe8
-    template: XEseries
+    compiler to: delphi12.0
     platforms:
-      - Win32
-      - Win64
-  - compiler: delphi10.0
-    template: d10seattle
+      - win32
+      - win64
+  - compiler: delphi13.0
     platforms:
-      - Win32
-      - Win64
-  - compiler from: delphi10.1
-    compiler to:   delphi10.4
-    template: d10series
-    platforms:
-      - Win32
-      - Win64
-  - compiler from: delphi11.0
-    compiler to:   delphi13.0
-    template: default
-    platforms:
-      - Win32
-      - Win64
+      - win32
+      - win64
+    variables:
+      packageSource: ./Delphi 12.0
 templates:
-  - name: XEseries
-    source:
-      - src: ./Delphi $compilermajornoprefix$/*.dpk
-      - src: ./Delphi $compilermajornoprefix$/*.dproj
-      - src: ./../source/layoutsaver/*.pas
-      - src: ./../source/elapsedtimer/*.pas
-      - src: ./../source/idleclose/*.pas
-      - src: ./../source/idleclose/*.dfm
-      - src: ./../source/misc/*.pas
-      - src: ./../source/*.res
-      - src: ./../source/*.pas
-      - src: ./../source/*.inc
-    build:
-      - project: ./Delphi $compilermajornoprefix$/ccLib_R.dproj
-        platforms:
-          - win32
-          - win64
-        defines: RELEASE
-    design:
-      - project: ./Delphi $compilermajornoprefix$/ccLib_D.dproj
-        platforms:
-          - win32
-        defines: RELEASE
-  - name: d10seattle
-    source:
-      - src: ./Delphi 10/*.dpk
-      - src: ./Delphi 10/*.dproj
-      - src: ./../source/layoutsaver/*.pas
-      - src: ./../source/elapsedtimer/*.pas
-      - src: ./../source/idleclose/*.pas
-      - src: ./../source/idleclose/*.dfm
-      - src: ./../source/misc/*.pas
-      - src: ./../source/*.res
-      - src: ./../source/*.pas
-      - src: ./../source/*.inc
-    build:
-      - project: ./Delphi 10/ccLib_R.dproj
-        platforms:
-          - win32
-          - win64
-        defines: RELEASE
-    design:
-      - project: ./Delphi 10/ccLib_D.dproj
-        platforms:
-          - win32
-        defines: RELEASE
-  - name: d10series
-    source:
-      - src: ./Delphi $compilernoprefix$/*.dpk
-      - src: ./Delphi $compilernoprefix$/*.dproj
-      - src: ./../source/layoutsaver/*.pas
-      - src: ./../source/elapsedtimer/*.pas
-      - src: ./../source/idleclose/*.pas
-      - src: ./../source/idleclose/*.dfm
-      - src: ./../source/misc/*.pas
-      - src: ./../source/*.res
-      - src: ./../source/*.pas
-      - src: ./../source/*.inc
-    build:
-      - project: ./Delphi $compilernoprefix$/ccLib_R.dproj
-        platforms:
-          - win32
-          - win64
-        defines: RELEASE
-    design:
-      - project: ./Delphi $compilernoprefix$/ccLib_D.dproj
-        platforms:
-          - win32
-        defines: RELEASE
   - name: default
     source:
-      - src: ./Delphi 12/*.dpk
-      - src: ./Delphi 12/*.dproj
+      - src: ./$packageSource$/*.dpk
+      - src: ./$packageSource$/*.dproj
       - src: ./../source/layoutsaver/*.pas
       - src: ./../source/idleclose/*.pas
       - src: ./../source/idleclose/*.dfm
@@ -119,13 +44,13 @@ templates:
       - src: ./../source/*.pas
       - src: ./../source/*.inc
     build:
-      - project: ./Delphi 12/ccLib_R.dproj
+      - project: ./$packageSource$/ccLib_R.dproj
         platforms:
           - win32
           - win64
         defines: RELEASE
     design:
-      - project: ./Delphi 12/ccLib_D.dproj
+      - project: ./$packageSource$/ccLib_D.dproj
         platforms:
           - win32
         defines: RELEASE
